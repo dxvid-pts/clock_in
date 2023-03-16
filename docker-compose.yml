@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+
+  mariadb:
+    build:
+      context: ./Database
+      dockerfile: Dockerfile
+    restart: 'unless-stopped'
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - "./Database/container:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_DATABASE: "clock_in"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
