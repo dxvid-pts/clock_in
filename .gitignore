@@ -1,2 +1,6 @@
-Database/container
-.idea
+# Backend ignores
+*.dep *.aps *.vbw *.suo *.obj *.ncb *.plg *.bsc *.ilk 
+*.exp *.sbr *.opt *.pdb *.idb *.pch *.res *.user
+
+/backend/obj/
+/backend/bin/
