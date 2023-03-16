@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: ClockIn API
+  description: |-
+    Official ClockIn API Documentation
+  contact:
+    email: info@felix-thalheimer.de
+  version: 1.0.0
+tags:
+  - name: anynonym
+    description: Operations without authentication
+  - name: admin
+    description: Opertations for admins
+  - name: manager
+    description: Operations for managers
+  - name: employee
+    description: Operations for employees
+paths:
+  /auth/login:
+    post:
+      tags:
+        - anonym
+      summary: Login to an existing account
+      description: Login to an existing account with email and password
+      operationId: login
+      requestBody:
+        description: Login information
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  example: "felix.thalheimer@test.com"
+                  type: string
+                password:
+                  example: "1234"
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
+        '405':
+          description: Validation exception
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+  
+  components:
+    securitySChemes:
+      auth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
+    
+    schemas:
+      Token:
+        type: object
+        required:
+          - string
+          - timestamp
+        properties:
+          string:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJh22NvdW50X2lkIjoiVVNFUi1MOU5aVUdYMDFdWDY5SwIsInJvbGUiOiJ2U0VSIiwialF0IxoxNjY2Njg1NDQzLCyleHAiOjE2NjY2OTEiND69uWGOhh7WjDnWluWsnK0cKGsmw-qMkRu3GZAs4sZc3kU0
+          timestamp:
+            type: integer
+            example: 1616689428325
+
+
+      Authentication:
+        type: object
+        required:
+          - accessToken
+          - refreshToken
+          - user
+        properties:
+          accessToken:
+            $ref: "#/components/schemas/Token"
+          refreshToken:
+            $ref: "#/components/schemas/Token"
+          account:
+            type: object
+            required:
+              - id
+              - role
+            properties:
+              id:
+                type: string
+                example: USER-L9NZUGX01JX69K
+              role:
+                type: string
+                enum: [ USER, GUEST ]
+      
+    
