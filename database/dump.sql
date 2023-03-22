@@ -45,7 +45,7 @@ CREATE TABLE vacation
     status VARCHAR(31),
     changed DATE NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account (id)
-);
+) WITH SYSTEM VERSIONING;
 
 CREATE TABLE profile
 (
