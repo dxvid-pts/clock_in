@@ -1,4 +1,4 @@
-Database/container
+database/container
 
 # Backend ignores
 *.dep *.aps *.vbw *.suo *.obj *.ncb *.plg *.bsc *.ilk 
