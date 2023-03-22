@@ -56,5 +56,5 @@ CREATE TABLE profile
     break_time INT NOT NULL,
     vacation_days INT NOT NULL,
     PRIMARY KEY (account_id),
-    FOREIGN KEY (account_id) REFERENCES account(id),
+    FOREIGN KEY (account_id) REFERENCES account(id)
 )  WITH SYSTEM VERSIONING;
