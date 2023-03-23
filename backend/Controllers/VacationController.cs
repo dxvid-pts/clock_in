@@ -40,7 +40,7 @@ public class VacationController : ControllerBase
     [HttpPatch(Name = "PatchVacation")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Patch(int end, string status)
+    public IActionResult Patch(int end, Status status)
     {
         return Ok();
     }
