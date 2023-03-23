@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/overview_screen/overview_screen.dart';
+import 'package:frontend/screens/stats_screen/stats_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,10 +19,10 @@ class _MyHomePageState extends State<MainScreen> {
     //select screen based on bottom navigation bar index
     switch (_index) {
       case 0:
-        body = const Center(child: Text("Explore"));
+        body = const OverviewScreen();
         break;
       case 1:
-        body = const Center(child: Text("Saved"));
+        body = const StatsScreen();
         break;
       case 2:
         body = const Center(child: Text("Profile"));
@@ -37,16 +39,16 @@ class _MyHomePageState extends State<MainScreen> {
         onTap: (index) => setState(() => _index = index),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            label: 'Explore',
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border_outlined),
-            label: 'Saved',
+            icon: Icon(Icons.stacked_line_chart_outlined),
+            label: 'Stats',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            label: 'Profile',
+            icon: Icon(Icons.admin_panel_settings_outlined),
+            label: 'Admin',
           ),
         ],
       ),
