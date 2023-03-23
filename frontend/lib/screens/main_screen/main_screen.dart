@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/screens/overview_screen/overview_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +18,7 @@ class _MyHomePageState extends State<MainScreen> {
     //select screen based on bottom navigation bar index
     switch (_index) {
       case 0:
-        body = const Center(child: Text("Explore"));
+        body = const OverviewScreen();
         break;
       case 1:
         body = const Center(child: Text("Saved"));
