@@ -10,7 +10,7 @@ services:
     ports:
       - "${DB_PORT}:3306"
     volumes:
-      - "./Database/container:/var/lib/mysql"
+      - "./database/container:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: "clock_in"
