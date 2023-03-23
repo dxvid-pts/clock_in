@@ -1,3 +1,4 @@
+using backend.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -7,10 +8,12 @@ namespace backend.Controllers;
 public class VacationController : ControllerBase
 {
     private readonly ILogger<VacationController> _logger;
+    private readonly ClockInContext clockInContext;
 
-    public VacationController(ILogger<VacationController> logger)
+    public VacationController(ILogger<VacationController> logger, ClockInContext clockInContext)
     {
         _logger = logger;
+        this.clockInContext = clockInContext;
     }
 
     /// <summary>
