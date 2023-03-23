@@ -29,8 +29,18 @@ public class VacationController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Update a Vacation Request
+    /// </summary>
+    /// <param name="end">Timestamp to change the end to</param>
+    /// <param name="status">New status to change the status to</param>
+    /// <returns></returns>
+    /// <response code="200">Change successful</response>
+    /// <response code="400">Change rejected</response>
     [HttpPatch(Name = "PatchVacation")]
-    public IActionResult Patch(int? end, string? status)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Patch(int end, string status)
     {
         return Ok();
     }
