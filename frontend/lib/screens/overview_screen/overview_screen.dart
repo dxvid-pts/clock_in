@@ -18,10 +18,37 @@ class OverviewScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SfDateRangePicker(
-            headerStyle: DateRangePickerHeaderStyle(
-              textStyle: titleStyle,
-            ),
+          Stack(
+            children: [
+              SfDateRangePicker(
+                headerStyle: DateRangePickerHeaderStyle(
+                  textStyle: titleStyle,
+                ),
+              ),
+              Positioned(
+                top: 6,
+                right: 10,
+                child: DropdownButton(
+                  isDense: true,
+                  value: null,
+                  items: const [
+                    DropdownMenuItem(
+                      child: Text("Krankheit"),
+                      value: "Krankheit",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Homeoffice"),
+                      value: "Homeoffice",
+                    ),
+                    DropdownMenuItem(
+                      child: Text("Urlaub"),
+                      value: "Urlaub",
+                    ),
+                  ],
+                  onChanged: (value) {},
+                ),
+              )
+            ],
           ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
@@ -34,15 +61,31 @@ class OverviewScreen extends StatelessWidget {
             child: ListView(
               children: [
                 for (var i = 0; i < 10; i++)
-                  ListTile(
-                    title: Text("Title $i"),
-                    subtitle: Text("Subtitle $i"),
-                  ),
+                  OverviewListTile(
+                    text: i.toString(),
+                  )
               ],
             ),
           )
         ],
       ),
+    );
+  }
+}
+
+class OverviewListTile extends StatelessWidget {
+  const OverviewListTile({
+    super.key,
+    required this.text,
+  });
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text("Title $text"),
+      subtitle: Text("Subtitle $text"),
     );
   }
 }
