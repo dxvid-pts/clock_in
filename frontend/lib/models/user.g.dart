@@ -1,35 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product.dart';
+part of 'user.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class ProductAdapter extends TypeAdapter<_$_Product> {
+class UserAdapter extends TypeAdapter<_$_User> {
   @override
   final int typeId = 1;
 
   @override
-  _$_Product read(BinaryReader reader) {
+  _$_User read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return _$_Product(
+    return _$_User(
       id: fields[0] as String,
-      name: fields[1] as String,
+      email: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, _$_Product obj) {
+  void write(BinaryWriter writer, _$_User obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.name);
+      ..write(obj.email);
   }
 
   @override
@@ -38,7 +38,7 @@ class ProductAdapter extends TypeAdapter<_$_Product> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ProductAdapter &&
+      other is UserAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -47,13 +47,12 @@ class ProductAdapter extends TypeAdapter<_$_Product> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
+_$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       id: json['id'] as String,
-      name: json['name'] as String,
+      email: json['email'] as String,
     );
 
-Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'email': instance.email,
     };
