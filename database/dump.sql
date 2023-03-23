@@ -4,7 +4,7 @@ CREATE TABLE account
     id         INT PRIMARY KEY AUTO_INCREMENT,
     email      VARCHAR(255)                        NOT NULL,
     password   VARCHAR(255)                        NOT NULL,
-    role       ENUM ('ADMIN','MANAGER','EMPLOYEE') NOT NULL,
+    role       ENUM ('Admin','Manager','Employee') NOT NULL,
     last_login DATETIME,
     blocked    BOOL
 );
@@ -52,7 +52,7 @@ CREATE TABLE vacation
     account_id INT  NOT NULL,
     begin      DATE NOT NULL,
     end        DATE NOT NULL,
-    status     ENUM ('PENDING','APPROVED','DECLINED','CANCELED'),
+    status     ENUM ('Pending','Approved','Declined','Canceled'),
     changed    DATE NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account (id)
 ) WITH SYSTEM VERSIONING;
