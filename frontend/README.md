@@ -2,6 +2,12 @@
 
 A new Flutter project.
 
+## Generator command
+
+```
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
