@@ -4,11 +4,11 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AccountController : ControllerBase
+public class AdminController : ControllerBase
 {
-    private readonly ILogger<AccountController> _logger;
+    private readonly ILogger<AdminController> _logger;
 
-    public AccountController(ILogger<AccountController> logger)
+    public AdminController(ILogger<AdminController> logger)
     {
         _logger = logger;
     }
