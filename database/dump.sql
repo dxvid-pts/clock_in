@@ -37,6 +37,15 @@ CREATE TABLE work
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
 
+CREATE TABLE sick_leave
+(
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT  NOT NULL,
+    begin      DATE NOT NULL,
+    end        DATE NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES account (id)
+);
+
 CREATE TABLE vacation
 (
     id         INT PRIMARY KEY AUTO_INCREMENT,
