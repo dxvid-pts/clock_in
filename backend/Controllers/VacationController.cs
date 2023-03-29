@@ -1,5 +1,6 @@
 using backend.Database;
 using backend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -33,12 +34,13 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
+    [Authorize]
     [HttpPost(Name = "PostVacation")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post(int begin, int end)
     {
-        return Ok();
+        return Ok(new Vacation());
     }
 
     /// <summary>

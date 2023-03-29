@@ -1,5 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using backend.Database;
+using Microsoft.IdentityModel.Tokens;
 
 namespace backend.Controllers;
 
@@ -11,14 +16,19 @@ namespace backend.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;
-    
+    private readonly IConfiguration _configuration;
+    private readonly ClockInContext _clockInContext;
+
     /// <summary>
     /// constructor
     /// </summary>
+    /// <param name="configuration"></param>
     /// <param name="logger"></param>
-    public AccountController(ILogger<AccountController> logger)
+    public AccountController(IConfiguration configuration, ILogger<AccountController> logger, ClockInContext clockInContext)
     {
+        _configuration = configuration;
         _logger = logger;
+        _clockInContext = clockInContext;
     }
 
     /// <summary>
@@ -30,7 +40,36 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult Login(LoginCredentials loginCredentials)
     {
-        return Ok();
+        Account? user = _clockInContext.Accounts
+            .FirstOrDefault(p => p.Email == loginCredentials.email && p.Password == loginCredentials.password);
+
+        if (user == null)
+            return Unauthorized();
+        
+        List<Claim> claims = new()
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role)
+        };
+        
+        var symmetricKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException()));
+        var exp = DateTime.UtcNow.AddMinutes(30);
+        JwtSecurityToken token = new JwtSecurityToken(
+            _configuration["Jwt:Issuer"],
+            _configuration["Jwt:Audience"],
+            claims,
+            expires: exp,
+            signingCredentials: new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256)
+        );
+        
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var tokenStr = tokenHandler.WriteToken(token);
+        return Ok(new TokenResponse()
+        {
+            access_token = tokenStr,
+            expires_in = "30",
+            token_type = "Bearer"
+        });
     }
 
     /// <summary>
@@ -41,7 +80,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult Register(ChangePassword changePassword)
+    public IActionResult ChangePassword(ChangePassword changePassword)
     {
         return NoContent();
     }
