@@ -1,16 +1,37 @@
+using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
 
+/// <summary>
+/// contains routes on vacation path
+/// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class VacationController : ControllerBase
 {
     private readonly ILogger<VacationController> _logger;
 
+    /// <summary>
+    /// constructor
+    /// </summary>
+    /// <param name="logger"></param>
     public VacationController(ILogger<VacationController> logger)
     {
         _logger = logger;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Vacation>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult Get()
+    {
+        return Ok();
     }
 
     /// <summary>
@@ -22,7 +43,7 @@ public class VacationController : ControllerBase
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
     [HttpPost(Name = "PostVacation")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post(int begin, int end)
     {
@@ -38,7 +59,7 @@ public class VacationController : ControllerBase
     /// <response code="200">Change successful</response>
     /// <response code="400">Change rejected</response>
     [HttpPatch(Name = "PatchVacation")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Patch(int end, string status)
     {

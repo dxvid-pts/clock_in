@@ -3,12 +3,19 @@ using backend.Models;
 
 namespace backend.Controllers;
 
+/// <summary>
+/// contains routes used for account operations
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;
     
+    /// <summary>
+    /// constructor
+    /// </summary>
+    /// <param name="logger"></param>
     public AccountController(ILogger<AccountController> logger)
     {
         _logger = logger;

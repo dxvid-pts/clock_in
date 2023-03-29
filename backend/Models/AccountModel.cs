@@ -1,13 +1,18 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models;
 
+/// <summary>
+/// account model
+/// </summary>
 public class Account
 {
     
 }
 
+/// <summary>
+/// LoginCredentials model as used in login requests
+/// </summary>
 public class LoginCredentials
 {
     /// <summary>
@@ -25,6 +30,9 @@ public class LoginCredentials
     public string password { get; set; } = string.Empty;
 }
 
+/// <summary>
+/// TokenResponse model as used in responses for logins
+/// </summary>
 public class TokenResponse
 {
     /// <summary>
@@ -46,6 +54,9 @@ public class TokenResponse
     public string expires_in { get; set; } = string.Empty;
 }
 
+/// <summary>
+/// ChangePassword model as used in requests for changing passwords
+/// </summary>
 public class ChangePassword
 {
     /// <summary>
