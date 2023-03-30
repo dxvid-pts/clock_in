@@ -1,15 +1,24 @@
 using backend.Database;
+using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
 
+/// <summary>
+/// contains routes on vacation path
+/// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class VacationController : ControllerBase
 {
     private readonly ILogger<VacationController> _logger;
     private readonly ClockInContext clockInContext;
 
+    /// <summary>
+    /// constructor
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="clockInContext"></param>
     public VacationController(ILogger<VacationController> logger, ClockInContext clockInContext)
     {
         _logger = logger;
@@ -25,7 +34,7 @@ public class VacationController : ControllerBase
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
     [HttpPost(Name = "PostVacation")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post(int begin, int end)
     {
@@ -41,9 +50,9 @@ public class VacationController : ControllerBase
     /// <response code="200">Change successful</response>
     /// <response code="400">Change rejected</response>
     [HttpPatch(Name = "PatchVacation")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Patch(int end, Status status)
+    public IActionResult Patch(int end, string status)
     {
         return Ok();
     }

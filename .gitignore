@@ -6,3 +6,6 @@ database/container
 
 /backend/obj/
 /backend/bin/
+/Folder.DotSettings.user
+
+*.DS_Store
