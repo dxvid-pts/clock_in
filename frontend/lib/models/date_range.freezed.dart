@@ -29,6 +29,9 @@ mixin _$DateRange {
   @JsonKey(name: "end")
   @HiveField(2)
   int get end => throw _privateConstructorUsedError;
+  @JsonKey(name: "category")
+  @HiveField(3)
+  DateRangeCategory get category => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,7 +47,8 @@ abstract class $DateRangeCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: "id") @HiveField(0) String id,
       @JsonKey(name: "start") @HiveField(1) int start,
-      @JsonKey(name: "end") @HiveField(2) int end});
+      @JsonKey(name: "end") @HiveField(2) int end,
+      @JsonKey(name: "category") @HiveField(3) DateRangeCategory category});
 }
 
 /// @nodoc
@@ -63,6 +67,7 @@ class _$DateRangeCopyWithImpl<$Res, $Val extends DateRange>
     Object? id = null,
     Object? start = null,
     Object? end = null,
+    Object? category = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -77,6 +82,10 @@ class _$DateRangeCopyWithImpl<$Res, $Val extends DateRange>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as int,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as DateRangeCategory,
     ) as $Val);
   }
 }
@@ -91,7 +100,8 @@ abstract class _$$_DateRangeCopyWith<$Res> implements $DateRangeCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: "id") @HiveField(0) String id,
       @JsonKey(name: "start") @HiveField(1) int start,
-      @JsonKey(name: "end") @HiveField(2) int end});
+      @JsonKey(name: "end") @HiveField(2) int end,
+      @JsonKey(name: "category") @HiveField(3) DateRangeCategory category});
 }
 
 /// @nodoc
@@ -108,6 +118,7 @@ class __$$_DateRangeCopyWithImpl<$Res>
     Object? id = null,
     Object? start = null,
     Object? end = null,
+    Object? category = null,
   }) {
     return _then(_$_DateRange(
       id: null == id
@@ -122,6 +133,10 @@ class __$$_DateRangeCopyWithImpl<$Res>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as int,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as DateRangeCategory,
     ));
   }
 }
@@ -133,7 +148,8 @@ class _$_DateRange with DiagnosticableTreeMixin implements _DateRange {
   const _$_DateRange(
       {@JsonKey(name: "id") @HiveField(0) required this.id,
       @JsonKey(name: "start") @HiveField(1) required this.start,
-      @JsonKey(name: "end") @HiveField(2) required this.end});
+      @JsonKey(name: "end") @HiveField(2) required this.end,
+      @JsonKey(name: "category") @HiveField(3) required this.category});
 
   factory _$_DateRange.fromJson(Map<String, dynamic> json) =>
       _$$_DateRangeFromJson(json);
@@ -150,10 +166,14 @@ class _$_DateRange with DiagnosticableTreeMixin implements _DateRange {
   @JsonKey(name: "end")
   @HiveField(2)
   final int end;
+  @override
+  @JsonKey(name: "category")
+  @HiveField(3)
+  final DateRangeCategory category;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'DateRange(id: $id, start: $start, end: $end)';
+    return 'DateRange(id: $id, start: $start, end: $end, category: $category)';
   }
 
   @override
@@ -163,7 +183,8 @@ class _$_DateRange with DiagnosticableTreeMixin implements _DateRange {
       ..add(DiagnosticsProperty('type', 'DateRange'))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('start', start))
-      ..add(DiagnosticsProperty('end', end));
+      ..add(DiagnosticsProperty('end', end))
+      ..add(DiagnosticsProperty('category', category));
   }
 
   @override
@@ -173,12 +194,14 @@ class _$_DateRange with DiagnosticableTreeMixin implements _DateRange {
             other is _$_DateRange &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.start, start) || other.start == start) &&
-            (identical(other.end, end) || other.end == end));
+            (identical(other.end, end) || other.end == end) &&
+            (identical(other.category, category) ||
+                other.category == category));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, start, end);
+  int get hashCode => Object.hash(runtimeType, id, start, end, category);
 
   @JsonKey(ignore: true)
   @override
@@ -196,10 +219,18 @@ class _$_DateRange with DiagnosticableTreeMixin implements _DateRange {
 
 abstract class _DateRange implements DateRange {
   const factory _DateRange(
-          {@JsonKey(name: "id") @HiveField(0) required final String id,
-          @JsonKey(name: "start") @HiveField(1) required final int start,
-          @JsonKey(name: "end") @HiveField(2) required final int end}) =
-      _$_DateRange;
+      {@JsonKey(name: "id")
+      @HiveField(0)
+          required final String id,
+      @JsonKey(name: "start")
+      @HiveField(1)
+          required final int start,
+      @JsonKey(name: "end")
+      @HiveField(2)
+          required final int end,
+      @JsonKey(name: "category")
+      @HiveField(3)
+          required final DateRangeCategory category}) = _$_DateRange;
 
   factory _DateRange.fromJson(Map<String, dynamic> json) =
       _$_DateRange.fromJson;
@@ -216,6 +247,10 @@ abstract class _DateRange implements DateRange {
   @JsonKey(name: "end")
   @HiveField(2)
   int get end;
+  @override
+  @JsonKey(name: "category")
+  @HiveField(3)
+  DateRangeCategory get category;
   @override
   @JsonKey(ignore: true)
   _$$_DateRangeCopyWith<_$_DateRange> get copyWith =>

@@ -14,13 +14,23 @@ class DateRange with _$DateRange {
   const factory DateRange({
     @JsonKey(name: "id") @HiveField(0) required String id,
     @JsonKey(name: "start") @HiveField(1) required int start,
-     @JsonKey(name: "end") @HiveField(2) required int end,
+    @JsonKey(name: "end") @HiveField(2) required int end,
+    @JsonKey(name: "category")
+    @HiveField(3)
+        required DateRangeCategory category,
   }) = _DateRange;
 
-  factory DateRange.fromJson(Map<String, Object?> json) => _$DateRangeFromJson(json);
+  factory DateRange.fromJson(Map<String, Object?> json) =>
+      _$DateRangeFromJson(json);
 }
 
 extension DateRangeExtension on DateRange {
   DateTime get startDate => DateTime.fromMillisecondsSinceEpoch(start);
   DateTime get endDate => DateTime.fromMillisecondsSinceEpoch(end);
+}
+
+enum DateRangeCategory {
+  vacation,
+  sick,
+  remote,
 }
