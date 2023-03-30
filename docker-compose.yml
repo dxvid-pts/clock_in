@@ -5,17 +5,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        MARIADB_HOST: "mariadb"
+        MARIADB_PORT: "${DB_PORT}"
+        MARIADB_DATABASE: "${DB_NAME}"
+        MARIADB_USER: "${DB_USER}"
+        MARIADB_PASSWORD: "${DB_PASSWORD}"
     restart: 'unless-stopped'
     ports:
       - "${API_PORT}:80"
     depends_on:
       - mariadb
-    environment:
-      MARIADB_HOST: "mariadb"
-      MARIADB_DATABASE: "clock_in"
-      MARIADB_USER: "${DB_USER}"
-      MARIADB_PASSWORD: "${DB_PASSWORD}"
-      
+  
   mariadb:
     build:
       context: ./database
@@ -27,6 +28,6 @@ services:
       - "./database/container:/var/lib/mysql"
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_DATABASE: "clock_in"
+      MYSQL_DATABASE: "${DB_NAME}"
       MYSQL_USER: "${DB_USER}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
