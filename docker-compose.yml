@@ -6,8 +6,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       args:
-        MARIADB_HOST: "mariadb"
-        MARIADB_PORT: "${DB_PORT}"
         MARIADB_DATABASE: "${DB_NAME}"
         MARIADB_USER: "${DB_USER}"
         MARIADB_PASSWORD: "${DB_PASSWORD}"
@@ -15,9 +13,9 @@ services:
     ports:
       - "${API_PORT}:80"
     depends_on:
-      - mariadb
+      - database
   
-  mariadb:
+  database:
     build:
       context: ./database
       dockerfile: Dockerfile
