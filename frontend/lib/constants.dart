@@ -1,3 +1,1 @@
-import 'package:flutter/material.dart';
-
-const kColor = Colors.red;
+const kDateRangeCollectionKey = "dateRange";
