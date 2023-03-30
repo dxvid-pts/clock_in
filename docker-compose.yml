@@ -1,7 +1,21 @@
 version: "3"
 
 services:
-
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: 'unless-stopped'
+    ports:
+      - "${API_PORT}:80"
+    depends_on:
+      - mariadb
+    environment:
+      MARIADB_HOST: "mariadb"
+      MARIADB_DATABASE: "clock_in"
+      MARIADB_USER: "${DB_USER}"
+      MARIADB_PASSWORD: "${DB_PASSWORD}"
+      
   mariadb:
     build:
       context: ./database
