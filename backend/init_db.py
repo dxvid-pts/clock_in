@@ -6,7 +6,7 @@ def rename_file(host, port, db, user, psswrt):
         f.seek(0) # reset pointer
         
 
-    try: # to catch regex errors
+        try: # to catch regex errors
             (before_text,focus_text) = text.split("\"Database\": \"")
             (focus_text,after_text) = focus_text.split("\"")
         except:
