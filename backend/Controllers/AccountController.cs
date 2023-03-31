@@ -29,6 +29,7 @@ public class AccountController : ControllerBase
         _configuration = configuration;
         _logger = logger;
         _clockInContext = clockInContext;
+        _logger.Log(LogLevel.Debug, configuration.GetConnectionString("Database"));
     }
 
     /// <summary>
