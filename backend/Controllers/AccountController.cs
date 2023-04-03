@@ -59,12 +59,22 @@ public class AccountController : ControllerBase
     /// Change a users password
     /// </summary>
     /// <returns></returns>
+    [Authorize]
     [HttpPut("password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult ChangePassword(ChangePassword changePassword)
     {
+        Account? account = _clockInContext.Accounts.FirstOrDefault(p =>
+            p.Email == changePassword.email && p.Password == changePassword.old_password);
+
+        if (account == null)
+            return BadRequest();
+
+        account.Password = changePassword.new_password;
+        _clockInContext.SaveChanges();
+        
         return NoContent();
     }
 
