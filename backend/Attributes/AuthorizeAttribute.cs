@@ -11,7 +11,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     /// <summary>
     /// the required role to authorized the account with
     /// </summary>
-    public string Roles { get; set; }
+    public string Roles { get; set; } = string.Empty;
     
     /// <summary>
     /// used with the [Authorize] tag to secure an http action
@@ -43,7 +43,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
         }
 
-        if (!Roles.Contains(account.Role))
+        if (Roles != string.Empty && !Roles.Contains(account.Role))
         {
             context.Result = new JsonResult(new
                 {

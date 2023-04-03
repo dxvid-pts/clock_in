@@ -23,7 +23,8 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="configuration"></param>
     /// <param name="logger"></param>
-    public AccountController(IConfiguration configuration, ILogger<AccountController> logger, TokenUtils tokenUtils, ClockInContext clockInContext)
+    public AccountController(IConfiguration configuration, ILogger<AccountController> logger, TokenUtils tokenUtils,
+        ClockInContext clockInContext)
     {
         _configuration = configuration;
         _logger = logger;
@@ -34,6 +35,11 @@ public class AccountController : ControllerBase
     /// <summary>
     /// Log in a user
     /// </summary>
+    /// <remarks>
+    /// Returned jwt token needs to be provided in the Authorization Header upon submitting a request.<br/>
+    /// Authorization Header contents schema: "Bearer TOKEN"<br/>
+    /// This api is session-less and provides no methods for logging a user out. The token is the key for all requests, so you can just throw it away to log a user out.
+    /// </remarks>
     /// <returns>JWT token containing users role as plain text in response body</returns>
     [HttpPost("login")]
     [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
@@ -60,6 +66,22 @@ public class AccountController : ControllerBase
     public IActionResult ChangePassword(ChangePassword changePassword)
     {
         return NoContent();
+    }
+
+    /// <summary>
+    /// Refresh an access token using a refresh token
+    /// </summary>
+    /// <remarks>
+    /// Not implemented yet!
+    /// </remarks>
+    /// <returns>A newly generated JWT Token</returns>
+    [Authorize]
+    [HttpPost("refresh_token")]
+    [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public IActionResult RefreshToken()
+    {
+        return Ok("Logic not implemented yet");
     }
 
     /// <summary>
