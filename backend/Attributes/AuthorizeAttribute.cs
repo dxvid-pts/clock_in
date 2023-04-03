@@ -8,17 +8,47 @@ namespace backend.Attributes;
 
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
+    /// <summary>
+    /// the required role to authorized the account with
+    /// </summary>
     public string Roles { get; set; }
     
+    /// <summary>
+    /// used with the [Authorize] tag to secure an http action
+    /// </summary>
+    /// <remarks>
+    /// use...<br/>
+    /// - <b>[Authorize(Roles = Roles.Employee)]</b> to grant access to employees<br/>
+    /// - <b>[Authorize(Roles = Roles.Manager)]</b> to grant access to managers<br/>
+    /// - <b>[Authorize(Roles = Roles.Admin)]</b> to grant access to admins<br/>
+    /// - <b>[Authorize(Roles = Roles.Employee + Roles.Manager)]</b> to combine roles
+    /// </remarks>
+    /// <param name="context"></param>
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var account = (Account)context.HttpContext.Items["User"];
-        Console.WriteLine(account.Role);
-        Console.WriteLine(Roles);
+        
         if (account == null)
-            context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
+            context.Result = new JsonResult(new
+                {
+                    message = new ProblemDetails()
+                    {
+                        Title = "Unauthorized",
+                        Status = StatusCodes.Status401Unauthorized,
+                        Detail = "No user is logged in"
+                    }
+                })
+                { StatusCode = StatusCodes.Status401Unauthorized };
         if (!Roles.Contains(account.Role))
-            context.Result = new JsonResult(new { message = "Forbidden" })
+            context.Result = new JsonResult(new
+                {
+                    message = new ProblemDetails()
+                    {
+                        Title = "Forbidden",
+                        Status = StatusCodes.Status403Forbidden,
+                        Detail = "Logged in user has insufficient permissions for requested route"
+                    }
+                })
                 { StatusCode = StatusCodes.Status403Forbidden };
     }
 }

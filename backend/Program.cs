@@ -58,25 +58,6 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddTransient<TokenUtils>();
 
-// builder.Services
-//     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters()
-//         {
-//             ClockSkew = TimeSpan.Zero,
-//             ValidateIssuer = true,
-//             ValidateAudience = true,
-//             ValidateLifetime = true,
-//             ValidateIssuerSigningKey = true,
-//             ValidIssuer = builder.Configuration["Jwt:Issuer"],
-//             ValidAudience = builder.Configuration["Jwt:Audience"],
-//             IssuerSigningKey = new SymmetricSecurityKey(
-//                 Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException())
-//             ),
-//         };
-//     });
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

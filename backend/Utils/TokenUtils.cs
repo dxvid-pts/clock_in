@@ -15,6 +15,12 @@ public class TokenUtils
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// create a jwt token for the specified account
+    /// </summary>
+    /// <param name="forAccount"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public TokenResponse CreateAccessToken(Account forAccount)
     {
         List<Claim> claims = new()
@@ -42,6 +48,11 @@ public class TokenUtils
         };
     }
 
+    /// <summary>
+    /// validate a given jwt token
+    /// </summary>
+    /// <param name="token"></param>
+    /// <returns>user id as string</returns>
     public string ValidateToken(string token)
     {
         if (token == null)
