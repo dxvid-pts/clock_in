@@ -86,9 +86,9 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestManagerPerms()
+    public IActionResult TestManagerPerms(HttpContext context)
     {
-        return Ok();
+        return Ok(context.Items["User"] );
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
         }
 
-        if (!Roles.Contains(account.Role))
+        if (!Roles.ToUpper().Contains(account.Role.ToUpper()))
         {
             context.Result = new JsonResult(new
                 {

@@ -78,15 +78,15 @@ public static class Roles
     /// <summary>
     /// Employee Role of user account
     /// </summary>
-    public const string Employee = "Employee";
+    public const string Employee = "EMPLOYEE";
     
     /// <summary>
     /// Manager Role of user account
     /// </summary>
-    public const string Manager = "Manager";
+    public const string Manager = "MANAGER";
     
     /// <summary>
     /// Admin Role of user account
     /// </summary>
-    public const string Admin = "Admin";
+    public const string Admin = "ADMIN";
 }
