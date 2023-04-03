@@ -23,6 +23,8 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="configuration"></param>
     /// <param name="logger"></param>
+    /// <param name="tokenUtils"></param>
+    /// <param name="clockInContext"></param>
     public AccountController(IConfiguration configuration, ILogger<AccountController> logger, TokenUtils tokenUtils,
         ClockInContext clockInContext)
     {

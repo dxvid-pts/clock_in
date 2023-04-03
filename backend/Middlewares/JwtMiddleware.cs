@@ -26,7 +26,7 @@ public class JwtMiddleware
     /// <param name="tokenUtils"></param>
     public async Task Invoke(HttpContext context, ClockInContext clockInContext, TokenUtils tokenUtils)
     {
-        string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        string token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last() ?? "";
         string userId = tokenUtils.ValidateToken(token);
         if (!userId.IsNullOrEmpty())
         {

@@ -17,6 +17,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     /// used with the [Authorize] tag to secure an http action
     /// </summary>
     /// <remarks>
+    /// <b>always</b> use <b>this attribute</b>, not the one from .net!<br/>
     /// use...<br/>
     /// - <b>[Authorize(Roles = Roles.Employee)]</b> to grant access to employees<br/>
     /// - <b>[Authorize(Roles = Roles.Manager)]</b> to grant access to managers<br/>
@@ -26,7 +27,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     /// <param name="context"></param>
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var account = (Account)context.HttpContext.Items["User"];
+        var account = (Account?)context.HttpContext.Items["User"];
 
         if (account == null)
         {

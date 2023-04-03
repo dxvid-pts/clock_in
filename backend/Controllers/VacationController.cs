@@ -1,6 +1,6 @@
 using backend.Database;
 using backend.Models;
-using Microsoft.AspNetCore.Authorization;
+using backend.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
