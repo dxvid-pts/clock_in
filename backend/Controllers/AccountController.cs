@@ -3,6 +3,7 @@ using backend.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using backend.Attributes;
 using backend.Database;
 using Microsoft.IdentityModel.Tokens;
 
@@ -81,6 +82,13 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult ChangePassword(ChangePassword changePassword)
+    {
+        return NoContent();
+    }
+
+    [Authorize(Roles = "Manager")]
+    [HttpGet("test")]
+    public IActionResult Test()
     {
         return NoContent();
     }
