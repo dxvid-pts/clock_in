@@ -27,8 +27,9 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var account = (Account)context.HttpContext.Items["User"];
-        
+
         if (account == null)
+        {
             context.Result = new JsonResult(new
                 {
                     message = new ProblemDetails()
@@ -39,7 +40,11 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
                     }
                 })
                 { StatusCode = StatusCodes.Status401Unauthorized };
+            return;
+        }
+
         if (!Roles.Contains(account.Role))
+        {
             context.Result = new JsonResult(new
                 {
                     message = new ProblemDetails()
@@ -50,5 +55,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
                     }
                 })
                 { StatusCode = StatusCodes.Status403Forbidden };
+            return;
+        }
     }
 }
