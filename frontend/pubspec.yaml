@@ -39,6 +39,15 @@ dependencies:
   syncfusion_flutter_datepicker: ^20.4.54
   fl_chart: ^0.61.0
 
+  storage_engine:
+    path: /Users/david.petersmway.io/IdeaProjects/storage_engine/storage_engine
+
+  storage_engine_hive_adapter:
+    path: /Users/david.petersmway.io/IdeaProjects/storage_engine/storage_engine_hive_adapter
+
+  commons_flutter:
+    path: /Users/david.petersmway.io/IdeaProjects/commons/commons_flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
