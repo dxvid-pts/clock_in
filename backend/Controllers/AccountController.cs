@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Attributes;
 using backend.Database;
+using backend.Interfaces;
 using backend.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace backend.Controllers;
 
@@ -86,9 +88,9 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestManagerPerms(HttpContext context)
+    public IActionResult TestManagerPerms()
     {
-        return Ok(context.Items["User"] );
+        return Ok(HttpContext.Items["User"] );
     }
 
     /// <summary>
@@ -103,5 +105,39 @@ public class AccountController : ControllerBase
     public IActionResult TestCombinedPerms()
     {
         return Ok();
+    }
+    
+    /// <summary>
+    /// Get account specific information
+    /// </summary>
+    /// <returns></returns>
+    [Authorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
+    [HttpGet("{user_id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult GetAccountInformation(int user_id)
+    {
+        Account account = (Account) HttpContext.Items["User"];
+
+        if (account.Role == Roles.Employee && user_id != account.Id)
+        {
+            return Forbid("Employees cannot access information of other accounts.");
+        }
+        
+        if (account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
+        {
+            return Forbid("Managers can only access information of subscript employees");
+        }
+
+        Account? result = _clockInContext.Accounts.Find(user_id);
+
+        if (result == null)
+        {
+            return NotFound("Account does not exist");
+        }
+        
+        return Ok(new AccountInformation(result));
     }
 }
