@@ -234,15 +234,41 @@ class _LowerSection extends StatelessWidget {
           top: Radius.circular(20),
         ),
       ),
-      child: const Column(
-        children: [
-          Text("This week you worked"),
-          EntryListTile(
-            title: "Monday 10.04",
-            subtitle: "Office",
-            duration: 2,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Text(
+              "This week you worked",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 15),
+            Expanded(
+              child: ListView(
+                children: const [
+                  EntryListTile(
+                    title: "Monday 10.04",
+                    subtitle: "Office",
+                    duration: 2,
+                  ),
+                  EntryListTile(
+                    title: "Tuesday 11.04",
+                    subtitle: "Remote",
+                    duration: 2.4,
+                  ),
+                  EntryListTile(
+                    title: "Wednesday 12.04",
+                    subtitle: "Office",
+                    duration: 7,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

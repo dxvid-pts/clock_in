@@ -14,10 +14,20 @@ class EntryListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: Text(duration.toStringAsFixed(2) + "h"),
+    return Container(
+      margin: const EdgeInsets.symmetric( vertical: 5),
+      //rounded corners
+      decoration: const BoxDecoration(
+        color: Color(0xFFf9f9f9),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(subtitle),
+        trailing: Text("${duration.toStringAsFixed(2)}h"),
+      ),
     );
   }
 }
