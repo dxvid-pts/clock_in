@@ -11,17 +11,19 @@ class TimerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: const Column(
-        children: [
-          Expanded(
-            flex: 6,
-            child: _UpperSection(),
-          ),
-          Expanded(
-            flex: 4,
-            child: _LowerSection(),
-          ),
-        ],
+      body: const SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 6,
+              child: _UpperSection(),
+            ),
+            Expanded(
+              flex: 4,
+              child: _LowerSection(),
+            ),
+          ],
+        ),
       ),
     );
   }
