@@ -55,3 +55,7 @@ class TimerScreen extends StatelessWidget {
     ));
   }
 }
+
+extension on int {
+  String twoDigits() => toString().padLeft(2, '0');
+}
