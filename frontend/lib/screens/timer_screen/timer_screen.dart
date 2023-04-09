@@ -158,11 +158,13 @@ class _CustomIconButton extends StatelessWidget {
     required this.icon,
     this.onPressed,
     required this.filled,
+    this.size = 35,
   }) : super(key: key);
 
   final IconData icon;
   final VoidCallback? onPressed;
   final bool filled;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -178,14 +180,14 @@ class _CustomIconButton extends StatelessWidget {
           color: filled ? highlight : Colors.transparent,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(6),
+          padding: EdgeInsets.all(size * 0.17),
           child: Icon(
             icon,
             color: filled ? primary : highlight,
           ),
         ),
       ),
-      iconSize: 35,
+      iconSize: size,
       color: highlight,
     );
   }
