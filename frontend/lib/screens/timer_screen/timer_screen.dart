@@ -1,4 +1,3 @@
-import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,18 +9,20 @@ class TimerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: [
-        const Expanded(
-          flex: 6,
-          child: _UpperSection(),
-        ),
-        Expanded(
-          flex: 4,
-          child: Container(),
-        ),
-      ],
-    ));
+      backgroundColor: Theme.of(context).primaryColor,
+      body: const Column(
+        children: [
+          Expanded(
+            flex: 6,
+            child: _UpperSection(),
+          ),
+          Expanded(
+            flex: 4,
+            child: _LowerSection(),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -42,180 +43,207 @@ class _UpperSection extends ConsumerWidget {
     final double maxHeight = MediaQuery.of(context).size.height;
     final double maxWidth = MediaQuery.of(context).size.width;
 
-    return Container(
-      color: Theme.of(context).primaryColor,
-      child: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            //custom app bar
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                height: 56,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/logo-black.svg',
-                      height: 18,
-                    ),
-                    const Expanded(child: SizedBox()),
-                    //container with rounded corners, a centered icon and a ripple effect
-                    Material(
-                      color: reducedFontColor.withOpacity(0.2),
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          //custom app bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SizedBox(
+              height: 56,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    'assets/logo-black.svg',
+                    height: 18,
+                  ),
+                  const Expanded(child: SizedBox()),
+                  //container with rounded corners, a centered icon and a ripple effect
+                  Material(
+                    color: reducedFontColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                    child: InkWell(
+                      onTap: () {},
                       borderRadius: BorderRadius.circular(10),
-                      child: InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(10),
-                        child: const Padding(
-                          padding: EdgeInsets.all(6),
-                          child: Icon(
-                            Icons.settings,
-                            color: reducedFontColor,
-                            size: 17,
-                          ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(6),
+                        child: Icon(
+                          Icons.settings,
+                          color: reducedFontColor,
+                          size: 17,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 5),
-                    VerticalDivider(
-                      color: reducedFontColor.withOpacity(0.7),
-                      indent: 17,
-                      endIndent: 17,
-                    ),
-                    _CustomIconButton(
-                      onPressed: () {},
-                      icon: Icons.keyboard_arrow_down,
-                      size: 15,
-                      filled: true,
-                    )
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 5),
+                  VerticalDivider(
+                    color: reducedFontColor.withOpacity(0.7),
+                    indent: 17,
+                    endIndent: 17,
+                  ),
+                  _CustomIconButton(
+                    onPressed: () {},
+                    icon: Icons.keyboard_arrow_down,
+                    size: 15,
+                    filled: true,
+                  )
+                ],
               ),
             ),
-            Divider(
-              color: reducedFontColor.withOpacity(0.3),
-              indent: 20,
-              endIndent: 20,
-              height: 1,
-            ),
+          ),
+          Divider(
+            color: reducedFontColor.withOpacity(0.3),
+            indent: 20,
+            endIndent: 20,
+            height: 1,
+          ),
 
-            const Expanded(
-              flex: 3,
-              child: SizedBox(),
-            ),
+          const Expanded(
+            flex: 3,
+            child: SizedBox(),
+          ),
 
-            Text(
-              '• Porsche AG',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: reducedFontColor,
-                  ),
-            ),
-
-            const SizedBox(height: 14),
-
-            //hour:minute:second timer
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: maxWidth * 0.1),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      timerService.hours.twoDigits(),
-                      style: timerTextTheme,
-                    ),
-                    Text(
-                      ':',
-                      style: timerTextTheme,
-                    ),
-                    Text(
-                      timerService.minutes.twoDigits(),
-                      style: timerTextTheme,
-                    ),
-                    Text(
-                      ':',
-                      style: timerTextTheme,
-                    ),
-                    Text(
-                      timerService.seconds.twoDigits(),
-                      style: timerTextTheme?.copyWith(
-                        color: const Color(0xFFe7b480),
-                      ),
-                    ),
-                  ],
+          Text(
+            '• Porsche AG',
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: reducedFontColor,
                 ),
+          ),
+
+          const SizedBox(height: 14),
+
+          //hour:minute:second timer
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: maxWidth * 0.1),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    timerService.hours.twoDigits(),
+                    style: timerTextTheme,
+                  ),
+                  Text(
+                    ':',
+                    style: timerTextTheme,
+                  ),
+                  Text(
+                    timerService.minutes.twoDigits(),
+                    style: timerTextTheme,
+                  ),
+                  Text(
+                    ':',
+                    style: timerTextTheme,
+                  ),
+                  Text(
+                    timerService.seconds.twoDigits(),
+                    style: timerTextTheme?.copyWith(
+                      color: const Color(0xFFe7b480),
+                    ),
+                  ),
+                ],
               ),
             ),
+          ),
 
-            const SizedBox(height: 7),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: maxWidth * 0.11),
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Text(
-                  'Work time 40 hours • Your daily rate \$145',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontSize: 100,
-                        color: reducedFontColor,
-                      ),
-                ),
+          const SizedBox(height: 7),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: maxWidth * 0.11),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Text(
+                'Work time 40 hours • Your daily rate \$145',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontSize: 100,
+                      color: reducedFontColor,
+                    ),
               ),
             ),
+          ),
 
-            const Expanded(child: SizedBox()),
+          const Expanded(child: SizedBox()),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //start timer button
-                if (!timerService.wasRunningOnce)
-                  _CustomIconButton(
-                    onPressed: timerService.startTimer,
-                    icon: Icons.play_arrow,
-                    filled: true,
-                    tooltip: 'Start timer',
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //start timer button
+              if (!timerService.wasRunningOnce)
+                _CustomIconButton(
+                  onPressed: timerService.startTimer,
+                  icon: Icons.play_arrow,
+                  filled: true,
+                  tooltip: 'Start timer',
+                ),
 
-                //pause timer button
-                if (timerService.wasRunningOnce && timerService.isRunning)
-                  _CustomIconButton(
-                    onPressed: timerService.pauseTimer,
-                    icon: Icons.pause,
-                    filled: true,
-                    tooltip: 'Pause timer',
-                  ),
+              //pause timer button
+              if (timerService.wasRunningOnce && timerService.isRunning)
+                _CustomIconButton(
+                  onPressed: timerService.pauseTimer,
+                  icon: Icons.pause,
+                  filled: true,
+                  tooltip: 'Pause timer',
+                ),
 
-                //start timer button when paused
-                if (timerService.wasRunningOnce && !timerService.isRunning)
-                  _CustomIconButton(
-                    onPressed: timerService.startTimer,
-                    icon: Icons.play_arrow,
-                    filled: true,
-                    tooltip: 'Resume timer',
-                  ),
+              //start timer button when paused
+              if (timerService.wasRunningOnce && !timerService.isRunning)
+                _CustomIconButton(
+                  onPressed: timerService.startTimer,
+                  icon: Icons.play_arrow,
+                  filled: true,
+                  tooltip: 'Resume timer',
+                ),
 
-                //stop timer button
-                if (timerService.wasRunningOnce)
-                  _CustomIconButton(
-                    onPressed: timerService.resetTimer,
-                    icon: Icons.stop,
-                    filled: false,
-                    tooltip: 'Stop timer',
-                  ),
-              ],
-            ),
-            const Expanded(
-              flex: 2,
-              child: SizedBox(),
-            ),
-          ],
+              //stop timer button
+              if (timerService.wasRunningOnce)
+                _CustomIconButton(
+                  onPressed: timerService.resetTimer,
+                  icon: Icons.stop,
+                  filled: false,
+                  tooltip: 'Stop timer',
+                ),
+            ],
+          ),
+          const Expanded(
+            flex: 2,
+            child: SizedBox(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LowerSection extends StatelessWidget {
+  const _LowerSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    //foreground color: white, background color: primary color, rounded corners on the top
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(20),
         ),
+      ),
+      child: Column(
+        children: [
+          Text("This week you worked"),
+          const SizedBox(height: 20),
+          // const _CustomAppBar(),
+          const SizedBox(height: 20),
+          //   const _TimerSection(),
+          const SizedBox(height: 20),
+          //  const _LowerSectionButtons(),
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }
