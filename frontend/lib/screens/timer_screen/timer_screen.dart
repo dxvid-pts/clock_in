@@ -64,6 +64,24 @@ class _UpperSection extends ConsumerWidget {
                       height: 18,
                     ),
                     const Expanded(child: SizedBox()),
+                    //container with rounded corners, a centered icon and a ripple effect
+                    Material(
+                      color: reducedFontColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(10),
+                        child: const Padding(
+                          padding: EdgeInsets.all(6),
+                          child: Icon(
+                            Icons.settings,
+                            color: reducedFontColor,
+                            size: 17,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
                     VerticalDivider(
                       color: reducedFontColor.withOpacity(0.7),
                       indent: 17,
