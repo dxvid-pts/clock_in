@@ -9,10 +9,18 @@ class TimerScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timerService = ref.watch(timerProvider);
 
+    final timerTextTheme = Theme.of(context).textTheme.headlineLarge?.copyWith(
+          fontSize: 64,
+          color: const Color(0xFFfefdfd),
+        );
+
+    const reducedFontColor = Color(0xFFf5ddaf);
+
     return Scaffold(
         body: Column(
       children: [
         Expanded(
+          flex: 6,
           child: Container(
             color: Theme.of(context).primaryColor,
             child: Column(
@@ -20,41 +28,55 @@ class TimerScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.max,
               children: [
                 Text(
-                  'Timer',
-                  style: Theme.of(context).textTheme.headline1,
+                  'Porsche AG',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: reducedFontColor,
+                      ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 //hour:minute:second timer
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       timerService.hours.twoDigits(),
-                      style: Theme.of(context).textTheme.headline2,
+                      style: timerTextTheme,
                     ),
                     Text(
                       ':',
-                      style: Theme.of(context).textTheme.headline2,
+                      style: timerTextTheme,
                     ),
                     Text(
                       timerService.minutes.twoDigits(),
-                      style: Theme.of(context).textTheme.headline2,
+                      style: timerTextTheme,
                     ),
                     Text(
                       ':',
-                      style: Theme.of(context).textTheme.headline2,
+                      style: timerTextTheme,
                     ),
                     Text(
                       timerService.seconds.twoDigits(),
-                      style: Theme.of(context).textTheme.headline2,
+                      style: timerTextTheme?.copyWith(
+                        color: const Color(0xFFe7b480),
+                      ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Work time 40 hours • Your daily rate 145€',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: reducedFontColor,
+                      ),
                 ),
               ],
             ),
           ),
         ),
-        Expanded(child: Container()),
+        Expanded(
+          flex: 4,
+          child: Container(),
+        ),
       ],
     ));
   }
