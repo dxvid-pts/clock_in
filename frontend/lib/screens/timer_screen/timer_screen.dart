@@ -61,7 +61,7 @@ class _UpperSection extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SvgPicture.asset(
-                    'assets/logo-black.svg',
+                    'assets/logo-white.svg',
                     height: 19,
                   ),
                   const Expanded(child: SizedBox()),
