@@ -48,7 +48,30 @@ class EntryListTile extends StatelessWidget {
           subtitle,
           style: Theme.of(context).textTheme.bodySmall,
         ),
-        trailing: Text("${duration.toStringAsFixed(2)}h"),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Icon(
+              Icons.access_time,
+              size: 15,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              duration.toStringAsFixed(2).replaceAll(".", ":"),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            IconButton(
+              onPressed: () {},
+              iconSize: 27,
+              icon: const Icon(
+                Icons.play_arrow,
+                color: Color(0xFF7c7c7c),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
