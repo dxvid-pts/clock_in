@@ -1,5 +1,7 @@
+import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/services/timer_service.dart';
 
 class TimerScreen extends StatelessWidget {
@@ -45,11 +47,49 @@ class _UpperSection extends ConsumerWidget {
       child: SizedBox(
         width: double.infinity,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
+            //custom app bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SizedBox(
+                height: 56,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/logo-black.svg',
+                      height: 18,
+                    ),
+                    const Expanded(child: SizedBox()),
+                    VerticalDivider(
+                      color: reducedFontColor.withOpacity(0.7),
+                      indent: 17,
+                      endIndent: 17,
+                    ),
+                    _CustomIconButton(
+                      onPressed: () {},
+                      icon: Icons.keyboard_arrow_down,
+                      size: 17,
+                      filled: true,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              color: reducedFontColor.withOpacity(0.3),
+              indent: 20,
+              endIndent: 20,
+              height: 1,
+            ),
+
+            SizedBox(height: maxHeight * 0.05),
+
             Text(
-              'Porsche AG',
+              '• Porsche AG',
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: reducedFontColor,
                   ),
