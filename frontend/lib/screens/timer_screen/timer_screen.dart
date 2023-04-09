@@ -118,6 +118,7 @@ class _UpperSection extends ConsumerWidget {
                     onPressed: timerService.startTimer,
                     icon: Icons.play_arrow,
                     filled: true,
+                    tooltip: 'Start timer',
                   ),
 
                 //pause timer button
@@ -126,6 +127,7 @@ class _UpperSection extends ConsumerWidget {
                     onPressed: timerService.pauseTimer,
                     icon: Icons.pause,
                     filled: true,
+                    tooltip: 'Pause timer',
                   ),
 
                 //start timer button when paused
@@ -134,6 +136,7 @@ class _UpperSection extends ConsumerWidget {
                     onPressed: timerService.startTimer,
                     icon: Icons.play_arrow,
                     filled: true,
+                    tooltip: 'Resume timer',
                   ),
 
                 //stop timer button
@@ -142,6 +145,7 @@ class _UpperSection extends ConsumerWidget {
                     onPressed: timerService.resetTimer,
                     icon: Icons.stop,
                     filled: false,
+                    tooltip: 'Stop timer',
                   ),
               ],
             ),
