@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/services/timer_service.dart';
 
-class TimerScreen extends StatelessWidget {
+class TimerScreen extends ConsumerWidget {
   const TimerScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final timerService = ref.watch(timerProvider);
+
     return Scaffold(
         body: Column(
       children: [
@@ -19,13 +23,13 @@ class TimerScreen extends StatelessWidget {
                   'Timer',
                   style: Theme.of(context).textTheme.headline1,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 //hour:minute:second timer
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '00',
+                      timerService.hours.twoDigits(),
                       style: Theme.of(context).textTheme.headline2,
                     ),
                     Text(
@@ -33,7 +37,7 @@ class TimerScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline2,
                     ),
                     Text(
-                      '00',
+                      timerService.minutes.twoDigits(),
                       style: Theme.of(context).textTheme.headline2,
                     ),
                     Text(
@@ -41,7 +45,7 @@ class TimerScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline2,
                     ),
                     Text(
-                      '00',
+                      timerService.seconds.twoDigits(),
                       style: Theme.of(context).textTheme.headline2,
                     ),
                   ],
