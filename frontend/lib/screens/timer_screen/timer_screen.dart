@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/services/timer_service.dart';
+import 'package:frontend/widgets/entry_list_tile.dart';
 
 class TimerScreen extends StatelessWidget {
   const TimerScreen({super.key});
@@ -227,22 +228,20 @@ class _LowerSection extends StatelessWidget {
     //foreground color: white, background color: primary color, rounded corners on the top
     return Container(
       width: double.infinity,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: const BorderRadius.vertical(
+        borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
         ),
       ),
-      child: Column(
+      child: const Column(
         children: [
           Text("This week you worked"),
-          const SizedBox(height: 20),
-          // const _CustomAppBar(),
-          const SizedBox(height: 20),
-          //   const _TimerSection(),
-          const SizedBox(height: 20),
-          //  const _LowerSectionButtons(),
-          const SizedBox(height: 20),
+          EntryListTile(
+            title: "Monday 10.04",
+            subtitle: "Office",
+            duration: 2,
+          ),
         ],
       ),
     );
