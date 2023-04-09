@@ -13,7 +13,7 @@ class TimerNotifier extends ChangeNotifier {
 
   Timer? _t;
 
-  TimerNotifier() {}
+  bool get isRunning => _t != null;
 
   void startTimer() {
     if (_t != null) {
