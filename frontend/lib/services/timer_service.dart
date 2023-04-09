@@ -7,9 +7,9 @@ final timerProvider =
     ChangeNotifierProvider<TimerNotifier>((ref) => TimerNotifier());
 
 class TimerNotifier extends ChangeNotifier {
-  double hours = 0;
-  double minutes = 0;
-  double seconds = 0;
+  int hours = 0;
+  int minutes = 0;
+  int seconds = 0;
 
   Timer? _t;
 
