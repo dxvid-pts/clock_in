@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/services/timer_service.dart';
@@ -220,7 +221,8 @@ class _UpperSection extends ConsumerWidget {
                     _vibrate();
                   },
                   icon: Icons.pause,
-                  filled: true,size: 38,
+                  filled: true,
+                  size: 38,
                   tooltip: 'Pause timer',
                 ),
 
@@ -232,7 +234,8 @@ class _UpperSection extends ConsumerWidget {
                     _vibrate();
                   },
                   icon: Icons.play_arrow,
-                  filled: true,size: 38,
+                  filled: true,
+                  size: 38,
                   tooltip: 'Resume timer',
                 ),
 
@@ -244,7 +247,8 @@ class _UpperSection extends ConsumerWidget {
                     _vibrate();
                   },
                   icon: Icons.stop,
-                  filled: false,size: 38,
+                  filled: false,
+                  size: 38,
                   tooltip: 'Stop timer',
                 ),
             ],
