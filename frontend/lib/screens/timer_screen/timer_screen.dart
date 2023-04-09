@@ -159,12 +159,14 @@ class _CustomIconButton extends StatelessWidget {
     this.onPressed,
     required this.filled,
     this.size = 35,
+    this.tooltip,
   }) : super(key: key);
 
   final IconData icon;
   final VoidCallback? onPressed;
   final bool filled;
   final double size;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +175,7 @@ class _CustomIconButton extends StatelessWidget {
 
     return IconButton(
       onPressed: onPressed,
+      tooltip: tooltip,
       icon: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
