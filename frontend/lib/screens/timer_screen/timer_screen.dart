@@ -202,7 +202,10 @@ class _UpperSection extends ConsumerWidget {
               //start timer button
               if (!timerService.wasRunningOnce)
                 _CustomIconButton(
-                  onPressed: timerService.startTimer,
+                  onPressed: () {
+                    timerService.startTimer();
+                    _vibrate();
+                  },
                   icon: Icons.play_arrow,
                   filled: true,
                   size: 38,
@@ -212,7 +215,10 @@ class _UpperSection extends ConsumerWidget {
               //pause timer button
               if (timerService.wasRunningOnce && timerService.isRunning)
                 _CustomIconButton(
-                  onPressed: timerService.pauseTimer,
+                  onPressed: () {
+                    timerService.pauseTimer();
+                    _vibrate();
+                  },
                   icon: Icons.pause,
                   filled: true,size: 38,
                   tooltip: 'Pause timer',
@@ -221,7 +227,10 @@ class _UpperSection extends ConsumerWidget {
               //start timer button when paused
               if (timerService.wasRunningOnce && !timerService.isRunning)
                 _CustomIconButton(
-                  onPressed: timerService.startTimer,
+                  onPressed: () {
+                    timerService.startTimer();
+                    _vibrate();
+                  },
                   icon: Icons.play_arrow,
                   filled: true,size: 38,
                   tooltip: 'Resume timer',
@@ -230,7 +239,10 @@ class _UpperSection extends ConsumerWidget {
               //stop timer button
               if (timerService.wasRunningOnce)
                 _CustomIconButton(
-                  onPressed: timerService.resetTimer,
+                  onPressed: () {
+                    timerService.resetTimer();
+                    _vibrate();
+                  },
                   icon: Icons.stop,
                   filled: false,size: 38,
                   tooltip: 'Stop timer',
@@ -299,6 +311,10 @@ class _LowerSection extends StatelessWidget {
       ),
     );
   }
+}
+
+void _vibrate() async {
+  HapticFeedback.selectionClick();
 }
 
 class _CustomIconButton extends StatelessWidget {
