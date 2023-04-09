@@ -11,18 +11,34 @@ class TimerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      body: const SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 6,
-              child: _UpperSection(),
+      body: SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).primaryColor.withOpacity(0.86),
+                  Theme.of(context).primaryColor,
+                ],
+                stops: const [0.0, 0.3],
+              ),
             ),
-            Expanded(
-              flex: 4,
-              child: _LowerSection(),
+            child: const Column(
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: _UpperSection(),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: _LowerSection(),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -62,7 +78,7 @@ class _UpperSection extends ConsumerWidget {
                 children: [
                   SvgPicture.asset(
                     'assets/logo-white.svg',
-                    height: 19,
+                    height: 21,
                   ),
                   const Expanded(child: SizedBox()),
                   //container with rounded corners, a centered icon and a ripple effect
@@ -189,6 +205,7 @@ class _UpperSection extends ConsumerWidget {
                   onPressed: timerService.startTimer,
                   icon: Icons.play_arrow,
                   filled: true,
+                  size: 38,
                   tooltip: 'Start timer',
                 ),
 
@@ -197,7 +214,7 @@ class _UpperSection extends ConsumerWidget {
                 _CustomIconButton(
                   onPressed: timerService.pauseTimer,
                   icon: Icons.pause,
-                  filled: true,
+                  filled: true,size: 38,
                   tooltip: 'Pause timer',
                 ),
 
@@ -206,7 +223,7 @@ class _UpperSection extends ConsumerWidget {
                 _CustomIconButton(
                   onPressed: timerService.startTimer,
                   icon: Icons.play_arrow,
-                  filled: true,
+                  filled: true,size: 38,
                   tooltip: 'Resume timer',
                 ),
 
@@ -215,7 +232,7 @@ class _UpperSection extends ConsumerWidget {
                 _CustomIconButton(
                   onPressed: timerService.resetTimer,
                   icon: Icons.stop,
-                  filled: false,
+                  filled: false,size: 38,
                   tooltip: 'Stop timer',
                 ),
             ],
