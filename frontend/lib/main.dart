@@ -18,7 +18,9 @@ class MyApp extends StatelessWidget {
       title: 'ClockIn',
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
+        colorScheme: const ColorScheme.light(
+          primary:  Color(0xFFd26a07),
+        ),
       ),
       home: Consumer(
         builder: (context, ref, mainScreen) {
