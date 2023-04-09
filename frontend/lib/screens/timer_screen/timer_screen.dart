@@ -41,7 +41,6 @@ class _UpperSection extends ConsumerWidget {
 
     const reducedFontColor = Color(0xFFf5ddaf);
 
-    final double maxHeight = MediaQuery.of(context).size.height;
     final double maxWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
@@ -61,7 +60,7 @@ class _UpperSection extends ConsumerWidget {
                 children: [
                   SvgPicture.asset(
                     'assets/logo-black.svg',
-                    height: 18,
+                    height: 19,
                   ),
                   const Expanded(child: SizedBox()),
                   //container with rounded corners, a centered icon and a ripple effect
