@@ -28,7 +28,7 @@ class TimerScreen extends StatelessWidget {
 }
 
 class _UpperSection extends ConsumerWidget {
-  const _UpperSection({super.key});
+  const _UpperSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -229,7 +229,7 @@ class _UpperSection extends ConsumerWidget {
 }
 
 class _LowerSection extends StatelessWidget {
-  const _LowerSection({super.key});
+  const _LowerSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
