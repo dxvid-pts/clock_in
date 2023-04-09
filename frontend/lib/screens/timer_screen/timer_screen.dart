@@ -90,7 +90,7 @@ class _UpperSection extends ConsumerWidget {
                     _CustomIconButton(
                       onPressed: () {},
                       icon: Icons.keyboard_arrow_down,
-                      size: 17,
+                      size: 15,
                       filled: true,
                     )
                   ],
@@ -104,7 +104,10 @@ class _UpperSection extends ConsumerWidget {
               height: 1,
             ),
 
-            SizedBox(height: maxHeight * 0.05),
+            const Expanded(
+              flex: 3,
+              child: SizedBox(),
+            ),
 
             Text(
               '• Porsche AG',
@@ -113,7 +116,7 @@ class _UpperSection extends ConsumerWidget {
                   ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 14),
 
             //hour:minute:second timer
             Padding(
@@ -150,13 +153,13 @@ class _UpperSection extends ConsumerWidget {
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 7),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: maxWidth * 0.1),
+              padding: EdgeInsets.symmetric(horizontal: maxWidth * 0.11),
               child: FittedBox(
                 fit: BoxFit.contain,
                 child: Text(
-                  'Work time 40 hours • Your daily rate 145€',
+                  'Work time 40 hours • Your daily rate \$145',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontSize: 100,
                         color: reducedFontColor,
@@ -165,7 +168,7 @@ class _UpperSection extends ConsumerWidget {
               ),
             ),
 
-            SizedBox(height: maxHeight * 0.05),
+            const Expanded(child: SizedBox()),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -206,6 +209,10 @@ class _UpperSection extends ConsumerWidget {
                     tooltip: 'Stop timer',
                   ),
               ],
+            ),
+            const Expanded(
+              flex: 2,
+              child: SizedBox(),
             ),
           ],
         ),
