@@ -295,16 +295,19 @@ class _LowerSection extends StatelessWidget {
                   EntryListTile(
                     title: "Monday 10.04",
                     subtitle: "Office",
+                    color: Color(0xFFd26a07),
                     duration: 2,
                   ),
                   EntryListTile(
                     title: "Tuesday 11.04",
                     subtitle: "Remote",
+                    color: Color(0xFFd399f1),
                     duration: 2.4,
                   ),
                   EntryListTile(
                     title: "Wednesday 12.04",
                     subtitle: "Office",
+                    color:  Color(0xFFd26a07),
                     duration: 7,
                   ),
                 ],
