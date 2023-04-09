@@ -68,7 +68,16 @@ class _UpperSection extends ConsumerWidget {
                     color: reducedFontColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(10),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        //Show snackbar "Your settings are managed by your company"
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Your settings are managed by your company',
+                            ),
+                          ),
+                        );
+                      },
                       borderRadius: BorderRadius.circular(10),
                       child: const Padding(
                         padding: EdgeInsets.all(6),
