@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/services/timer_service.dart';
@@ -91,6 +90,46 @@ class TimerScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
+
+                  SizedBox(height: maxHeight * 0.05),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //start timer button
+                      if (!timerService.wasRunningOnce)
+                        _CustomIconButton(
+                          onPressed: timerService.startTimer,
+                          icon: Icons.play_arrow,
+                          filled: true,
+                        ),
+
+                      //pause timer button
+                      if (timerService.wasRunningOnce && timerService.isRunning)
+                        _CustomIconButton(
+                          onPressed: timerService.pauseTimer,
+                          icon: Icons.pause,
+                          filled: true,
+                        ),
+
+                      //start timer button when paused
+                      if (timerService.wasRunningOnce &&
+                          !timerService.isRunning)
+                        _CustomIconButton(
+                          onPressed: timerService.startTimer,
+                          icon: Icons.play_arrow,
+                          filled: true,
+                        ),
+
+                      //stop timer button
+                      if (timerService.wasRunningOnce)
+                        _CustomIconButton(
+                          onPressed: timerService.resetTimer,
+                          icon: Icons.stop,
+                          filled: false,
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -102,6 +141,45 @@ class TimerScreen extends ConsumerWidget {
         ),
       ],
     ));
+  }
+}
+
+class _CustomIconButton extends StatelessWidget {
+  const _CustomIconButton({
+    Key? key,
+    required this.icon,
+    this.onPressed,
+    required this.filled,
+  }) : super(key: key);
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final bool filled;
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).primaryColor;
+    const highlight = Color(0xFFfefdfd);
+
+    return IconButton(
+      onPressed: onPressed,
+      icon: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: highlight, width: 2),
+          color: filled ? highlight : Colors.transparent,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Icon(
+            icon,
+            color: filled ? primary : highlight,
+          ),
+        ),
+      ),
+      iconSize: 35,
+      color: highlight,
+    );
   }
 }
 
