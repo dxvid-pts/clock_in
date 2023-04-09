@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 
 class EntryListTile extends StatelessWidget {
-  const EntryListTile({super.key});
+  const EntryListTile({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.duration,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final double duration;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: Text(duration.toStringAsFixed(2) + "h"),
+    );
   }
 }
