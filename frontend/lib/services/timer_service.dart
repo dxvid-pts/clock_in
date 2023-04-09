@@ -13,10 +13,12 @@ class TimerNotifier extends ChangeNotifier {
 
   Timer? _t;
 
-  bool get isRunning => _t != null;
+  bool get wasRunningOnce => _t != null;
+  bool get isRunning => _t?.isActive ?? false;
 
   void startTimer() {
-    if (_t != null) {
+    //check if currently running
+    if (isRunning) {
       return;
     }
 
@@ -35,10 +37,22 @@ class TimerNotifier extends ChangeNotifier {
       }
       notifyListeners();
     });
+
+    //notify listeners to update that the timer has started
+    notifyListeners();
   }
 
-  void stopTimer() {
+  void pauseTimer() {
+    _t?.cancel();
+    notifyListeners();
+  }
+
+  void resetTimer() {
     _t?.cancel();
     _t = null;
+    hours = 0;
+    minutes = 0;
+    seconds = 0;
+    notifyListeners();
   }
 }
