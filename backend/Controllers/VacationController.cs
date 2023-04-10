@@ -29,33 +29,96 @@ public class VacationController : ControllerBase
     /// <summary>
     /// Creates a new Vacation Request
     /// </summary>
-    /// <param name="begin">Timestamp which defines the begin of the vacation</param>
-    /// <param name="end">Timestamp which defines the end of the vacation</param>
     /// <returns></returns>
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
-    [Authorize]
-    [HttpPost(Name = "PostVacation")]
+    [Authorize(Roles = Roles.Employee)]
+    [HttpPost(Name = "Request Vacation")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Post(int begin, int end)
+    public IActionResult Post([FromBody] VacationInput input)
     {
-        return Ok(new Vacation());
+        Vacation vacation = new Vacation()
+        {
+            id = 1234,
+            account_id = ((Account?)HttpContext.Items["User"])!.Id,
+            status = "PENDING",
+            begin = input.begin,
+            end = input.end,
+            changed = DateTime.Now
+        };
+        return Ok(vacation);
     }
 
     /// <summary>
     /// Update a Vacation Request
     /// </summary>
-    /// <param name="end">Timestamp to change the end to</param>
-    /// <param name="status">New status to change the status to</param>
+    /// <param name="id">ID of vacation request to be updated</param>
+    /// <param name="input">input values</param>
     /// <returns></returns>
     /// <response code="200">Change successful</response>
     /// <response code="400">Change rejected</response>
-    [HttpPatch(Name = "PatchVacation")]
+    [Authorize(Roles = Roles.Employee + Roles.Manager)]
+    [HttpPatch("{id}", Name = "Edit Vacation")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Patch(int end, string status)
+    public IActionResult Patch(int id, [FromBody] VacationInput input)
     {
-        return Ok();
+        Vacation vacation = new Vacation()
+        {
+            id = id,
+            account_id = ((Account?)HttpContext.Items["User"])!.Id,
+            status = "PENDING",
+            begin = input.begin,
+            end = input.end,
+            changed = DateTime.Now
+        };
+        return Ok(vacation);
+    }
+
+    /// <summary>
+    /// Cancel a Vacation
+    /// </summary>
+    /// <param name="id">ID of vacation request to be canceled</param>
+    /// <param name="input">input values</param>
+    /// <returns></returns>
+    /// <response code="200">Cancellation successful</response>
+    /// <response code="400">Cancellation rejected</response>
+    [Authorize(Roles = Roles.Employee)]
+    [HttpDelete("{id}", Name = "Cancel Vacation")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Delete(int id)
+    {
+        Vacation vacation = new Vacation
+        {
+            id = id,
+            account_id = ((Account?)HttpContext.Items["User"])!.Id,
+            status = "CANCELED"
+        };
+        return Ok(vacation);
+    }
+
+    /// <summary>
+    /// Review (approve/decline) a vacation request
+    /// </summary>
+    /// <param name="id">ID of vacation request to be reviewed</param>
+    /// <param name="input">input values</param>
+    /// <returns></returns>
+    /// <response code="200">Review successful</response>
+    /// <response code="400">Review rejected</response>
+    [Authorize(Roles = Roles.Manager)]
+    [HttpPatch("review/{id}", Name = "Review Vacation")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Review(int id, [FromBody] VacationReviewInput input)
+    {
+        Vacation vacation = new Vacation
+        {
+            id = id,
+            account_id = 1234,
+            status = input.status
+        };
+        return Ok(vacation);
     }
 }

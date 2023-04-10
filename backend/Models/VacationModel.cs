@@ -42,3 +42,32 @@ public class Vacation
     [Required]
     public DateTime changed { get; set; }
 }
+
+/// <summary>
+/// input data for creating/editing a vacation request
+/// </summary>
+public class VacationInput
+{
+    /// <summary>
+    /// begin time
+    /// </summary>
+    public DateTime begin { get; set; }
+    
+    /// <summary>
+    /// end time
+    /// </summary>
+    public DateTime end { get; set; }
+}
+
+/// <summary>
+/// input data for reviewing a vacation request
+/// </summary>
+public class VacationReviewInput
+{
+    /// <summary>
+    /// the status the request should be set to
+    /// </summary>
+    [Required]
+    [RegularExpression("APPROVED|DECLINED", ErrorMessage = "Allowed values for status property: 'APPROVED', 'DECLINED'")]
+    public string status { get; set; } = string.Empty;
+}
