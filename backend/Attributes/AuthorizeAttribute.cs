@@ -9,8 +9,18 @@ namespace backend.Attributes;
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     /// <summary>
-    /// the required role to authorized the account with
+    /// the required role to authorize the account with<br/>
+    /// used with the [Authorize] tag to secure an http action
     /// </summary>
+    /// <remarks>
+    /// <b>always</b> use <b>this attribute</b>, not the one from .net!<br/>
+    /// use...<br/>
+    /// - <b>[Authorize(Roles = Roles.Employee)]</b> to grant access to employees<br/>
+    /// - <b>[Authorize(Roles = Roles.Manager)]</b> to grant access to managers<br/>
+    /// - <b>[Authorize(Roles = Roles.Admin)]</b> to grant access to admins<br/>
+    /// - <b>[Authorize(Roles = Roles.Employee + Roles.Manager)]</b> to combine roles
+    /// </remarks>
+    /// <param name="context"></param>
     public string Roles { get; set; } = string.Empty;
     
     /// <summary>

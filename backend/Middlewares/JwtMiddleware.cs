@@ -1,5 +1,4 @@
 using backend.Database;
-using backend.Models;
 using backend.Utils;
 using Microsoft.IdentityModel.Tokens;
 
@@ -31,6 +30,7 @@ public class JwtMiddleware
         if (!userId.IsNullOrEmpty())
         {
             context.Items["User"] = clockInContext.Accounts.FirstOrDefault(p => p.Id.ToString() == userId);
+            /// TODO: rework user data into context.User
         }
 
         await _next(context);
