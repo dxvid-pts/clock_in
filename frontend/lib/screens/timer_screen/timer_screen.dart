@@ -27,8 +27,8 @@ class TimerScreen extends StatelessWidget {
                 stops: const [0.0, 0.3],
               ),
             ),
-            child: const Column(
-              children: [
+            child: Column(
+              children: const [
                 Expanded(
                   flex: 6,
                   child: _UpperSection(),
