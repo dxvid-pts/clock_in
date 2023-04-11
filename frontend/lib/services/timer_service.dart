@@ -16,11 +16,16 @@ class TimerNotifier extends ChangeNotifier {
   bool get wasRunningOnce => _t != null;
   bool get isRunning => _t?.isActive ?? false;
 
+  DateTime? startTime;
+
   void startTimer() {
     //check if currently running
     if (isRunning) {
       return;
     }
+
+    //set start time
+    startTime = DateTime.now();
 
     //periodically update the timer every second
     _t = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -44,6 +49,7 @@ class TimerNotifier extends ChangeNotifier {
 
   void pauseTimer() {
     _t?.cancel();
+    startTime = null;
     notifyListeners();
   }
 
@@ -53,6 +59,7 @@ class TimerNotifier extends ChangeNotifier {
     hours = 0;
     minutes = 0;
     seconds = 0;
+    startTime = null;
     notifyListeners();
   }
 }
