@@ -118,7 +118,9 @@ class _UpperSection extends ConsumerWidget {
                     endIndent: 17,
                   ),
                   _CustomIconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     icon: Icons.keyboard_arrow_down,
                     size: 15,
                     filled: true,
