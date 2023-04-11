@@ -39,7 +39,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^20.4.54
   fl_chart: ^0.61.0
   flutter_svg: ^2.0.4
-  collection: ^1.17.1
+  collection: ^1.17.0
 
   storage_engine:
     path: /Users/david.petersmway.io/IdeaProjects/storage_engine/storage_engine
