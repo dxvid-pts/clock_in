@@ -1,8 +1,11 @@
+import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/services/timer_service.dart';
+import 'package:frontend/services/tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 
 class TimerScreen extends StatelessWidget {
@@ -217,7 +220,18 @@ class _UpperSection extends ConsumerWidget {
               if (timerService.wasRunningOnce && timerService.isRunning)
                 _CustomIconButton(
                   onPressed: () {
+                    final startTime = timerService.startTime;
+                    final endTime = DateTime.now();
+
+                    //pause timer
                     timerService.pauseTimer();
+
+                    //add tracking entry to database
+                    ref.read(trackingProvider).addTrackingEntry(
+                          startTime: startTime!,
+                          endTime: endTime,
+                        );
+
                     _vibrate();
                   },
                   icon: Icons.pause,
@@ -243,7 +257,20 @@ class _UpperSection extends ConsumerWidget {
               if (timerService.wasRunningOnce)
                 _CustomIconButton(
                   onPressed: () {
+                    final startTime = timerService.startTime;
+                    final endTime = DateTime.now();
+
+                    //pause timer
                     timerService.resetTimer();
+
+                    //add tracking entry to database (only if start time is not null)
+                    if (startTime != null) {
+                      ref.read(trackingProvider).addTrackingEntry(
+                            startTime: startTime,
+                            endTime: endTime,
+                          );
+                    }
+
                     _vibrate();
                   },
                   icon: Icons.stop,
@@ -263,11 +290,11 @@ class _UpperSection extends ConsumerWidget {
   }
 }
 
-class _LowerSection extends StatelessWidget {
+class _LowerSection extends ConsumerWidget {
   const _LowerSection({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     //foreground color: white, background color: primary color, rounded corners on the top
     return Container(
       width: double.infinity,
@@ -291,25 +318,24 @@ class _LowerSection extends StatelessWidget {
             const SizedBox(height: 15),
             Expanded(
               child: ListView(
-                children: const [
-                  EntryListTile(
+                children: [
+                  //sample
+                  const EntryListTile(
                     title: "Monday 10.04",
-                    subtitle: "Office",
-                    color: Color(0xFFd26a07),
-                    duration: 2,
-                  ),
-                  EntryListTile(
-                    title: "Tuesday 11.04",
                     subtitle: "Remote",
                     color: Color(0xFFd399f1),
                     duration: 2.4,
                   ),
-                  EntryListTile(
-                    title: "Wednesday 12.04",
-                    subtitle: "Office",
-                    color:  Color(0xFFd26a07),
-                    duration: 7,
-                  ),
+
+                  for (final trackingEntry
+                      in ref.watch(trackingProvider).getConsolidatedTrackingEntries)
+                    EntryListTile(
+                      title: _dayToDisplayString(trackingEntry.day),
+                      subtitle: "Office",
+                      color: const Color(0xFFd26a07),
+                      duration: trackingEntry.duration.inHours +
+                          (trackingEntry.duration.inMinutes / 60),
+                    ),
                 ],
               ),
             ),
@@ -318,6 +344,35 @@ class _LowerSection extends StatelessWidget {
       ),
     );
   }
+}
+
+String _dayToDisplayString(Day day) {
+  String returnString = "";
+  switch (day.weekDay) {
+    case 1:
+      returnString = "Monday";
+      break;
+    case 2:
+      returnString = "Tuesday";
+      break;
+    case 3:
+      returnString = "Wednesday";
+      break;
+    case 4:
+      returnString = "Thursday";
+      break;
+    case 5:
+      returnString = "Friday";
+      break;
+    case 6:
+      returnString = "Saturday";
+      break;
+    case 7:
+      returnString = "Sunday";
+      break;
+  }
+
+  return "$returnString ${day.day.twoDigits()}.${day.month.twoDigits()}";
 }
 
 void _vibrate() async {
