@@ -332,7 +332,7 @@ class _LowerSection extends ConsumerWidget {
                   for (final trackingEntry
                       in ref.watch(trackingProvider).getConsolidatedTrackingEntries)
                     EntryListTile(
-                      title: _dayToDisplayString(trackingEntry.day),
+                      title: dayToDisplayString(trackingEntry.day),
                       subtitle: "Office",
                       color: const Color(0xFFd26a07),
                       duration: trackingEntry.duration.inHours +
@@ -348,7 +348,7 @@ class _LowerSection extends ConsumerWidget {
   }
 }
 
-String _dayToDisplayString(Day day) {
+String dayToDisplayString(Day day) {
   String returnString = "";
   switch (day.weekDay) {
     case 1:
