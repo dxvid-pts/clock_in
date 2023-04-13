@@ -65,14 +65,26 @@ class SimpleBarChart extends StatelessWidget {
             ),
           ),
           barGroups: [
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 7; i++)
               BarChartGroupData(
                 x: 0,
                 barRods: [
                   BarChartRodData(
                     toY: math.Random().nextDouble() * 10,
-                    color: Colors.blue[200],
-                    width: 10,
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).primaryColor.withOpacity(0.8),
+                        Theme.of(context).primaryColor,
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      stops: const [0.2, 1],
+                    ),
+                    width: 30,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(7),
+                      topRight: Radius.circular(7),
+                    ),
                   ),
                 ],
               ),
