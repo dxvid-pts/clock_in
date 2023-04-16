@@ -152,17 +152,17 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult GetAccountInformation(int user_id)
     {
-        Account account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"];
 
         if (account.Role == Roles.Employee && user_id != account.Id)
         {
-            return Forbid("Employees cannot access information of other accounts.");
+            return Forbid(" ");
         }
-        
+
         if (account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
                 relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
         {
-            return Forbid("Managers can only access information of subscript employees");
+            return Forbid();
         }
 
         Account? result = _clockInContext.Accounts.Find(user_id);
@@ -171,7 +171,7 @@ public class AccountController : ControllerBase
         {
             return NotFound("Account does not exist");
         }
-        
+
         return Ok(new AccountInformation(result));
     }
 }

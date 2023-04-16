@@ -5,9 +5,6 @@ using backend.Models;
 
 namespace backend.Database;
 
-// build command
-// dotnet ef dbcontext scaffold Name=ConnectionStrings:Database Pomelo.EntityFrameworkCore.MySql --context-dir "Database" --output-dir "Models"
-
 public partial class ClockInContext : DbContext
 {
     public ClockInContext()
@@ -22,6 +19,8 @@ public partial class ClockInContext : DbContext
     public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<ManagerEmployee> ManagerEmployees { get; set; }
+
+    public virtual DbSet<SickLeave> SickLeaves { get; set; }
 
     public virtual DbSet<Token> Tokens { get; set; }
 
@@ -56,7 +55,7 @@ public partial class ClockInContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("password");
             entity.Property(e => e.Role)
-                .HasColumnType("enum('ADMIN','MANAGER','EMPLOYEE')")
+                .HasColumnType("enum('Admin','Manager','Employee')")
                 .HasColumnName("role");
         });
 
@@ -89,6 +88,29 @@ public partial class ClockInContext : DbContext
                 .HasForeignKey(d => d.ManagerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("manager_employee_ibfk_1");
+        });
+
+        modelBuilder.Entity<SickLeave>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("sick_leave");
+
+            entity.HasIndex(e => e.AccountId, "account_id");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.AccountId)
+                .HasColumnType("int(11)")
+                .HasColumnName("account_id");
+            entity.Property(e => e.Begin).HasColumnName("begin");
+            entity.Property(e => e.End).HasColumnName("end");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.SickLeaves)
+                .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("sick_leave_ibfk_1");
         });
 
         modelBuilder.Entity<Token>(entity =>

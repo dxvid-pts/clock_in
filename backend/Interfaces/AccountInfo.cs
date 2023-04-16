@@ -4,12 +4,12 @@ namespace backend.Interfaces;
 
 public class AccountInformation
 {
-    
-    private int Id { get; }
-    private String Email { get; }
-    private String Role { get; }
-    private DateTime? LastLogin { get; }
-    private bool? Blocked { get; }
+
+    public int Id { get;  } 
+    public String Email { get;  } 
+    public String Role { get;  } 
+    public DateTime? LastLogin { get;  } 
+    public bool? Blocked { get;  } 
     
     
     public AccountInformation(Account account)

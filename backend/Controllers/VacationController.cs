@@ -64,7 +64,7 @@ public class VacationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Patch(int id, [FromBody] VacationInput input)
     {
-        Vacation vacation = new Vacation()
+        var vacation = new Vacation()
         {
             id = id,
             account_id = ((Account?)HttpContext.Items["User"])!.Id,
@@ -120,5 +120,39 @@ public class VacationController : ControllerBase
             status = input.status
         };
         return Ok(vacation);
+    }
+    
+    /// <summary>
+    /// Get all vacations of a user in the given year
+    /// </summary>
+    /// <param name="user_id">User ID of whom the vacations are</param>
+    /// <param name="year">Year of vacations</param>
+    /// <returns>A List of all vacations in the given yxear</returns>
+    /// <response code="200">Review successful</response>
+    /// <response code="400">Review rejected</response>
+    [Authorize(Roles = Roles.Manager)]
+    [HttpGet("{user_id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult Get(int user_id, int year)
+    {
+        var account = (Account) HttpContext.Items["User"];
+
+        if (account.Role == Roles.Employee && user_id != account.Id)
+        {
+            return Forbid(" ");
+        }
+
+        if (account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
+        {
+            return Forbid();
+        }
+        
+        //var vacations = this.clockInContext
+        
+        return Ok();
     }
 }

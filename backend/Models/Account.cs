@@ -21,6 +21,8 @@ public partial class Account
 
     public virtual ICollection<ManagerEmployee> ManagerEmployeeManagers { get; } = new List<ManagerEmployee>();
 
+    public virtual ICollection<SickLeave> SickLeaves { get; } = new List<SickLeave>();
+
     public virtual ICollection<Token> Tokens { get; } = new List<Token>();
 
     public virtual ICollection<Work> Works { get; } = new List<Work>();
