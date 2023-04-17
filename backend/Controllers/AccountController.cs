@@ -156,7 +156,7 @@ public class AccountController : ControllerBase
 
         if (account.Role == Roles.Employee && user_id != account.Id)
         {
-            return Forbid(" ");
+            return Forbid();
         }
 
         if (account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>

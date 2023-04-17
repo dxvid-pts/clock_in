@@ -11,6 +11,16 @@ public class AccountInformation
     public DateTime? LastLogin { get;  } 
     public bool? Blocked { get;  } 
     
+    public TimeOnly WorkTime { get;  }
+
+    public TimeOnly BeginTime { get;  }
+
+    public TimeOnly EndTime { get;  }
+
+    public TimeOnly BreakTime { get;  }
+
+    public int VacationDays { get;  }
+
     
     public AccountInformation(Account account)
     {
@@ -19,5 +29,10 @@ public class AccountInformation
         this.Role = account.Role;
         this.LastLogin = account.LastLogin;
         this.Blocked = account.Blocked;
+        this.WorkTime = account.WorkTime;
+        this.BeginTime = account.BeginTime;
+        this.EndTime = account.EndTime;
+        this.BreakTime = account.BreakTime;
+        this.VacationDays = account.VacationDays;
     }
 }

@@ -132,7 +132,7 @@ public class VacationController : ControllerBase
     /// <returns>A List of all vacations in the given year</returns>
     [Authorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
     [HttpGet("{user_id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationInformation))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult Get(int user_id, int year)
