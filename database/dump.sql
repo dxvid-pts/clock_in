@@ -5,7 +5,12 @@ CREATE TABLE account
     password   VARCHAR(255)                        NOT NULL,
     role       ENUM ('Admin','Manager','Employee') NOT NULL,
     last_login DATETIME,
-    blocked    BOOL
+    blocked    BOOL,
+    work_time     TIME NOT NULL,
+    begin_time    TIME NOT NULL,
+    end_time      TIME NOT NULL,
+    break_time    TIME NOT NULL,
+    vacation_days INT  NOT NULL,
 );
 
 CREATE TABLE token
@@ -54,19 +59,7 @@ CREATE TABLE vacation
     status     ENUM ('Pending','Approved','Declined','Canceled'),
     changed    DATE NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account (id)
-) WITH SYSTEM VERSIONING;
-
-CREATE TABLE profile
-(
-    account_id    INT  NOT NULL,
-    work_time     TIME NOT NULL,
-    begin_time    TIME NOT NULL,
-    end_time      TIME NOT NULL,
-    break_time    TIME NOT NULL,
-    vacation_days INT  NOT NULL,
-    PRIMARY KEY (account_id),
-    FOREIGN KEY (account_id) REFERENCES account (id)
-) WITH SYSTEM VERSIONING;
+);
 
 # Integrity Checks
 

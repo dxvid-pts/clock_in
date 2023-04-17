@@ -5,7 +5,7 @@ namespace backend.Models;
 /// <summary>
 /// Vacation model as in the database
 /// </summary>
-public class Vacation
+public class VacationModel
 {
     /// <summary>
     /// id

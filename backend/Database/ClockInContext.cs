@@ -24,6 +24,8 @@ public partial class ClockInContext : DbContext
 
     public virtual DbSet<Token> Tokens { get; set; }
 
+    public virtual DbSet<Vacation> Vacations { get; set; }
+
     public virtual DbSet<Work> Works { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -44,10 +46,19 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
+            entity.Property(e => e.BeginTime)
+                .HasColumnType("time")
+                .HasColumnName("begin_time");
             entity.Property(e => e.Blocked).HasColumnName("blocked");
+            entity.Property(e => e.BreakTime)
+                .HasColumnType("time")
+                .HasColumnName("break_time");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
+            entity.Property(e => e.EndTime)
+                .HasColumnType("time")
+                .HasColumnName("end_time");
             entity.Property(e => e.LastLogin)
                 .HasColumnType("datetime")
                 .HasColumnName("last_login");
@@ -57,6 +68,12 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.Role)
                 .HasColumnType("enum('Admin','Manager','Employee')")
                 .HasColumnName("role");
+            entity.Property(e => e.VacationDays)
+                .HasColumnType("int(11)")
+                .HasColumnName("vacation_days");
+            entity.Property(e => e.WorkTime)
+                .HasColumnType("time")
+                .HasColumnName("work_time");
         });
 
         modelBuilder.Entity<ManagerEmployee>(entity =>
@@ -138,6 +155,33 @@ public partial class ClockInContext : DbContext
                 .HasForeignKey(d => d.AccountId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("token_ibfk_1");
+        });
+
+        modelBuilder.Entity<Vacation>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("vacation");
+
+            entity.HasIndex(e => e.AccountId, "account_id");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.AccountId)
+                .HasColumnType("int(11)")
+                .HasColumnName("account_id");
+            entity.Property(e => e.Begin).HasColumnName("begin");
+            entity.Property(e => e.Changed).HasColumnName("changed");
+            entity.Property(e => e.End).HasColumnName("end");
+            entity.Property(e => e.Status)
+                .HasColumnType("enum('Pending','Approved','Declined','Canceled')")
+                .HasColumnName("status");
+
+            entity.HasOne(d => d.Account).WithMany(p => p.Vacations)
+                .HasForeignKey(d => d.AccountId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("vacation_ibfk_1");
         });
 
         modelBuilder.Entity<Work>(entity =>

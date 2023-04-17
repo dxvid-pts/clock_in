@@ -17,6 +17,16 @@ public partial class Account
 
     public bool? Blocked { get; set; }
 
+    public TimeOnly WorkTime { get; set; }
+
+    public TimeOnly BeginTime { get; set; }
+
+    public TimeOnly EndTime { get; set; }
+
+    public TimeOnly BreakTime { get; set; }
+
+    public int VacationDays { get; set; }
+
     public virtual ICollection<ManagerEmployee> ManagerEmployeeEmployees { get; } = new List<ManagerEmployee>();
 
     public virtual ICollection<ManagerEmployee> ManagerEmployeeManagers { get; } = new List<ManagerEmployee>();
@@ -24,6 +34,8 @@ public partial class Account
     public virtual ICollection<SickLeave> SickLeaves { get; } = new List<SickLeave>();
 
     public virtual ICollection<Token> Tokens { get; } = new List<Token>();
+
+    public virtual ICollection<Vacation> Vacations { get; } = new List<Vacation>();
 
     public virtual ICollection<Work> Works { get; } = new List<Work>();
 }

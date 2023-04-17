@@ -1,6 +1,8 @@
+using System.Collections.Immutable;
 using backend.Database;
 using backend.Models;
 using backend.Attributes;
+using backend.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -38,7 +40,7 @@ public class VacationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] VacationInput input)
     {
-        Vacation vacation = new Vacation()
+        VacationModel vacation = new VacationModel()
         {
             id = 1234,
             account_id = ((Account?)HttpContext.Items["User"])!.Id,
@@ -64,7 +66,7 @@ public class VacationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Patch(int id, [FromBody] VacationInput input)
     {
-        var vacation = new Vacation()
+        var vacation = new VacationModel()
         {
             id = id,
             account_id = ((Account?)HttpContext.Items["User"])!.Id,
@@ -90,7 +92,7 @@ public class VacationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Delete(int id)
     {
-        Vacation vacation = new Vacation
+        VacationModel vacation = new VacationModel
         {
             id = id,
             account_id = ((Account?)HttpContext.Items["User"])!.Id,
@@ -113,7 +115,7 @@ public class VacationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Review(int id, [FromBody] VacationReviewInput input)
     {
-        Vacation vacation = new Vacation
+        VacationModel vacation = new VacationModel
         {
             id = id,
             account_id = 1234,
@@ -127,13 +129,10 @@ public class VacationController : ControllerBase
     /// </summary>
     /// <param name="user_id">User ID of whom the vacations are</param>
     /// <param name="year">Year of vacations</param>
-    /// <returns>A List of all vacations in the given yxear</returns>
-    /// <response code="200">Review successful</response>
-    /// <response code="400">Review rejected</response>
-    [Authorize(Roles = Roles.Manager)]
+    /// <returns>A List of all vacations in the given year</returns>
+    [Authorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
     [HttpGet("{user_id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationInformation))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult Get(int user_id, int year)
@@ -146,13 +145,13 @@ public class VacationController : ControllerBase
         }
 
         if (account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
-                relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
+                relation.Employee.Id == user_id && relation.ManagerId == account.Id) == null)
         {
             return Forbid();
         }
+
+        var vacations = this.clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new VacationInformation(v));
         
-        //var vacations = this.clockInContext
-        
-        return Ok();
+        return Ok(vacations);
     }
 }
