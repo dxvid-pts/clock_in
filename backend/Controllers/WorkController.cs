@@ -95,7 +95,7 @@ public class WorkController : ControllerBase
     /// <returns></returns>
     /// <response code="200"></response>
     [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
-    [HttpPost("{user_id}",Name = "Show Work")]
+    [HttpGet("{user_id}",Name = "Show Work")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WorkInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -108,7 +108,7 @@ public class WorkController : ControllerBase
             return Forbid();
         }
 
-        if (account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+        if (user_id != account.Id && account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
                 relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
         {
             return Forbid();
