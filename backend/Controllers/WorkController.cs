@@ -3,6 +3,7 @@ using backend.Interfaces;
 using backend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -33,10 +34,11 @@ public class WorkController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Work session started</response>
     /// <response code="409">Not possible to start a new work session</response>
-    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [Authorize(Roles = Roles.Manager + Roles.Employee)]
     [HttpPost("start",Name = "Start Work")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public IActionResult StartWork()
     {
@@ -49,14 +51,20 @@ public class WorkController : ControllerBase
             return Conflict();
         }
 
-        running_work = new Work();
-        
-        running_work.Begin = DateTime.Now;
-        running_work.AccountId = account.Id;
+        try
+        {
+            running_work = new Work();
 
-        this.clockInContext.Works.Add(running_work);
+            running_work.Begin = DateTime.Now;
+            running_work.AccountId = account.Id;
 
-        return Ok();
+            this.clockInContext.Works.Add(running_work);
+
+            return Ok();
+        } catch
+        {
+            return Conflict();
+        }
     }
     
     /// <summary>
@@ -99,7 +107,7 @@ public class WorkController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WorkInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult StopWork(int user_id, int month, int year)
+    public IActionResult ShowWork(int user_id, int month, int year)
     {
         var account = (Account) HttpContext.Items["User"];
 
@@ -118,5 +126,64 @@ public class WorkController : ControllerBase
             .Select(w => new WorkInformation(w));
         
         return Ok(work_list);
+    }
+    
+    /// <summary>
+    /// Change a work session by a given id
+    /// </summary>
+    /// <returns></returns>
+    /// <response code="200">Work session successfully updated</response>
+    /// <response code="409">Illegal parameters</response>
+    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [HttpPatch("session",Name = "Patch Work")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public IActionResult PatchWork(int work_id, DateTime begin, DateTime end)
+    {
+        var account = (Account) HttpContext.Items["User"];
+
+        var work = clockInContext.Works.FirstOrDefault<Work>(w => w.AccountId == account.Id && w.Id == work_id);
+
+        if (work == null || begin >= end)
+        {
+            return Conflict();
+        }
+
+        work.Begin = begin;
+        work.End = end;
+
+        clockInContext.Works.Update(work);
+        
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Delete a work session by a given id
+    /// </summary>
+    /// <returns></returns>
+    /// <response code="200">Work session successfully deleted</response>
+    /// <response code="409">Work session does not exist</response>
+    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [HttpDelete("session",Name = "Delete Work")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public IActionResult PatchWork(int work_id)
+    {
+        var account = (Account) HttpContext.Items["User"];
+
+        var work = clockInContext.Works.FirstOrDefault<Work>(w => w.AccountId == account.Id && w.Id == work_id);
+
+        if (work == null)
+        {
+            return Conflict();
+        }
+
+        clockInContext.Works.Remove(work);
+        
+        return Ok();
     }
 }

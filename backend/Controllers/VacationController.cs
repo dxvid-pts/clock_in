@@ -144,7 +144,7 @@ public class VacationController : ControllerBase
             return Forbid(" ");
         }
 
-        if (account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+        if (user_id != account.Id && account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
                 relation.Employee.Id == user_id && relation.ManagerId == account.Id) == null)
         {
             return Forbid();
