@@ -159,7 +159,7 @@ public class AccountController : ControllerBase
             return Forbid();
         }
 
-        if (account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+        if (user_id != account.Id && account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
                 relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
         {
             return Forbid();
