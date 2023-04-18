@@ -10,7 +10,7 @@ CREATE TABLE account
     begin_time    TIME NOT NULL,
     end_time      TIME NOT NULL,
     break_time    TIME NOT NULL,
-    vacation_days INT  NOT NULL,
+    vacation_days INT  NOT NULL
 );
 
 CREATE TABLE token
