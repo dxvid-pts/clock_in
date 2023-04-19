@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/date_range_category.dart';
 
 void showPlanningDialog(BuildContext context) {
   showDialog(
@@ -17,6 +18,7 @@ class PlanningDialog extends StatefulWidget {
 class _PlanningDialogState extends State<PlanningDialog> {
   DateTime? _startDate;
   DateTime? _endDate;
+  DateRangeCategory? _category;
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +80,28 @@ class _PlanningDialogState extends State<PlanningDialog> {
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: "End",
+            ),
+          ),
+
+          //dropdown in the style of a textfield
+          const SizedBox(height: 10),
+
+          DropdownButtonFormField<DateRangeCategory>(
+            value: _category,
+            items: [
+              for (final item in DateRangeCategory.values)
+                DropdownMenuItem(
+                  value: item,
+                  child: Text(item.name),
+                ),
+            ],
+            onChanged: (newValue) {
+              setState(() {
+                _category = newValue;
+              });
+            },
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
             ),
           ),
         ],
