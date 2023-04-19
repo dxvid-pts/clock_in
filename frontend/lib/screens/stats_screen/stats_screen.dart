@@ -2,6 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/current_week_stats_service.dart';
+
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
 
@@ -47,11 +51,13 @@ class StatsScreen extends StatelessWidget {
   }
 }
 
-class SimpleBarChart extends StatelessWidget {
+class SimpleBarChart extends ConsumerWidget {
   const SimpleBarChart({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentWeekStats = ref.watch(currentWeekStatsProvider);
+
     return AspectRatio(
       aspectRatio: 1.5,
       child: BarChart(
@@ -65,12 +71,12 @@ class SimpleBarChart extends StatelessWidget {
             ),
           ),
           barGroups: [
-            for (int i = 0; i < 7; i++)
+            for(final statsEntry in currentWeekStats.entries)
               BarChartGroupData(
                 x: 0,
                 barRods: [
                   BarChartRodData(
-                    toY: math.Random().nextDouble() * 10,
+                    toY: statsEntry.value.duration.inHours.toDouble(),
                     gradient: LinearGradient(
                       colors: [
                         Theme.of(context).primaryColor.withOpacity(0.8),
