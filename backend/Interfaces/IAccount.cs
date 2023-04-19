@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using backend.Models;
 
 namespace backend.Interfaces;
@@ -35,4 +37,36 @@ public class IAccount
         this.BreakTime = account.BreakTime;
         this.VacationDays = account.VacationDays;
     }
+}
+
+/// <summary>
+/// Model for creating a new account
+/// </summary>
+public class ICreateAccount
+{
+    /// <summary>
+    /// user account email address
+    /// </summary>
+    [Required]
+    [EmailAddress(ErrorMessage = "Specified E-Mail address is invalid")]
+    public string Email { get; set; } = string.Empty;
+    
+    [Required]
+    public string Role { get; set; }
+    
+    [Required]
+    public TimeOnly WorkTime { get; set; }
+    
+    [Required]
+    public TimeOnly BeginTime { get; set; }
+    
+    [Required]
+    public TimeOnly EndTime { get; set; }
+    
+    [Required]
+    public TimeOnly BreakTime { get; set; }
+    
+    [Required]
+    [Description("Amount of vacations days per year")]
+    public int VacationDays { get; set; }
 }

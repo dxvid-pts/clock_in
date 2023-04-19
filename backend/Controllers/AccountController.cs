@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
 using backend.Models;
 using backend.Attributes;
@@ -5,7 +6,6 @@ using backend.Database;
 using backend.Interfaces;
 using backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers;
 
@@ -65,7 +65,7 @@ public class AccountController : ControllerBase
     /// Change a users password
     /// </summary>
     /// <returns></returns>
-    [Authorize]
+    [SuperiorAuthorize]
     [HttpPut("password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -91,7 +91,7 @@ public class AccountController : ControllerBase
     /// Not implemented yet!
     /// </remarks>
     /// <returns>A newly generated JWT Token</returns>
-    [Authorize]
+    [SuperiorAuthorize]
     [HttpPost("refresh_token")]
     [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -104,7 +104,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for employee
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Employee)]
+    [SuperiorAuthorize(Roles = Roles.Employee)]
     [HttpGet("testemp")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -115,24 +115,59 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// test permissions with jwt for manager
+    /// Create a new Account
     /// </summary>
-    /// <returns></returns>
-    [Authorize(Roles = Roles.Manager)]
-    [HttpGet("testman")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    /// <returns>Password for the new Account</returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpPost("create")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(String))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestManagerPerms()
+    public IActionResult CreateAccount(ICreateAccount account)
     {
-        return Ok(HttpContext.Items["User"] );
+        try
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var password_array = new char[12];
+            var random = new Random();
+
+            for (int i = 0; i < password_array.Length; i++)
+            {
+                password_array[i] = chars[random.Next(chars.Length)];
+            }
+
+            var password = new String(password_array);
+            
+            var new_account = new Account
+            {
+                Email = account.Email,
+                Role = account.Role,
+                Password = password,
+                Blocked = false,
+                WorkTime = account.WorkTime,
+                BeginTime = account.BeginTime,
+                EndTime = account.EndTime,
+                BreakTime = account.BreakTime,
+                VacationDays = account.VacationDays
+            };
+
+            _clockInContext.Accounts.Add(new_account);
+            _clockInContext.SaveChanges();
+            
+            return Ok(password);
+        }
+        catch (Exception e)
+        {
+            return BadRequest();
+        }
     }
 
     /// <summary>
     /// test permissions with jwt for employee + manager
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Employee + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
     [HttpGet("testcomb")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -146,7 +181,7 @@ public class AccountController : ControllerBase
     /// Get account specific information
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
     [HttpGet("{user_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

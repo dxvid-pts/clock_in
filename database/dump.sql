@@ -5,13 +5,13 @@ CREATE TABLE account
     password   VARCHAR(255)                        NOT NULL,
     role       ENUM ('Admin','Manager','Employee') NOT NULL,
     last_login DATETIME,
-    blocked    BOOL,
+    blocked    BOOL DEFAULT false,
     work_time     TIME NOT NULL,
     begin_time    TIME NOT NULL,
     end_time      TIME NOT NULL,
     break_time    TIME NOT NULL,
     vacation_days INT  NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE token
     account_id INT          NOT NULL,
     expiration DATETIME     NOT NULL,
     content    VARCHAR(511) NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
@@ -32,7 +32,7 @@ CREATE TABLE manager_employee
     manager_id  INT NOT NULL,
     employee_id INT NOT NULL,
     FOREIGN KEY (manager_id) REFERENCES account (id),
-    created TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (employee_id) REFERENCES account (id)
 );
@@ -43,7 +43,7 @@ CREATE TABLE work
     account_id INT      NOT NULL,
     begin      DATETIME NOT NULL,
     end        DATETIME,
-    created TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
@@ -54,7 +54,7 @@ CREATE TABLE sick_leave
     account_id INT  NOT NULL,
     begin      DATE NOT NULL,
     end        DATE NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
@@ -66,7 +66,7 @@ CREATE TABLE vacation
     begin      DATE NOT NULL,
     end        DATE NOT NULL,
     status     ENUM ('Pending','Approved','Declined','Canceled'),
-    created TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES account (id)
 );
