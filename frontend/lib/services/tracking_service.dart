@@ -35,40 +35,6 @@ class TrackingNotifier extends ChangeNotifier {
     ),
   };
 
-  Set<TrackingEntry> get getConsolidatedTrackingEntries {
-    final consolidatedEntries = <TrackingEntry>{};
-
-    for (final entry in trackingEntries) {
-      //check if there is already an entry for the same day
-      final existingEntry = consolidatedEntries.firstWhereOrNull(
-        (e) => e.day == entry.day,
-      );
-
-      //no entry for the same day found
-      if (existingEntry == null) {
-        consolidatedEntries.add(entry);
-      } else {
-        //entry for the same day found
-        //create new entry with one of both start times; add both durations; end time = start time + duration
-        final combinedDuration = entry.duration + existingEntry.duration;
-        //remove old entry
-        consolidatedEntries.remove(existingEntry);
-
-        //add new combined entry
-        consolidatedEntries.add(
-          TrackingEntry(
-            id: Commons.generateId(),
-            start: entry.start,
-            end: entry.start + combinedDuration.inMilliseconds,
-            category: entry.category,
-          ),
-        );
-      }
-    }
-
-    return consolidatedEntries;
-  }
-
   late final StorageBox<TrackingEntry> _trackingBox;
 
   TrackingNotifier() {

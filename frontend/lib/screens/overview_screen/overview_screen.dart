@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
-import 'package:frontend/services/tracking_service.dart';
+import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -49,8 +49,7 @@ class _OverEntryListSection extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: ListView(
         children: [
-          for (final trackingEntry
-              in ref.watch(trackingProvider).getConsolidatedTrackingEntries)
+          for (final trackingEntry in ref.watch(consolidatedTrackingProvider))
             EntryListTile(
               title: dayToDisplayString(trackingEntry.day),
               subtitle:

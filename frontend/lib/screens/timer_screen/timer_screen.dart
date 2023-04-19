@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/timer_service.dart';
 import 'package:frontend/services/tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
@@ -323,7 +324,7 @@ class _LowerSection extends ConsumerWidget {
               child: ListView(
                 children: [
                   for (final trackingEntry
-                      in ref.watch(trackingProvider).getConsolidatedTrackingEntries)
+                      in ref.watch(consolidatedTrackingProvider))
                     EntryListTile(
                       title: dayToDisplayString(trackingEntry.day),
                       subtitle: (trackingEntry.category?? DateRangeCategory.office).name,
