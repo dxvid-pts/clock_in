@@ -344,7 +344,7 @@ class _LowerSection extends ConsumerWidget {
 
 String dayToDisplayString(Day day) {
   String returnString = "";
-  switch (day.weekDay) {
+  switch (day.weekday) {
     case 1:
       returnString = "Monday";
       break;
