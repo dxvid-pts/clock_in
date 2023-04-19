@@ -20,19 +20,22 @@ class TrackingEntryAdapter extends TypeAdapter<_$_TrackingEntry> {
       id: fields[0] as String,
       start: fields[1] as int,
       end: fields[2] as int,
+      category: fields[3] as DateRangeCategory,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$_TrackingEntry obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.start)
       ..writeByte(2)
-      ..write(obj.end);
+      ..write(obj.end)
+      ..writeByte(3)
+      ..write(obj.category);
   }
 
   @override
@@ -55,6 +58,7 @@ _$_TrackingEntry _$$_TrackingEntryFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       start: json['start'] as int,
       end: json['end'] as int,
+      category: $enumDecode(_$DateRangeCategoryEnumMap, json['category']),
     );
 
 Map<String, dynamic> _$$_TrackingEntryToJson(_$_TrackingEntry instance) =>
@@ -62,4 +66,11 @@ Map<String, dynamic> _$$_TrackingEntryToJson(_$_TrackingEntry instance) =>
       'id': instance.id,
       'start': instance.start,
       'end': instance.end,
+      'category': _$DateRangeCategoryEnumMap[instance.category]!,
     };
+
+const _$DateRangeCategoryEnumMap = {
+  DateRangeCategory.vacation: 'vacation',
+  DateRangeCategory.sick: 'sick',
+  DateRangeCategory.remote: 'remote',
+};
