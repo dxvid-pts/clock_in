@@ -109,7 +109,7 @@ public class WorkController : ControllerBase
     /// <response code="200"></response>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpGet("{user_id}",Name = "Show Work")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WorkInformation[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IWork[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult ShowWork(int user_id, int month, int year)
@@ -128,7 +128,7 @@ public class WorkController : ControllerBase
         }
 
         var work_list = clockInContext.Works.Where(w => w.AccountId == account.Id && w.Begin.Month == month && w.Begin.Year == year).ToList()
-            .Select(w => new WorkInformation(w));
+            .Select(w => new IWork(w));
         
         return Ok(work_list);
     }
