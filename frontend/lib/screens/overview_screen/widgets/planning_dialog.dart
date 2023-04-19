@@ -82,6 +82,20 @@ class _PlanningDialogState extends State<PlanningDialog> {
           ),
         ],
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text("Save"),
+        ),
+      ],
     );
   }
 }
