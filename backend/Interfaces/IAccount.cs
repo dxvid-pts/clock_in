@@ -2,7 +2,7 @@ using backend.Models;
 
 namespace backend.Interfaces;
 
-public class AccountInformation
+public class IAccount
 {
 
     public int Id { get;  } 
@@ -22,7 +22,7 @@ public class AccountInformation
     public int VacationDays { get;  }
 
     
-    public AccountInformation(Account account)
+    public IAccount(Account account)
     {
         this.Id = account.Id;
         this.Email = account.Email;

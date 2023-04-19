@@ -2,7 +2,7 @@ using backend.Models;
 
 namespace backend.Interfaces;
 
-public class VacationInformation
+public class IVacation
 {
 
     public DateOnly Begin { get;  }
@@ -13,7 +13,7 @@ public class VacationInformation
 
     public DateTime Changed { get;  }
 
-    public VacationInformation(Vacation vacation)
+    public IVacation(Vacation vacation)
     {
         this.Begin = vacation.Begin;
         this.End = vacation.End;

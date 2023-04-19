@@ -2,7 +2,7 @@ using backend.Models;
 
 namespace backend.Interfaces;
 
-public class WorkInformation
+public class IWork
 {
     public int Id { get;  }
 
@@ -12,7 +12,7 @@ public class WorkInformation
 
     public DateTime Changed { get;  }
 
-    public WorkInformation(Work work)
+    public IWork(Work work)
     {
         this.Id = work.Id;
         this.Begin = work.Begin;

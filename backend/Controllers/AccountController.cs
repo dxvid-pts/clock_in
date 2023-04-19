@@ -173,6 +173,6 @@ public class AccountController : ControllerBase
             return NotFound("Account does not exist");
         }
 
-        return Ok(new AccountInformation(result));
+        return Ok(new IAccount(result));
     }
 }
