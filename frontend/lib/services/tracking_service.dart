@@ -2,6 +2,7 @@ import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
@@ -90,6 +91,7 @@ class TrackingNotifier extends ChangeNotifier {
       id: Commons.generateId(),
       start: startTime.millisecondsSinceEpoch,
       end: endTime.millisecondsSinceEpoch,
+      category: DateRangeCategory.office,
     );
 
     trackingEntries.add(trackingEntry);
