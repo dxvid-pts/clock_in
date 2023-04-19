@@ -14,7 +14,7 @@ namespace backend.Controllers;
 public class VacationController : ControllerBase
 {
     private readonly ILogger<VacationController> _logger;
-    private readonly ClockInContext clockInContext;
+    private readonly ClockInContext _clockInContext;
 
     /// <summary>
     /// constructor
@@ -24,7 +24,7 @@ public class VacationController : ControllerBase
     public VacationController(ILogger<VacationController> logger, ClockInContext clockInContext)
     {
         _logger = logger;
-        this.clockInContext = clockInContext;
+        this._clockInContext = clockInContext;
     }
 
     /// <summary>
@@ -81,7 +81,6 @@ public class VacationController : ControllerBase
     /// Cancel a Vacation
     /// </summary>
     /// <param name="id">ID of vacation request to be canceled</param>
-    /// <param name="input">input values</param>
     /// <returns></returns>
     /// <response code="200">Cancellation successful</response>
     /// <response code="400">Cancellation rejected</response>
@@ -126,30 +125,30 @@ public class VacationController : ControllerBase
     /// <summary>
     /// Get all vacations of a user in the given year
     /// </summary>
-    /// <param name="user_id">User ID of whom the vacations are</param>
+    /// <param name="userId">User ID of whom the vacations are</param>
     /// <param name="year">Year of vacations</param>
     /// <returns>A List of all vacations in the given year</returns>
     [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
-    [HttpGet("{user_id}")]
+    [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult Get(int user_id, int year)
+    public IActionResult Get(int userId, int year)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        if (account.Role == Roles.Employee && user_id != account.Id)
+        if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid(" ");
         }
 
-        if (user_id != account.Id && account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
-                relation.Employee.Id == user_id && relation.ManagerId == account.Id) == null)
+        if (userId != account.Id && account.Role == Roles.Manager && this._clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == userId && relation.ManagerId == account.Id) == null)
         {
             return Forbid();
         }
 
-        var vacations = this.clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new VacationInformation(v));
+        var vacations = this._clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new VacationInformation(v));
         
         return Ok(vacations);
     }

@@ -4,7 +4,6 @@ using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
 using backend.Utils;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace backend.Controllers;
 
@@ -30,8 +29,8 @@ public class AccountController : ControllerBase
     public AccountController(IConfiguration configuration, ILogger<AccountController> logger, TokenUtils tokenUtils,
         ClockInContext clockInContext)
     {
-        _configuration = configuration;
         _logger = logger;
+        _configuration = configuration;
         _tokenUtils = tokenUtils;
         _clockInContext = clockInContext;
         _logger.Log(LogLevel.Debug, configuration.GetConnectionString("Database"));
@@ -146,26 +145,26 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
-    [HttpGet("{user_id}")]
+    [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult GetAccountInformation(int user_id)
+    public IActionResult GetAccountInformation(int userId)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        if (account.Role == Roles.Employee && user_id != account.Id)
+        if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid();
         }
 
-        if (user_id != account.Id && account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
-                relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
+        if (userId != account.Id && account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == userId && relation.Manager.Id == account.Id) == null)
         {
             return Forbid();
         }
 
-        Account? result = _clockInContext.Accounts.Find(user_id);
+        Account? result = _clockInContext.Accounts.Find(userId);
 
         if (result == null)
         {
