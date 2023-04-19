@@ -1,9 +1,8 @@
+using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
 using backend.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -34,7 +33,7 @@ public class WorkController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Work session started</response>
     /// <response code="409">Not possible to start a new work session</response>
-    [Authorize(Roles = Roles.Manager + Roles.Employee)]
+    [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee)]
     [HttpPost("start",Name = "Start Work")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -74,7 +73,7 @@ public class WorkController : ControllerBase
     /// <response code="200">Work session stopped</response>
     /// <response code="400">Work session does not exist</response>
     /// <response code="409">Not possible to stop this work session</response>
-    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpPost("stop",Name = "Stop Work")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -102,7 +101,7 @@ public class WorkController : ControllerBase
     /// </summary>
     /// <returns></returns>
     /// <response code="200"></response>
-    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpGet("{user_id}",Name = "Show Work")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WorkInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -134,7 +133,7 @@ public class WorkController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Work session successfully updated</response>
     /// <response code="409">Illegal parameters</response>
-    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpPatch("session",Name = "Patch Work")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -165,7 +164,7 @@ public class WorkController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Work session successfully deleted</response>
     /// <response code="409">Work session does not exist</response>
-    [Authorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpDelete("session",Name = "Delete Work")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

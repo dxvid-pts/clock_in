@@ -6,7 +6,7 @@ namespace backend.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 
-public class AuthorizeAttribute : Attribute, IAuthorizationFilter
+public class SuperiorAuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     /// <summary>
     /// the required role to authorize the account with<br/>

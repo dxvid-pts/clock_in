@@ -64,7 +64,7 @@ public class AccountController : ControllerBase
     /// Change a users password
     /// </summary>
     /// <returns></returns>
-    [Authorize]
+    [SuperiorAuthorize]
     [HttpPut("password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -90,7 +90,7 @@ public class AccountController : ControllerBase
     /// Not implemented yet!
     /// </remarks>
     /// <returns>A newly generated JWT Token</returns>
-    [Authorize]
+    [SuperiorAuthorize]
     [HttpPost("refresh_token")]
     [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -103,7 +103,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for employee
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Employee)]
+    [SuperiorAuthorize(Roles = Roles.Employee)]
     [HttpGet("testemp")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -117,7 +117,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for manager
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Manager)]
     [HttpGet("testman")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -131,7 +131,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for employee + manager
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Employee + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
     [HttpGet("testcomb")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -145,7 +145,7 @@ public class AccountController : ControllerBase
     /// Get account specific information
     /// </summary>
     /// <returns></returns>
-    [Authorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
     [HttpGet("{user_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
