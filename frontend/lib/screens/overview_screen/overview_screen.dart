@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
@@ -150,9 +151,15 @@ class _DatePickerState extends State<DatePicker> {
         Positioned(
           top: 6,
           right: 10,
-          child: DropdownButton<DateRangeCategory>(
+          child: TextButton(
+            onPressed: () {
+              showPlanningDialog(context);
+            },
+            child: const Text("Plan now"),
+          ),
+          
+          /*DropdownButton<DateRangeCategory>(
             isDense: true,
-            //  value: _selectedCategory,
             items: [
               for (final item in DateRangeCategory.values)
                 DropdownMenuItem(
@@ -160,13 +167,8 @@ class _DatePickerState extends State<DatePicker> {
                   child: Text(item.name),
                 ),
             ],
-            onChanged: (value) {
-              /* setState(() {
-                _selectedCategory = value;
-                _multiRangeSelectionCount = 0;
-              });*/
-            },
-          ),
+            onChanged: (value) {},
+          )*/
         )
       ],
     );
