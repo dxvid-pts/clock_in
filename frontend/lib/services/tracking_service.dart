@@ -17,8 +17,20 @@ class TrackingNotifier extends ChangeNotifier {
   Set<TrackingEntry> trackingEntries = {
     TrackingEntry(
       id: Commons.generateId(),
-      start: DateTime.parse("2021-09-01 08:00:00").millisecondsSinceEpoch,
-      end: DateTime.parse("2021-09-01 12:00:00").millisecondsSinceEpoch,
+      start: DateTime.parse("2023-04-17 00:00:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2023-04-17 08:00:00").millisecondsSinceEpoch,
+      category: DateRangeCategory.remote,
+    ),
+    TrackingEntry(
+      id: Commons.generateId(),
+      start: DateTime.parse("2023-04-18 00:30:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2023-04-18 08:00:00").millisecondsSinceEpoch,
+      category: DateRangeCategory.remote,
+    ),
+    TrackingEntry(
+      id: Commons.generateId(),
+      start: DateTime.parse("2023-04-19 02:00:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2023-04-19 12:00:00").millisecondsSinceEpoch,
       category: DateRangeCategory.remote,
     ),
   };
