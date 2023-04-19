@@ -59,12 +59,9 @@ class VacationNotifier extends ChangeNotifier {
 
     _vacationBox = StorageEngine.getBox<VacationEntry>(kVacationCollectionKey);
 
-    print("init");
-
     Future<void> load() async {
       final entries = await _vacationBox.getAll();
 
-      print("loaded");
       vacationData = entries.values.toSet();
 
       final availableVacationDays = kMaxVacationDays - vacationData.length;
@@ -95,20 +92,16 @@ class VacationNotifier extends ChangeNotifier {
 
     //check if available entry exists and remove it, otherwise return and do nothing
     bool contains = false;
-    print(vacationData);
     for (VacationEntry entry in vacationData) {
       if (entry.category == VacationCategory.available) {
-        print("contains");
         contains = true;
         break;
       }
     }
 
     if (!contains) {
-      print("return");
       return;
     } else {
-      print("vacationEntry");
       //get one available entry and remove it
       final availableEntry = vacationData.firstWhere(
         (element) => element.category == VacationCategory.available,
