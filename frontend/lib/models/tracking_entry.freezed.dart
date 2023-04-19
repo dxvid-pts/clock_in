@@ -33,7 +33,7 @@ mixin _$TrackingEntry {
   int get end => throw _privateConstructorUsedError;
   @JsonKey(name: "category")
   @HiveField(3)
-  DateRangeCategory get category => throw _privateConstructorUsedError;
+  DateRangeCategory? get category => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +51,7 @@ abstract class $TrackingEntryCopyWith<$Res> {
       {@JsonKey(name: "id") @HiveField(0) String id,
       @JsonKey(name: "start") @HiveField(1) int start,
       @JsonKey(name: "end") @HiveField(2) int end,
-      @JsonKey(name: "category") @HiveField(3) DateRangeCategory category});
+      @JsonKey(name: "category") @HiveField(3) DateRangeCategory? category});
 }
 
 /// @nodoc
@@ -70,7 +70,7 @@ class _$TrackingEntryCopyWithImpl<$Res, $Val extends TrackingEntry>
     Object? id = null,
     Object? start = null,
     Object? end = null,
-    Object? category = null,
+    Object? category = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -85,10 +85,10 @@ class _$TrackingEntryCopyWithImpl<$Res, $Val extends TrackingEntry>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as int,
-      category: null == category
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as DateRangeCategory,
+              as DateRangeCategory?,
     ) as $Val);
   }
 }
@@ -105,7 +105,7 @@ abstract class _$$_TrackingEntryCopyWith<$Res>
       {@JsonKey(name: "id") @HiveField(0) String id,
       @JsonKey(name: "start") @HiveField(1) int start,
       @JsonKey(name: "end") @HiveField(2) int end,
-      @JsonKey(name: "category") @HiveField(3) DateRangeCategory category});
+      @JsonKey(name: "category") @HiveField(3) DateRangeCategory? category});
 }
 
 /// @nodoc
@@ -122,7 +122,7 @@ class __$$_TrackingEntryCopyWithImpl<$Res>
     Object? id = null,
     Object? start = null,
     Object? end = null,
-    Object? category = null,
+    Object? category = freezed,
   }) {
     return _then(_$_TrackingEntry(
       id: null == id
@@ -137,10 +137,10 @@ class __$$_TrackingEntryCopyWithImpl<$Res>
           ? _value.end
           : end // ignore: cast_nullable_to_non_nullable
               as int,
-      category: null == category
+      category: freezed == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
-              as DateRangeCategory,
+              as DateRangeCategory?,
     ));
   }
 }
@@ -150,10 +150,18 @@ class __$$_TrackingEntryCopyWithImpl<$Res>
 @HiveType(typeId: 3, adapterName: 'TrackingEntryAdapter')
 class _$_TrackingEntry implements _TrackingEntry {
   const _$_TrackingEntry(
-      {@JsonKey(name: "id") @HiveField(0) required this.id,
-      @JsonKey(name: "start") @HiveField(1) required this.start,
-      @JsonKey(name: "end") @HiveField(2) required this.end,
-      @JsonKey(name: "category") @HiveField(3) required this.category});
+      {@JsonKey(name: "id")
+      @HiveField(0)
+          required this.id,
+      @JsonKey(name: "start")
+      @HiveField(1)
+          required this.start,
+      @JsonKey(name: "end")
+      @HiveField(2)
+          required this.end,
+      @JsonKey(name: "category")
+      @HiveField(3)
+          this.category = DateRangeCategory.office});
 
   factory _$_TrackingEntry.fromJson(Map<String, dynamic> json) =>
       _$$_TrackingEntryFromJson(json);
@@ -175,7 +183,7 @@ class _$_TrackingEntry implements _TrackingEntry {
   @override
   @JsonKey(name: "category")
   @HiveField(3)
-  final DateRangeCategory category;
+  final DateRangeCategory? category;
 
   @override
   String toString() {
@@ -225,7 +233,7 @@ abstract class _TrackingEntry implements TrackingEntry {
           required final int end,
       @JsonKey(name: "category")
       @HiveField(3)
-          required final DateRangeCategory category}) = _$_TrackingEntry;
+          final DateRangeCategory? category}) = _$_TrackingEntry;
 
   factory _TrackingEntry.fromJson(Map<String, dynamic> json) =
       _$_TrackingEntry.fromJson;
@@ -245,7 +253,7 @@ abstract class _TrackingEntry implements TrackingEntry {
   @override
   @JsonKey(name: "category")
   @HiveField(3)
-  DateRangeCategory get category;
+  DateRangeCategory? get category;
   @override
   @JsonKey(ignore: true)
   _$$_TrackingEntryCopyWith<_$_TrackingEntry> get copyWith =>

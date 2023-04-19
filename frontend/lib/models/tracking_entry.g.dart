@@ -20,7 +20,7 @@ class TrackingEntryAdapter extends TypeAdapter<_$_TrackingEntry> {
       id: fields[0] as String,
       start: fields[1] as int,
       end: fields[2] as int,
-      category: fields[3] as DateRangeCategory,
+      category: fields[3] as DateRangeCategory?,
     );
   }
 
@@ -58,7 +58,9 @@ _$_TrackingEntry _$$_TrackingEntryFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       start: json['start'] as int,
       end: json['end'] as int,
-      category: $enumDecode(_$DateRangeCategoryEnumMap, json['category']),
+      category:
+          $enumDecodeNullable(_$DateRangeCategoryEnumMap, json['category']) ??
+              DateRangeCategory.office,
     );
 
 Map<String, dynamic> _$$_TrackingEntryToJson(_$_TrackingEntry instance) =>
@@ -66,11 +68,12 @@ Map<String, dynamic> _$$_TrackingEntryToJson(_$_TrackingEntry instance) =>
       'id': instance.id,
       'start': instance.start,
       'end': instance.end,
-      'category': _$DateRangeCategoryEnumMap[instance.category]!,
+      'category': _$DateRangeCategoryEnumMap[instance.category],
     };
 
 const _$DateRangeCategoryEnumMap = {
   DateRangeCategory.vacation: 'vacation',
   DateRangeCategory.sick: 'sick',
   DateRangeCategory.remote: 'remote',
+  DateRangeCategory.office: 'office',
 };
