@@ -28,7 +28,7 @@ class TrackingNotifier extends ChangeNotifier {
     for (final entry in trackingEntries) {
       //check if there is already an entry for the same day
       final existingEntry = consolidatedEntries.firstWhereOrNull(
-        (e) => e.start == entry.start,
+        (e) => e.day == entry.day,
       );
 
       //no entry for the same day found
@@ -38,11 +38,16 @@ class TrackingNotifier extends ChangeNotifier {
         //entry for the same day found
         //create new entry with one of both start times; add both durations; end time = start time + duration
         final combinedDuration = entry.duration + existingEntry.duration;
+        //remove old entry
+        consolidatedEntries.remove(existingEntry);
+
+        //add new combined entry
         consolidatedEntries.add(
           TrackingEntry(
             id: Commons.generateId(),
             start: entry.start,
             end: entry.start + combinedDuration.inMilliseconds,
+            category: entry.category,
           ),
         );
       }
