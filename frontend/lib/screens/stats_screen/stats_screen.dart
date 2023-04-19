@@ -108,21 +108,7 @@ class PieChartSample2 extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sections = [
-      for (final chartEntry in ref.watch(vacationChartProider).entries)
-        PieChartSectionData(
-          color: chartEntry.key.color,
-          value: chartEntry.value.toDouble(),
-          title: '${chartEntry.value}',
-          radius: 50,
-          titleStyle: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            shadows: [Shadow(color: Colors.black12, blurRadius: 1)],
-          ),
-        ),
-    ];
+    final vacationChartService = ref.watch(vacationChartProider);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +121,21 @@ class PieChartSample2 extends ConsumerWidget {
               ),
               sectionsSpace: 0,
               centerSpaceRadius: 40,
-              sections: sections,
+              sections: [
+                for (final chartEntry in vacationChartService.entries)
+                  PieChartSectionData(
+                    color: chartEntry.key.color,
+                    value: chartEntry.value.toDouble(),
+                    title: '${chartEntry.value}',
+                    radius: 50,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [Shadow(color: Colors.black12, blurRadius: 1)],
+                    ),
+                  ),
+              ],
             ),
           ),
         ),

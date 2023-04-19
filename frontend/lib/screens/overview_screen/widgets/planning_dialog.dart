@@ -1,5 +1,10 @@
+import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
+import 'package:frontend/models/vacation_category.dart';
+import 'package:frontend/models/vacation_entry.dart';
+import 'package:frontend/services/vacation_service.dart';
 
 void showPlanningDialog(BuildContext context) {
   showDialog(
@@ -113,12 +118,25 @@ class _PlanningDialogState extends State<PlanningDialog> {
           },
           child: const Text("Cancel"),
         ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: const Text("Save"),
-        ),
+        Consumer(builder: (context, ref, _) {
+          return TextButton(
+            onPressed:
+                _startDate == null || _endDate == null || _category == null
+                    ? null
+                    : () {
+                        ref.read(vacationProvider).requestNewVacation(
+                              VacationEntry(
+                                id: Commons.generateId(),
+                                start: _startDate!.millisecondsSinceEpoch,
+                                end: _endDate!.millisecondsSinceEpoch,
+                                category: VacationCategory.pending,
+                              ),
+                            );
+                        Navigator.of(context).pop();
+                      },
+            child: const Text("Save"),
+          );
+        }),
       ],
     );
   }

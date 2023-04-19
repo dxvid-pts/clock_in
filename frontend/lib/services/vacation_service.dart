@@ -4,12 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/models/vacation_entry.dart';
+import 'package:hive/hive.dart';
 import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
 import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
 
 final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
-  final vacationEntries = ref.watch(vacationProvider).vacationData;
+  final vacationService = ref.watch(vacationProvider);
+  final vacationEntries = vacationService.vacationData;
 
   if (vacationEntries.isEmpty) return {};
 
@@ -39,6 +41,8 @@ class VacationNotifier extends ChangeNotifier {
 
   late final StorageBox<VacationEntry> _vacationBox;
 
+  Future<void>? _initFuture;
+
   VacationNotifier() {
     //register storage adapter
     StorageEngine.registerBoxAdapter<VacationEntry>(
@@ -51,50 +55,71 @@ class VacationNotifier extends ChangeNotifier {
         },
       ),
     );
+    Hive.registerAdapter(VacationCategoryAdapter());
 
     _vacationBox = StorageEngine.getBox<VacationEntry>(kVacationCollectionKey);
 
-    //load data from storage
-    _vacationBox.getAll().then(
-      (entries) {
-        vacationData = entries.values.toSet();
+    print("init");
 
-        final availableVacationDays = kMaxVacationDays - vacationData.length;
+    Future<void> load() async {
+      final entries = await _vacationBox.getAll();
 
-        //fill rest up with available entries
-        for (int i = 0; i < (availableVacationDays); i++) {
-          final date = DateTime.now().add(Duration(days: i));
-          vacationData.add(
-            VacationEntry(
-              id: Commons.generateId(),
-              start: date.millisecondsSinceEpoch,
-              end: date.millisecondsSinceEpoch,
-              category: VacationCategory.available,
-            ),
-          );
-        }
+      print("loaded");
+      vacationData = entries.values.toSet();
 
-        notifyListeners();
-      },
-    );
-  }
+      final availableVacationDays = kMaxVacationDays - vacationData.length;
 
-  void requestNewVacation(VacationEntry vacationEntry) {
-    _vacationBox.put(vacationEntry.id, vacationEntry);
+      //fill rest up with available entries
+      for (int i = 0; i < (availableVacationDays); i++) {
+        final date = DateTime.now().add(Duration(days: i));
+        vacationData.add(
+          VacationEntry(
+            id: Commons.generateId(),
+            start: date.millisecondsSinceEpoch,
+            end: date.millisecondsSinceEpoch,
+            category: VacationCategory.available,
+          ),
+        );
+      }
 
-    //check if available entry exists and remove it, otherwise return and do nothing
-    if (!vacationData
-        .any((element) => element.category == VacationCategory.available)) {
-      return;
-    } else {
-      vacationData.removeWhere(
-          (element) => element.category == VacationCategory.available);
+      notifyListeners();
     }
 
-    //remove old date range if it exists and add new one
-    vacationData.removeWhere((element) => element.id == vacationEntry.id);
-    vacationData.add(vacationEntry);
+    //load data from storage
+    _initFuture = load();
+  }
 
-    notifyListeners();
+  Future<void> requestNewVacation(VacationEntry vacationEntry) async {
+    //await initFuture;
+    if (_initFuture != null) await _initFuture;
+
+    //check if available entry exists and remove it, otherwise return and do nothing
+    bool contains = false;
+    print(vacationData);
+    for (VacationEntry entry in vacationData) {
+      if (entry.category == VacationCategory.available) {
+        print("contains");
+        contains = true;
+        break;
+      }
+    }
+
+    if (!contains) {
+      print("return");
+      return;
+    } else {
+      print("vacationEntry");
+      //get one available entry and remove it
+      final availableEntry = vacationData.firstWhere(
+        (element) => element.category == VacationCategory.available,
+      );
+      vacationData.remove(availableEntry);
+      vacationData.add(vacationEntry);
+
+      //add new entry to storage
+      _vacationBox.put(vacationEntry.id, vacationEntry);
+
+      notifyListeners();
+    }
   }
 }

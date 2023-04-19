@@ -1,9 +1,16 @@
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+part 'vacation_category.g.dart';
 
+@HiveType(typeId: 8, adapterName: 'VacationCategoryAdapter')
 enum VacationCategory {
+  @HiveField(0)
   available,
+  @HiveField(1)
   taken,
+  @HiveField(2)
   pending,
+  @HiveField(3)
   approved,
 }
 
