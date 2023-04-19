@@ -4,6 +4,7 @@ import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/services/current_week_stats_service.dart';
 
 class StatsScreen extends StatelessWidget {
@@ -146,30 +147,15 @@ class PieChart2State extends State {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Indicator(
-              color: Theme.of(context).primaryColor,
-              text: 'Vacation available',
-              isSquare: true,
-            ),
-            const SizedBox(height: 4),
-            const Indicator(
-              color: Color(0xFFE3954B),
-              text: 'Vacation taken',
-              isSquare: true,
-            ),
-            const SizedBox(height: 4),
-            const Indicator(
-              color: Color(0xFF5E3E1F),
-              text: 'Vacation pending',
-              isSquare: true,
-            ),
-            const SizedBox(height: 4),
-            const Indicator(
-              color: Color(0xFFAB5505),
-              text: 'Vacation planned',
-              isSquare: true,
-            ),
-            const SizedBox(height: 18),
+            for (final cat in VacationCategory.values)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Indicator(
+                  color: cat.color,
+                  text: cat.name,
+                  isSquare: true,
+                ),
+              ),
           ],
         ),
         const SizedBox(
