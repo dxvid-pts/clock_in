@@ -1,5 +1,8 @@
+using System.Collections.Immutable;
 using backend.Database;
 using backend.Models;
+using backend.Attributes;
+using backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,33 +32,127 @@ public class VacationController : ControllerBase
     /// <summary>
     /// Creates a new Vacation Request
     /// </summary>
-    /// <param name="begin">Timestamp which defines the begin of the vacation</param>
-    /// <param name="end">Timestamp which defines the end of the vacation</param>
     /// <returns></returns>
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
-    [Authorize]
-    [HttpPost(Name = "PostVacation")]
+    [Authorize(Roles = Roles.Employee)]
+    [HttpPost(Name = "Request Vacation")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Post(int begin, int end)
+    public IActionResult Post([FromBody] VacationInput input)
     {
-        return Ok(new Vacation());
+        VacationModel vacation = new VacationModel()
+        {
+            id = 1234,
+            account_id = ((Account?)HttpContext.Items["User"])!.Id,
+            status = "PENDING",
+            begin = input.begin,
+            end = input.end,
+            changed = DateTime.Now
+        };
+        return Ok(vacation);
     }
 
     /// <summary>
     /// Update a Vacation Request
     /// </summary>
-    /// <param name="end">Timestamp to change the end to</param>
-    /// <param name="status">New status to change the status to</param>
+    /// <param name="id">ID of vacation request to be updated</param>
+    /// <param name="input">input values</param>
     /// <returns></returns>
     /// <response code="200">Change successful</response>
     /// <response code="400">Change rejected</response>
-    [HttpPatch(Name = "PatchVacation")]
+    [Authorize(Roles = Roles.Employee + Roles.Manager)]
+    [HttpPatch("{id}", Name = "Edit Vacation")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Patch(int end, string status)
+    public IActionResult Patch(int id, [FromBody] VacationInput input)
     {
-        return Ok();
+        var vacation = new VacationModel()
+        {
+            id = id,
+            account_id = ((Account?)HttpContext.Items["User"])!.Id,
+            status = "PENDING",
+            begin = input.begin,
+            end = input.end,
+            changed = DateTime.Now
+        };
+        return Ok(vacation);
+    }
+
+    /// <summary>
+    /// Cancel a Vacation
+    /// </summary>
+    /// <param name="id">ID of vacation request to be canceled</param>
+    /// <param name="input">input values</param>
+    /// <returns></returns>
+    /// <response code="200">Cancellation successful</response>
+    /// <response code="400">Cancellation rejected</response>
+    [Authorize(Roles = Roles.Employee)]
+    [HttpDelete("{id}", Name = "Cancel Vacation")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Delete(int id)
+    {
+        VacationModel vacation = new VacationModel
+        {
+            id = id,
+            account_id = ((Account?)HttpContext.Items["User"])!.Id,
+            status = "CANCELED"
+        };
+        return Ok(vacation);
+    }
+
+    /// <summary>
+    /// Review (approve/decline) a vacation request
+    /// </summary>
+    /// <param name="id">ID of vacation request to be reviewed</param>
+    /// <param name="input">input values</param>
+    /// <returns></returns>
+    /// <response code="200">Review successful</response>
+    /// <response code="400">Review rejected</response>
+    [Authorize(Roles = Roles.Manager)]
+    [HttpPatch("review/{id}", Name = "Review Vacation")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Review(int id, [FromBody] VacationReviewInput input)
+    {
+        VacationModel vacation = new VacationModel
+        {
+            id = id,
+            account_id = 1234,
+            status = input.status
+        };
+        return Ok(vacation);
+    }
+    
+    /// <summary>
+    /// Get all vacations of a user in the given year
+    /// </summary>
+    /// <param name="user_id">User ID of whom the vacations are</param>
+    /// <param name="year">Year of vacations</param>
+    /// <returns>A List of all vacations in the given year</returns>
+    [Authorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
+    [HttpGet("{user_id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IVacation[]))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult Get(int user_id, int year)
+    {
+        var account = (Account) HttpContext.Items["User"];
+
+        if (account.Role == Roles.Employee && user_id != account.Id)
+        {
+            return Forbid(" ");
+        }
+
+        if (user_id != account.Id && account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == user_id && relation.ManagerId == account.Id) == null)
+        {
+            return Forbid();
+        }
+
+        var vacations = this.clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new IVacation(v));
+        
+        return Ok(vacations);
     }
 }

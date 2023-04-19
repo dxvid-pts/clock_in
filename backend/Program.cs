@@ -1,6 +1,8 @@
 using System.Reflection;
 using System.Text;
 using backend.Database;
+using backend.Middlewares;
+using backend.Utils;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Logging;
@@ -54,6 +56,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddTransient<TokenUtils>();
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -84,6 +88,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<JwtMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
