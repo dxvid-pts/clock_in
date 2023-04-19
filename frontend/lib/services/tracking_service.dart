@@ -13,7 +13,14 @@ final trackingProvider =
     ChangeNotifierProvider<TrackingNotifier>((ref) => TrackingNotifier());
 
 class TrackingNotifier extends ChangeNotifier {
-  Set<TrackingEntry> trackingEntries = {};
+  Set<TrackingEntry> trackingEntries = {
+    TrackingEntry(
+      id: Commons.generateId(),
+      start: DateTime.parse("2021-09-01 08:00:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2021-09-01 12:00:00").millisecondsSinceEpoch,
+      category: DateRangeCategory.remote,
+    ),
+  };
 
   Set<TrackingEntry> get getConsolidatedTrackingEntries {
     final consolidatedEntries = <TrackingEntry>{};
