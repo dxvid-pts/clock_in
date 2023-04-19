@@ -5,6 +5,7 @@ using backend.Database;
 using backend.Interfaces;
 using backend.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace backend.Controllers;
 
@@ -64,7 +65,7 @@ public class AccountController : ControllerBase
     /// Change a users password
     /// </summary>
     /// <returns></returns>
-    [SuperiorAuthorize]
+    [Authorize]
     [HttpPut("password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -90,7 +91,7 @@ public class AccountController : ControllerBase
     /// Not implemented yet!
     /// </remarks>
     /// <returns>A newly generated JWT Token</returns>
-    [SuperiorAuthorize]
+    [Authorize]
     [HttpPost("refresh_token")]
     [ProducesResponseType(typeof(TokenResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -103,7 +104,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for employee
     /// </summary>
     /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee)]
+    [Authorize(Roles = Roles.Employee)]
     [HttpGet("testemp")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -117,7 +118,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for manager
     /// </summary>
     /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [Authorize(Roles = Roles.Manager)]
     [HttpGet("testman")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -131,7 +132,7 @@ public class AccountController : ControllerBase
     /// test permissions with jwt for employee + manager
     /// </summary>
     /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
+    [Authorize(Roles = Roles.Employee + Roles.Manager)]
     [HttpGet("testcomb")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -145,7 +146,7 @@ public class AccountController : ControllerBase
     /// Get account specific information
     /// </summary>
     /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
+    [Authorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
     [HttpGet("{user_id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

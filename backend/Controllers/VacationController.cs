@@ -1,7 +1,9 @@
+using System.Collections.Immutable;
 using backend.Database;
 using backend.Models;
 using backend.Attributes;
 using backend.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -33,7 +35,7 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
-    [SuperiorAuthorize(Roles = Roles.Employee)]
+    [Authorize(Roles = Roles.Employee)]
     [HttpPost(Name = "Request Vacation")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,7 +61,7 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Change successful</response>
     /// <response code="400">Change rejected</response>
-    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
+    [Authorize(Roles = Roles.Employee + Roles.Manager)]
     [HttpPatch("{id}", Name = "Edit Vacation")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -85,7 +87,7 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Cancellation successful</response>
     /// <response code="400">Cancellation rejected</response>
-    [SuperiorAuthorize(Roles = Roles.Employee)]
+    [Authorize(Roles = Roles.Employee)]
     [HttpDelete("{id}", Name = "Cancel Vacation")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,7 +110,7 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Review successful</response>
     /// <response code="400">Review rejected</response>
-    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [Authorize(Roles = Roles.Manager)]
     [HttpPatch("review/{id}", Name = "Review Vacation")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -129,7 +131,7 @@ public class VacationController : ControllerBase
     /// <param name="user_id">User ID of whom the vacations are</param>
     /// <param name="year">Year of vacations</param>
     /// <returns>A List of all vacations in the given year</returns>
-    [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
+    [Authorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
     [HttpGet("{user_id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

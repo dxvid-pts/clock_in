@@ -52,13 +52,18 @@ public class WorkController : ControllerBase
 
         try
         {
-            running_work = new Work();
-
-            running_work.Begin = DateTime.Now;
-            running_work.AccountId = account.Id;
+            running_work = new Work
+            {
+                AccountId = account.Id,
+                Begin = DateTime.Now,
+                End = null,
+                Changed = default,
+                Account = account
+            };
 
             this.clockInContext.Works.Add(running_work);
-
+            this.clockInContext.SaveChanges();
+            
             return Ok();
         } catch
         {
@@ -92,7 +97,8 @@ public class WorkController : ControllerBase
         running_work.End = DateTime.Now;
         
         this.clockInContext.Works.Update(running_work);
-        
+        this.clockInContext.SaveChanges();
+
         return Ok();
     }
     
