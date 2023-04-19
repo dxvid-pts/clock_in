@@ -7,6 +7,7 @@ import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/services/timer_service.dart';
 import 'package:frontend/services/tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
+import 'package:frontend/models/date_range_category.dart';
 
 class TimerScreen extends StatelessWidget {
   const TimerScreen({super.key});
@@ -321,20 +322,12 @@ class _LowerSection extends ConsumerWidget {
             Expanded(
               child: ListView(
                 children: [
-                  //sample
-                  const EntryListTile(
-                    title: "Monday 10.04",
-                    subtitle: "Remote",
-                    color: Color(0xFFd399f1),
-                    duration: 2.4,
-                  ),
-
                   for (final trackingEntry
                       in ref.watch(trackingProvider).getConsolidatedTrackingEntries)
                     EntryListTile(
                       title: dayToDisplayString(trackingEntry.day),
-                      subtitle: "Office",
-                      color: const Color(0xFFd26a07),
+                      subtitle: (trackingEntry.category?? DateRangeCategory.office).name,
+                      color: (trackingEntry.category?? DateRangeCategory.office).color,
                       duration: trackingEntry.duration.inHours +
                           (trackingEntry.duration.inMinutes / 60),
                     ),
