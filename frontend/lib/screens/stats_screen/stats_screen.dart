@@ -141,8 +141,8 @@ class PieChart2State extends State {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Indicator(
-              color: AppColors.contentColorYellow,
-              text: 'First',
+              color: Theme.of(context).primaryColor,
+              text: 'Vacation available',
               isSquare: true,
             ),
             SizedBox(
@@ -150,7 +150,7 @@ class PieChart2State extends State {
             ),
             Indicator(
               color: Colors.blue[200]!,
-              text: 'Second',
+              text: 'Vacation taken',
               isSquare: true,
             ),
             SizedBox(
@@ -158,7 +158,7 @@ class PieChart2State extends State {
             ),
             Indicator(
               color: Colors.blue[50]!,
-              text: 'Third',
+              text: 'Vacation pending',
               isSquare: true,
             ),
             SizedBox(
@@ -166,7 +166,7 @@ class PieChart2State extends State {
             ),
             Indicator(
               color: Colors.blue[100]!,
-              text: 'Fourth',
+              text: 'Vacation planned',
               isSquare: true,
             ),
             SizedBox(
