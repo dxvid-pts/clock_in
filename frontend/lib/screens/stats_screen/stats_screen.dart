@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/services/current_week_stats_service.dart';
+import 'package:frontend/services/vacation_service.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -102,44 +103,39 @@ class SimpleBarChart extends ConsumerWidget {
   }
 }
 
-class PieChartSample2 extends StatefulWidget {
+class PieChartSample2 extends ConsumerWidget {
   const PieChartSample2({super.key});
 
   @override
-  State<StatefulWidget> createState() => PieChart2State();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sections = [
+      for (final chartEntry in ref.watch(vacationChartProider).entries)
+        PieChartSectionData(
+          color: chartEntry.key.color,
+          value: chartEntry.value.toDouble(),
+          title: '${chartEntry.value}',
+          radius: 50,
+          titleStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            shadows: [Shadow(color: Colors.black12, blurRadius: 1)],
+          ),
+        ),
+    ];
 
-class PieChart2State extends State {
-  int touchedIndex = -1;
-
-  @override
-  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
           child: PieChart(
             PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  setState(() {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      touchedIndex = -1;
-                      return;
-                    }
-                    touchedIndex =
-                        pieTouchResponse.touchedSection!.touchedSectionIndex;
-                  });
-                },
-              ),
               borderData: FlBorderData(
                 show: false,
               ),
               sectionsSpace: 0,
               centerSpaceRadius: 40,
-              sections: showingSections(),
+              sections: sections,
             ),
           ),
         ),
@@ -163,58 +159,6 @@ class PieChart2State extends State {
         ),
       ],
     );
-  }
-
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 18.0 : 12.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black12, blurRadius: 1)];
-
-      final titleStyle = TextStyle(
-        fontSize: fontSize,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-        shadows: shadows,
-      );
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Theme.of(context).primaryColor,
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        case 1:
-          return PieChartSectionData(
-            color: const Color(0xFFE3954B),
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        case 2:
-          return PieChartSectionData(
-            color: const Color(0xFF5E3E1F),
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        case 3:
-          return PieChartSectionData(
-            color: const Color(0xFFAB5505),
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        default:
-          throw Error();
-      }
-    });
   }
 }
 
