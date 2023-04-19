@@ -59,7 +59,7 @@ class _PlanningDialogState extends State<PlanningDialog> {
           //end date
           TextField(
             controller: TextEditingController(
-              text: _startDate?.toIso8601String() ?? "",
+              text: _endDate?.toIso8601String() ?? "",
             ),
             onTap: () {
               //show date picker
