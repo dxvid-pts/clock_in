@@ -11,7 +11,7 @@ class EntryListTile extends StatelessWidget {
 
   final String title;
   final String subtitle;
-  final double duration;
+  final Duration duration;
   final Color? color;
 
   @override
@@ -59,7 +59,7 @@ class EntryListTile extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             Text(
-              duration.toStringAsFixed(2).replaceAll(".", ":"),
+              "${duration.inHours.toString().padLeft(2, "0")}:${(duration.inMinutes - duration.inHours * 60).toString().padLeft(2, "0")}",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             IconButton(

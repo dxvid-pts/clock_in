@@ -55,8 +55,7 @@ class _OverEntryListSection extends ConsumerWidget {
               subtitle:
                   (trackingEntry.category ?? DateRangeCategory.office).name,
               color: (trackingEntry.category ?? DateRangeCategory.office).color,
-              duration: trackingEntry.duration.inHours +
-                  (trackingEntry.duration.inMinutes / 60),
+              duration: trackingEntry.duration,
             ),
         ],
       ),

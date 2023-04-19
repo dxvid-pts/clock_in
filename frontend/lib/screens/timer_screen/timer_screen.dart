@@ -327,10 +327,13 @@ class _LowerSection extends ConsumerWidget {
                       in ref.watch(consolidatedTrackingProvider))
                     EntryListTile(
                       title: dayToDisplayString(trackingEntry.day),
-                      subtitle: (trackingEntry.category?? DateRangeCategory.office).name,
-                      color: (trackingEntry.category?? DateRangeCategory.office).color,
-                      duration: trackingEntry.duration.inHours +
-                          (trackingEntry.duration.inMinutes / 60),
+                      subtitle:
+                          (trackingEntry.category ?? DateRangeCategory.office)
+                              .name,
+                      color:
+                          (trackingEntry.category ?? DateRangeCategory.office)
+                              .color,
+                      duration: trackingEntry.duration,
                     ),
                 ],
               ),
