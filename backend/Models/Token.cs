@@ -13,5 +13,9 @@ public partial class Token
 
     public string Content { get; set; } = null!;
 
+    public DateTime Created { get; set; }
+
+    public DateTime Changed { get; set; }
+
     public virtual Account Account { get; set; } = null!;
 }

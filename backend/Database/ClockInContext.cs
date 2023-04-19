@@ -53,6 +53,15 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.BreakTime)
                 .HasColumnType("time")
                 .HasColumnName("break_time");
+            entity.Property(e => e.Changed)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("changed");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("created");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
                 .HasColumnName("email");
@@ -89,6 +98,15 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
+            entity.Property(e => e.Changed)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("changed");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("created");
             entity.Property(e => e.EmployeeId)
                 .HasColumnType("int(11)")
                 .HasColumnName("employee_id");
@@ -122,6 +140,15 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("account_id");
             entity.Property(e => e.Begin).HasColumnName("begin");
+            entity.Property(e => e.Changed)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("changed");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("created");
             entity.Property(e => e.End).HasColumnName("end");
 
             entity.HasOne(d => d.Account).WithMany(p => p.SickLeaves)
@@ -144,9 +171,18 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.AccountId)
                 .HasColumnType("int(11)")
                 .HasColumnName("account_id");
+            entity.Property(e => e.Changed)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("changed");
             entity.Property(e => e.Content)
                 .HasMaxLength(511)
                 .HasColumnName("content");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("created");
             entity.Property(e => e.Expiration)
                 .HasColumnType("datetime")
                 .HasColumnName("expiration");
@@ -172,7 +208,15 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("account_id");
             entity.Property(e => e.Begin).HasColumnName("begin");
-            entity.Property(e => e.Changed).HasColumnName("changed");
+            entity.Property(e => e.Changed)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("changed");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("created");
             entity.Property(e => e.End).HasColumnName("end");
             entity.Property(e => e.Status)
                 .HasColumnType("enum('Pending','Approved','Declined','Canceled')")
@@ -201,7 +245,15 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.Begin)
                 .HasColumnType("datetime")
                 .HasColumnName("begin");
-            entity.Property(e => e.Changed).HasColumnName("changed");
+            entity.Property(e => e.Changed)
+                .ValueGeneratedOnAddOrUpdate()
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("changed");
+            entity.Property(e => e.Created)
+                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasColumnType("timestamp")
+                .HasColumnName("created");
             entity.Property(e => e.End)
                 .HasColumnType("datetime")
                 .HasColumnName("end");

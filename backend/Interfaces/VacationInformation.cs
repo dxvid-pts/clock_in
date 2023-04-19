@@ -11,7 +11,7 @@ public class VacationInformation
 
     public string? Status { get;  }
 
-    public DateOnly Changed { get;  }
+    public DateTime Changed { get;  }
 
     public VacationInformation(Vacation vacation)
     {

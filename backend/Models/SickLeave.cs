@@ -13,5 +13,9 @@ public partial class SickLeave
 
     public DateOnly End { get; set; }
 
+    public DateTime Created { get; set; }
+
+    public DateTime Changed { get; set; }
+
     public virtual Account Account { get; set; } = null!;
 }

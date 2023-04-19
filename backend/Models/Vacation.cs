@@ -15,7 +15,9 @@ public partial class Vacation
 
     public string? Status { get; set; }
 
-    public DateOnly Changed { get; set; }
+    public DateTime Created { get; set; }
+
+    public DateTime Changed { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 }

@@ -11,6 +11,10 @@ public partial class ManagerEmployee
 
     public int EmployeeId { get; set; }
 
+    public DateTime Created { get; set; }
+
+    public DateTime Changed { get; set; }
+
     public virtual Account Employee { get; set; } = null!;
 
     public virtual Account Manager { get; set; } = null!;

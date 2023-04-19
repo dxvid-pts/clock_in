@@ -10,7 +10,7 @@ public class WorkInformation
 
     public DateTime? End { get;  }
 
-    public DateOnly Changed { get;  }
+    public DateTime Changed { get;  }
 
     public WorkInformation(Work work)
     {

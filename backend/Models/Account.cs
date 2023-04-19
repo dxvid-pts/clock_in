@@ -27,6 +27,10 @@ public partial class Account
 
     public int VacationDays { get; set; }
 
+    public DateTime Created { get; set; }
+
+    public DateTime Changed { get; set; }
+
     public virtual ICollection<ManagerEmployee> ManagerEmployeeEmployees { get; } = new List<ManagerEmployee>();
 
     public virtual ICollection<ManagerEmployee> ManagerEmployeeManagers { get; } = new List<ManagerEmployee>();

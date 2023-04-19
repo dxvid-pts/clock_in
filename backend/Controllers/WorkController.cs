@@ -160,6 +160,7 @@ public class WorkController : ControllerBase
         work.End = end;
 
         clockInContext.Works.Update(work);
+        clockInContext.SaveChanges();
         
         return Ok();
     }
@@ -176,7 +177,7 @@ public class WorkController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public IActionResult PatchWork(int work_id)
+    public IActionResult DeleteWork(int work_id)
     {
         var account = (Account) HttpContext.Items["User"];
 
