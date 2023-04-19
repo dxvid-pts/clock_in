@@ -2,6 +2,7 @@ enum DateRangeCategory {
   vacation,
   sick,
   remote,
+  office,
 }
 
 extension DateRangeCategoryExtension on DateRangeCategory {
@@ -13,6 +14,10 @@ extension DateRangeCategoryExtension on DateRangeCategory {
         return 'Sick';
       case DateRangeCategory.remote:
         return 'Remote';
+      case DateRangeCategory.office:
+        return 'Office';
+    }
+  }
     }
   }
 }
