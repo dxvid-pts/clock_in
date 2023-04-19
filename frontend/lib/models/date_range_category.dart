@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 enum DateRangeCategory {
   vacation,
   sick,
@@ -18,6 +20,17 @@ extension DateRangeCategoryExtension on DateRangeCategory {
         return 'Office';
     }
   }
+
+  Color get color {
+    switch (this) {
+      case DateRangeCategory.vacation:
+        return const Color(0xFFd399f1);
+      case DateRangeCategory.sick:
+        return const Color(0xFFd26a07);
+      case DateRangeCategory.remote:
+        return const Color(0xFFd399f1);
+      case DateRangeCategory.office:
+        return const Color(0xFFd26a07);
     }
   }
 }
