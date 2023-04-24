@@ -56,7 +56,7 @@ public class VacationController : ControllerBase
                 Status = "Pending",
                 Begin = begin,
                 End = end,
-                Changed = DateTime.Now.ToDateOnly()
+                Changed = DateTime.Now
             };
             _clockInContext.Vacations.Add(vacation);
             _clockInContext.SaveChanges();
@@ -204,7 +204,7 @@ public class VacationController : ControllerBase
     /// <returns>A List of all vacations in the given year</returns>
     [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
     [HttpGet("{userId}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationInformation[]))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IVacation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult Get(int userId, int year)
@@ -222,7 +222,7 @@ public class VacationController : ControllerBase
             return Forbid();
         }
 
-        var vacations = this._clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new VacationInformation(v));
+        var vacations = this._clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new IVacation(v));
         
         return Ok(vacations);
     }

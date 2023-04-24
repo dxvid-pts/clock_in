@@ -27,6 +27,6 @@ public class SickLeaveController : ControllerBase
     
     public IActionResult Post(int accountId, [FromBody] SickLeaveInput input)
     {
-        
+        return Ok();
     }
 }

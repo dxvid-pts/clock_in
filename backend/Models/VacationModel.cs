@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using backend.Utils;
 using Microsoft.OpenApi.Models;
 
 namespace backend.Models;
@@ -50,7 +51,7 @@ public class VacationModel
         Begin = vacation.Begin;
         End = vacation.End;
         Status = vacation.Status;
-        Changed = vacation.Changed;
+        Changed = vacation.Changed.ToDateOnly();
     }
 }
 
