@@ -16,9 +16,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ClockIn',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        primarySwatch: Colors.blue,
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFFd26a07),
+        ),
       ),
       home: Consumer(
         builder: (context, ref, mainScreen) {
