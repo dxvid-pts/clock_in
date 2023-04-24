@@ -217,4 +217,37 @@ public class AccountController : ControllerBase
 
         return Ok(new IAccount(result));
     }
+    
+    /// <summary>
+    /// Update role of an account
+    /// </summary>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpPatch("{userId}/role")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult ChangeRole(int userId, string role)
+    {
+        var account = _clockInContext.Accounts.Find(userId);
+
+        if (account == null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            account.Role = role;
+            _clockInContext.Accounts.Update(account);
+            _clockInContext.SaveChanges();
+        }
+        catch
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
 }
