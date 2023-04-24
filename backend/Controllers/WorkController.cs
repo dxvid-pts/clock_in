@@ -14,7 +14,7 @@ namespace backend.Controllers;
 public class WorkController : ControllerBase
 {
     private readonly ILogger<VacationController> _logger;
-    private readonly ClockInContext clockInContext;
+    private readonly ClockInContext _clockInContext;
 
     /// <summary>
     /// constructor
@@ -24,7 +24,7 @@ public class WorkController : ControllerBase
     public WorkController(ILogger<VacationController> logger, ClockInContext clockInContext)
     {
         _logger = logger;
-        this.clockInContext = clockInContext;
+        _clockInContext = clockInContext;
     }
     
     /// <summary>
@@ -35,24 +35,24 @@ public class WorkController : ControllerBase
     /// <response code="409">Not possible to start a new work session</response>
     [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee)]
     [HttpPost("start",Name = "Start Work")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public IActionResult StartWork()
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        var running_work = this.clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.End == null);
+        var runningWork = _clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.End == null);
 
-        if (running_work != null)
+        if (runningWork != null)
         {
             return Conflict();
         }
 
         try
         {
-            running_work = new Work
+            runningWork = new Work
             {
                 AccountId = account.Id,
                 Begin = DateTime.Now,
@@ -61,10 +61,10 @@ public class WorkController : ControllerBase
                 Account = account
             };
 
-            this.clockInContext.Works.Add(running_work);
-            this.clockInContext.SaveChanges();
-            
-            return Ok();
+            _clockInContext.Works.Add(runningWork);
+            _clockInContext.SaveChanges();
+
+            return NoContent();
         } catch
         {
             return Conflict();
@@ -80,26 +80,26 @@ public class WorkController : ControllerBase
     /// <response code="409">Not possible to stop this work session</response>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpPost("stop",Name = "Stop Work")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public IActionResult StopWork()
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        var running_work = this.clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.End == null);
+        var runningWork = _clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.End == null);
 
-        if (running_work == null)
+        if (runningWork == null)
         {
             return BadRequest();
         }
 
-        running_work.End = DateTime.Now;
+        runningWork.End = DateTime.Now;
         
-        this.clockInContext.Works.Update(running_work);
-        this.clockInContext.SaveChanges();
-
-        return Ok();
+        _clockInContext.Works.Update(runningWork);
+        _clockInContext.SaveChanges();
+        
+        return NoContent();
     }
     
     /// <summary>
@@ -108,29 +108,29 @@ public class WorkController : ControllerBase
     /// <returns></returns>
     /// <response code="200"></response>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
-    [HttpGet("{user_id}",Name = "Show Work")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IWork[]))]
+    [HttpGet("{userId}",Name = "Show Work")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WorkInformation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult ShowWork(int user_id, int month, int year)
+    public IActionResult ShowWork(int userId, int month, int year)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        if (account.Role == Roles.Employee && user_id != account.Id)
+        if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid();
         }
 
-        if (user_id != account.Id && account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
-                relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
+        if (userId != account.Id && account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == userId && relation.Manager.Id == account.Id) == null)
         {
             return Forbid();
         }
 
-        var work_list = clockInContext.Works.Where(w => w.AccountId == account.Id && w.Begin.Month == month && w.Begin.Year == year).ToList()
-            .Select(w => new IWork(w));
+        var workList = _clockInContext.Works.Where(w => w.AccountId == account.Id && w.Begin.Month == month && w.Begin.Year == year).ToList()
+            .Select(w => new WorkInformation(w));
         
-        return Ok(work_list);
+        return Ok(workList);
     }
     
     /// <summary>
@@ -145,11 +145,11 @@ public class WorkController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public IActionResult PatchWork(int work_id, DateTime begin, DateTime end)
+    public IActionResult PatchWork(int workId, DateTime begin, DateTime end)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account)HttpContext.Items["User"]!;
 
-        var work = clockInContext.Works.FirstOrDefault<Work>(w => w.AccountId == account.Id && w.Id == work_id);
+        var work = _clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.Id == workId);
 
         if (work == null || begin >= end)
         {
@@ -159,8 +159,8 @@ public class WorkController : ControllerBase
         work.Begin = begin;
         work.End = end;
 
-        clockInContext.Works.Update(work);
-        clockInContext.SaveChanges();
+        _clockInContext.Works.Update(work);
+        _clockInContext.SaveChanges();
         
         return Ok();
     }
@@ -173,23 +173,24 @@ public class WorkController : ControllerBase
     /// <response code="409">Work session does not exist</response>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Admin + Roles.Manager)]
     [HttpDelete("session",Name = "Delete Work")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public IActionResult DeleteWork(int work_id)
+    public IActionResult DeleteWork(int workId)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        var work = clockInContext.Works.FirstOrDefault<Work>(w => w.AccountId == account.Id && w.Id == work_id);
+        var work = _clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.Id == workId);
 
         if (work == null)
         {
             return Conflict();
         }
 
-        clockInContext.Works.Remove(work);
+        _clockInContext.Works.Remove(work);
+        _clockInContext.SaveChanges()
         
-        return Ok();
+        return NoContent();
     }
 }
