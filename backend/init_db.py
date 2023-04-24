@@ -13,7 +13,7 @@ def rename_file(host, port, db, user, psswrt):
             print("String decoding failed")
             return 1
             
-        focus_text = f"Server={host}; Database={db}; Password={psswrt}; User={user}; Port={user}; AllowZeroDateTime=True" # insert values
+        focus_text = f"Server={host}; Database={db}; Password={psswrt}; User={user}; Port={port}; AllowZeroDateTime=True" # insert values
         file_text = before_text + "\"Database\": \"" + focus_text + "\"" + after_text # restore full text
 
         f.truncate(0) # clear file
