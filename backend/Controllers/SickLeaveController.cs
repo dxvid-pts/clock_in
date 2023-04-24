@@ -24,9 +24,9 @@ public class SickLeaveController : ControllerBase
         _clockInContext = clockInContext;
     }
 
-    
+    /*
     public IActionResult Post(int accountId, [FromBody] SickLeaveInput input)
     {
         return Ok();
-    }
+    }*/
 }

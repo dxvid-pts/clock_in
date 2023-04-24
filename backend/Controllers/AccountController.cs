@@ -125,6 +125,13 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult CreateAccount(ICreateAccount account)
     {
+        var account_with_same_email = _clockInContext.Accounts.FirstOrDefault(a => a.Email == account.Email);
+        
+        if (account_with_same_email != null)
+        {
+            return BadRequest();
+        }
+        
         try
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
