@@ -1,9 +1,8 @@
-using System.Collections.Immutable;
 using backend.Database;
 using backend.Models;
 using backend.Attributes;
 using backend.Interfaces;
-using Microsoft.AspNetCore.Authorization;
+using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -16,7 +15,7 @@ namespace backend.Controllers;
 public class VacationController : ControllerBase
 {
     private readonly ILogger<VacationController> _logger;
-    private readonly ClockInContext clockInContext;
+    private readonly ClockInContext _clockInContext;
 
     /// <summary>
     /// constructor
@@ -26,7 +25,7 @@ public class VacationController : ControllerBase
     public VacationController(ILogger<VacationController> logger, ClockInContext clockInContext)
     {
         _logger = logger;
-        this.clockInContext = clockInContext;
+        this._clockInContext = clockInContext;
     }
 
     /// <summary>
@@ -35,22 +34,45 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="201">Submission successful</response>
     /// <response code="400">Submission rejected</response>
-    [Authorize(Roles = Roles.Employee)]
+    [SuperiorAuthorize(Roles = Roles.Employee)]
     [HttpPost(Name = "Request Vacation")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(VacationModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] VacationInput input)
     {
-        VacationModel vacation = new VacationModel()
+        try
         {
-            id = 1234,
-            account_id = ((Account?)HttpContext.Items["User"])!.Id,
-            status = "PENDING",
-            begin = input.begin,
-            end = input.end,
-            changed = DateTime.Now
-        };
-        return Ok(vacation);
+            DateOnly begin = input.begin.ToDateOnly();
+            DateOnly end = input.end.ToDateOnly();
+            if (end.CompareTo(begin) < 0)
+            {
+                throw new FormatException("end date was before begin date");
+            }
+
+            int accountId = ((Account?)HttpContext.Items["User"])!.Id;
+            Vacation vacation = new Vacation()
+            {
+                AccountId = accountId,
+                Status = "Pending",
+                Begin = begin,
+                End = end,
+                Changed = DateTime.Now
+            };
+            _clockInContext.Vacations.Add(vacation);
+            _clockInContext.SaveChanges();
+            
+            return Ok(new VacationModel(vacation));
+        }
+        catch (FormatException e)
+        {
+            _logger.LogError(e.ToString());
+            return BadRequest();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e.ToString());
+            return Problem();
+        }
     }
 
     /// <summary>
@@ -61,97 +83,146 @@ public class VacationController : ControllerBase
     /// <returns></returns>
     /// <response code="200">Change successful</response>
     /// <response code="400">Change rejected</response>
-    [Authorize(Roles = Roles.Employee + Roles.Manager)]
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
     [HttpPatch("{id}", Name = "Edit Vacation")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult Patch(int id, [FromBody] VacationInput input)
     {
-        var vacation = new VacationModel()
+        Vacation? vacation = _clockInContext.Vacations.FirstOrDefault(v => v.Id == id);
+        if (vacation == null)
         {
-            id = id,
-            account_id = ((Account?)HttpContext.Items["User"])!.Id,
-            status = "PENDING",
-            begin = input.begin,
-            end = input.end,
-            changed = DateTime.Now
-        };
-        return Ok(vacation);
+            return BadRequest();
+        }
+        
+        if (vacation.AccountId != ((Account?)HttpContext.Items["User"])!.Id)
+        {
+            return Forbid();
+        }
+
+        DateOnly begin = input.begin.ToDateOnly();
+        DateOnly end = input.end.ToDateOnly();
+        if (end.CompareTo(begin) < 0)
+        {
+            return BadRequest();
+        }
+
+        vacation.Begin = begin;
+        vacation.End = end;
+        vacation.Status = "Pending";
+        _clockInContext.SaveChanges();
+        
+        return Ok(new VacationModel(vacation));
     }
 
     /// <summary>
     /// Cancel a Vacation
     /// </summary>
     /// <param name="id">ID of vacation request to be canceled</param>
-    /// <param name="input">input values</param>
     /// <returns></returns>
     /// <response code="200">Cancellation successful</response>
     /// <response code="400">Cancellation rejected</response>
-    [Authorize(Roles = Roles.Employee)]
+    [SuperiorAuthorize(Roles = Roles.Employee)]
     [HttpDelete("{id}", Name = "Cancel Vacation")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Delete(int id)
     {
-        VacationModel vacation = new VacationModel
+        Vacation? vacation = _clockInContext.Vacations.FirstOrDefault(v => v.Id == id);
+        if (vacation == null)
         {
-            id = id,
-            account_id = ((Account?)HttpContext.Items["User"])!.Id,
-            status = "CANCELED"
-        };
-        return Ok(vacation);
+            return BadRequest();
+        }
+        
+        if (vacation.AccountId != ((Account?)HttpContext.Items["User"])!.Id)
+        {
+            return Forbid();
+        }
+
+        vacation.Status = "Canceled";
+        _clockInContext.SaveChanges();
+        
+        return Ok(new VacationModel(vacation));
     }
 
     /// <summary>
-    /// Review (approve/decline) a vacation request
+    /// Review (approve) a vacation request
     /// </summary>
-    /// <param name="id">ID of vacation request to be reviewed</param>
-    /// <param name="input">input values</param>
+    /// <param name="id">ID of vacation request to be approved</param>
     /// <returns></returns>
-    /// <response code="200">Review successful</response>
-    /// <response code="400">Review rejected</response>
-    [Authorize(Roles = Roles.Manager)]
-    [HttpPatch("review/{id}", Name = "Review Vacation")]
+    /// <response code="200">Approval successful</response>
+    /// <response code="400">Approval rejected</response>
+    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [HttpPatch("approve/{id}", Name = "Approve Vacation")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(VacationModel))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult Approve(int id)
+    {
+        Vacation? vacation = _clockInContext.Vacations.FirstOrDefault(v => v.Id == id);
+        if (vacation == null)
+        {
+            return BadRequest();
+        }
+
+        vacation.Status = "Approved";
+        _clockInContext.SaveChanges();
+        
+        return Ok(new VacationModel(vacation));
+    }
+    
+    /// <summary>
+    /// Review (decline) a vacation request
+    /// </summary>
+    /// <param name="id">ID of vacation request to be declined</param>
+    /// <returns></returns>
+    /// <response code="200">Rejection successful</response>
+    /// <response code="400">Rejection rejected</response>
+    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [HttpPatch("decline/{id}", Name = "Decline Vacation")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Vacation))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult Review(int id, [FromBody] VacationReviewInput input)
+    public IActionResult Decline(int id)
     {
-        VacationModel vacation = new VacationModel
+        Vacation? vacation = _clockInContext.Vacations.FirstOrDefault(v => v.Id == id);
+        if (vacation == null)
         {
-            id = id,
-            account_id = 1234,
-            status = input.status
-        };
-        return Ok(vacation);
+            return BadRequest();
+        }
+
+        vacation.Status = "Declined";
+        _clockInContext.SaveChanges();
+        
+        return Ok(new VacationModel(vacation));
     }
     
     /// <summary>
     /// Get all vacations of a user in the given year
     /// </summary>
-    /// <param name="user_id">User ID of whom the vacations are</param>
+    /// <param name="userId">User ID of whom the vacations are</param>
     /// <param name="year">Year of vacations</param>
     /// <returns>A List of all vacations in the given year</returns>
-    [Authorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
-    [HttpGet("{user_id}")]
+    [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
+    [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IVacation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult Get(int user_id, int year)
+    public IActionResult Get(int userId, int year)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        if (account.Role == Roles.Employee && user_id != account.Id)
+        if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid(" ");
         }
 
-        if (user_id != account.Id && account.Role == Roles.Manager && this.clockInContext.ManagerEmployees.FirstOrDefault(relation =>
-                relation.Employee.Id == user_id && relation.ManagerId == account.Id) == null)
+        if (userId != account.Id && account.Role == Roles.Manager && this._clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == userId && relation.ManagerId == account.Id) == null)
         {
             return Forbid();
         }
 
-        var vacations = this.clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new IVacation(v));
+        var vacations = this._clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new IVacation(v));
         
         return Ok(vacations);
     }
