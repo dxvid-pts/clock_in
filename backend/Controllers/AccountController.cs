@@ -139,12 +139,13 @@ public class AccountController : ControllerBase
 
             var password = new String(password_array);
             
+            Console.WriteLine(account.BeginTime);
+            
             var new_account = new Account
             {
                 Email = account.Email,
                 Role = account.Role,
                 Password = password,
-                Blocked = false,
                 WorkTime = account.WorkTime,
                 BeginTime = account.BeginTime,
                 EndTime = account.EndTime,

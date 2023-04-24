@@ -12,6 +12,7 @@ services:
     restart: 'unless-stopped'
     ports:
       - "${API_PORT}:80"
+      - "3002:5224"
     depends_on:
       - database
   
