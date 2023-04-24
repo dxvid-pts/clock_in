@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using backend.Models;
+using Microsoft.AspNetCore.Authentication;
 
 namespace backend.Database;
 
@@ -30,7 +31,6 @@ public partial class ClockInContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseMySql("name=ConnectionStrings:Database", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.2-mariadb"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -49,7 +49,9 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.BeginTime)
                 .HasColumnType("time")
                 .HasColumnName("begin_time");
-            entity.Property(e => e.Blocked).HasColumnName("blocked");
+            entity.Property(e => e.Blocked)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("blocked");
             entity.Property(e => e.BreakTime)
                 .HasColumnType("time")
                 .HasColumnName("break_time");
@@ -59,7 +61,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created");
             entity.Property(e => e.Email)
@@ -104,7 +106,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created");
             entity.Property(e => e.EmployeeId)
@@ -146,7 +148,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created");
             entity.Property(e => e.End).HasColumnName("end");
@@ -180,7 +182,7 @@ public partial class ClockInContext : DbContext
                 .HasMaxLength(511)
                 .HasColumnName("content");
             entity.Property(e => e.Created)
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created");
             entity.Property(e => e.Expiration)
@@ -214,7 +216,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created");
             entity.Property(e => e.End).HasColumnName("end");
@@ -251,7 +253,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created");
             entity.Property(e => e.End)
