@@ -47,6 +47,30 @@ final vacationOverviewProider = Provider<List<VacationEntry>>((ref) {
   ];
 });
 
+final vacationCalendarProider = Provider<Map<Day, VacationCategory>>((ref) {
+  final vacationService = ref.watch(vacationProvider);
+  final vacationEntries = vacationService.vacationData.where((e) => e.category != VacationCategory.available);
+
+  if (vacationEntries.isEmpty) return {};
+
+  final Map<Day, VacationCategory> vacationCalendar = {};
+
+  for (VacationEntry entry in vacationEntries) {
+    final start = DateTime.fromMillisecondsSinceEpoch(entry.start);
+    final end = DateTime.fromMillisecondsSinceEpoch(entry.end);
+
+    final days = end.difference(start).inDays;
+
+    for (int i = 0; i <= days; i++) {
+      final date = start.add(Duration(days: i));
+      vacationCalendar[Day(day: date.day, month: date.month, year: date.year)] =
+          entry.category;
+    }
+  }
+
+  return vacationCalendar;
+});
+
 final vacationProvider =
     ChangeNotifierProvider<VacationNotifier>((ref) => VacationNotifier());
 

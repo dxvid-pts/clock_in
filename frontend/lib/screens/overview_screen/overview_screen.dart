@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
@@ -146,60 +147,49 @@ class _DatePickerState extends State<DatePicker> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SfDateRangePicker(
-          headerStyle: DateRangePickerHeaderStyle(
-            textStyle: titleStyle(context),
-          ),
-          cellBuilder: (context, dateDetails) {
-            final base = Center(
-              child: Text(
-                dateDetails.date.day.toString(),
-              ),
-            );
-            if (Day.fromDateTime(dateDetails.date) ==
-                Day.fromDateTime(DateTime.now())) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    dateDetails.date.day.toString(),
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+        Consumer(builder: (context, ref, child) {
+          return SfDateRangePicker(
+            headerStyle: DateRangePickerHeaderStyle(
+              textStyle: titleStyle(context),
+            ),
+            cellBuilder: (context, dateDetails) {
+              final vacationDays = ref.watch(vacationCalendarProider);
+
+              final currentDay = Day.fromDateTime(dateDetails.date);
+
+              final base = Center(
+                child: Text(
+                  dateDetails.date.day.toString(),
+                  style: TextStyle(
+                    color: currentDay == Day.fromDateTime(DateTime.now())
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).textTheme.bodyMedium?.color,
                   ),
                 ),
               );
-            }
+              if (vacationDays.containsKey(currentDay)) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: vacationDays[currentDay]!.color.withOpacity(0.2),
+                  ),
+                  child: base,
+                );
+              } else if (currentDay == Day.fromDateTime(DateTime.now())) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: base,
+                  ),
+                );
+              }
 
-            return base;
-          },
-          selectionMode: DateRangePickerSelectionMode.single,
-          onSelectionChanged: (value) {
-            /*   if (_multiRangeSelectionCount < 2 && _selectedCategory != null) {
-              print("object");
-              _multiRangeSelectionCount = _multiRangeSelectionCount + 1;
-            } else {
-              print("object1");
-              setState(() {
-                _selectedCategory = null;
-              });
-            }
-            /**/
-
-            print(dateController.selectedRanges);
-
-            //create new date range
-            PickerDateRange newDateRange = PickerDateRange(
-              DateTime.now().subtract(const Duration(days: 1)),
-              DateTime.now(),
-            );
-
-            //yesterday and today
-            // dateController.selectedRanges = [newDateRange];
-            // print(value.value);*/
-          },
-        ),
+              return base;
+            },
+          );
+        }),
         Positioned(
           top: 6,
           right: 10,
