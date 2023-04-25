@@ -100,20 +100,6 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// test permissions with jwt for employee
-    /// </summary>
-    /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee)]
-    [HttpGet("testemp")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestEmployeePerms()
-    {
-        return Ok();
-    }
-
-    /// <summary>
     /// Create a new Account
     /// </summary>
     /// <returns>Password for the new Account</returns>
@@ -168,20 +154,6 @@ public class AccountController : ControllerBase
         {
             return BadRequest();
         }
-    }
-
-    /// <summary>
-    /// test permissions with jwt for employee + manager
-    /// </summary>
-    /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
-    [HttpGet("testcomb")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestCombinedPerms()
-    {
-        return Ok();
     }
     
     /// <summary>
