@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/models/vacation_category.dart';
+import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
-import 'package:frontend/services/tracking_service.dart';
+import 'package:frontend/services/consolidated_tracking_service.dart';
+import 'package:frontend/services/vacation_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -26,18 +29,72 @@ class OverviewScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const DatePicker(),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              "Overview",
-              style: titleStyle(context),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView(
+                children: const [
+                  _TitleWidget("Vacation"),
+                  _PendingVacationWidget(),
+                  SizedBox(height: 20),
+                  _TitleWidget("Overview"),
+                  _OverEntryListSection(),
+                ],
+              ),
             ),
           ),
-          const Expanded(child: _OverEntryListSection()),
         ],
       ),
     );
   }
+}
+
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget(this.title, {Key? key}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: titleStyle(context),
+    );
+  }
+}
+
+class _PendingVacationWidget extends ConsumerWidget {
+  const _PendingVacationWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        for (final vacationEntry in ref.watch(vacationOverviewProider))
+          VacationListTile(
+            title: _getVacationDisplayString(
+                vacationEntry.start, vacationEntry.end),
+            subtitle: "Request to Manager",
+            category: vacationEntry.category,
+          ),
+      ],
+    );
+  }
+}
+
+String _getVacationDisplayString(int start, int end) {
+  String startString = dayToDisplayString(
+      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(start)));
+  String endString = dayToDisplayString(
+      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(end)));
+
+  String weekDay = startString.split(" ")[0];
+  startString = "${weekDay.substring(0, 3)}. ${startString.split(" ")[1]}";
+
+  weekDay = endString.split(" ")[0];
+  endString = "${weekDay.substring(0, 3)}. ${endString.split(" ")[1]}";
+
+  return "$startString - $endString";
 }
 
 class _OverEntryListSection extends ConsumerWidget {
@@ -45,30 +102,16 @@ class _OverEntryListSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: ListView(
-        children: [
-          //sample
-          const EntryListTile(
-            title: "Monday 10.04",
-            subtitle: "Remote",
-            color: Color(0xFFd399f1),
-            duration: 2.4,
+    return Column(
+      children: [
+        for (final trackingEntry in ref.watch(consolidatedTrackingProvider))
+          EntryListTile(
+            title: dayToDisplayString(trackingEntry.day),
+            subtitle: (trackingEntry.category ?? DateRangeCategory.office).name,
+            color: (trackingEntry.category ?? DateRangeCategory.office).color,
+            duration: trackingEntry.duration,
           ),
-
-          for (final trackingEntry in ref
-              .watch(trackingProvider)
-              .getConsolidatedTrackingEntries)
-            EntryListTile(
-              title: dayToDisplayString(trackingEntry.day),
-              subtitle: "Office",
-              color: const Color(0xFFd26a07),
-              duration: trackingEntry.duration.inHours +
-                  (trackingEntry.duration.inMinutes / 60),
-            ),
-        ],
-      ),
+      ],
     );
   }
 }
@@ -104,65 +147,61 @@ class _DatePickerState extends State<DatePicker> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SfDateRangePicker(
-          headerStyle: DateRangePickerHeaderStyle(
-            textStyle: titleStyle(context),
-          ),
-          cellBuilder: (context, dateDetails) {
-            final base = Center(
-              child: Text(
-                dateDetails.date.day.toString(),
-              ),
-            );
-            if (dateDetails.date.day == DateTime.now().day) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    dateDetails.date.day.toString(),
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+        Consumer(builder: (context, ref, child) {
+          return SfDateRangePicker(
+            headerStyle: DateRangePickerHeaderStyle(
+              textStyle: titleStyle(context),
+            ),
+            cellBuilder: (context, dateDetails) {
+              final vacationDays = ref.watch(vacationCalendarProider);
+
+              final currentDay = Day.fromDateTime(dateDetails.date);
+
+              final base = Center(
+                child: Text(
+                  dateDetails.date.day.toString(),
+                  style: TextStyle(
+                    color: currentDay == Day.fromDateTime(DateTime.now())
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).textTheme.bodyMedium?.color,
                   ),
                 ),
               );
-            }
+              if (vacationDays.containsKey(currentDay)) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: vacationDays[currentDay]!.color.withOpacity(0.2),
+                  ),
+                  child: base,
+                );
+              } else if (currentDay == Day.fromDateTime(DateTime.now())) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: base,
+                  ),
+                );
+              }
 
-            return base;
-          },
-          selectionMode: DateRangePickerSelectionMode.single,
-          onSelectionChanged: (value) {
-            /*   if (_multiRangeSelectionCount < 2 && _selectedCategory != null) {
-              print("object");
-              _multiRangeSelectionCount = _multiRangeSelectionCount + 1;
-            } else {
-              print("object1");
-              setState(() {
-                _selectedCategory = null;
-              });
-            }
-            /**/
-
-            print(dateController.selectedRanges);
-
-            //create new date range
-            PickerDateRange newDateRange = PickerDateRange(
-              DateTime.now().subtract(const Duration(days: 1)),
-              DateTime.now(),
-            );
-
-            //yesterday and today
-            // dateController.selectedRanges = [newDateRange];
-            // print(value.value);*/
-          },
-        ),
+              return base;
+            },
+          );
+        }),
         Positioned(
           top: 6,
           right: 10,
-          child: DropdownButton<DateRangeCategory>(
+          child: TextButton(
+            onPressed: () {
+              showPlanningDialog(context);
+            },
+            child: const Text("Plan now"),
+          ),
+
+          /*DropdownButton<DateRangeCategory>(
             isDense: true,
-            //  value: _selectedCategory,
             items: [
               for (final item in DateRangeCategory.values)
                 DropdownMenuItem(
@@ -170,13 +209,8 @@ class _DatePickerState extends State<DatePicker> {
                   child: Text(item.name),
                 ),
             ],
-            onChanged: (value) {
-              /* setState(() {
-                _selectedCategory = value;
-                _multiRangeSelectionCount = 0;
-              });*/
-            },
-          ),
+            onChanged: (value) {},
+          )*/
         )
       ],
     );

@@ -2,6 +2,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/models/vacation_category.dart';
+import 'package:frontend/services/current_week_stats_service.dart';
+import 'package:frontend/services/vacation_service.dart';
+
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
 
@@ -47,11 +53,13 @@ class StatsScreen extends StatelessWidget {
   }
 }
 
-class SimpleBarChart extends StatelessWidget {
+class SimpleBarChart extends ConsumerWidget {
   const SimpleBarChart({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentWeekStats = ref.watch(currentWeekStatsProvider);
+
     return AspectRatio(
       aspectRatio: 1.5,
       child: BarChart(
@@ -65,14 +73,26 @@ class SimpleBarChart extends StatelessWidget {
             ),
           ),
           barGroups: [
-            for (int i = 0; i < 16; i++)
+            for (final statsEntry in currentWeekStats.entries)
               BarChartGroupData(
                 x: 0,
                 barRods: [
                   BarChartRodData(
-                    toY: math.Random().nextDouble() * 10,
-                    color: Colors.blue[200],
-                    width: 10,
+                    toY: statsEntry.value.duration.inHours.toDouble(),
+                    gradient: LinearGradient(
+                      colors: [
+                        Theme.of(context).primaryColor.withOpacity(0.8),
+                        Theme.of(context).primaryColor,
+                      ],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      stops: const [0.2, 1],
+                    ),
+                    width: 30,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(7),
+                      topRight: Radius.circular(7),
+                    ),
                   ),
                 ],
               ),
@@ -83,44 +103,39 @@ class SimpleBarChart extends StatelessWidget {
   }
 }
 
-class PieChartSample2 extends StatefulWidget {
+class PieChartSample2 extends ConsumerWidget {
   const PieChartSample2({super.key});
 
   @override
-  State<StatefulWidget> createState() => PieChart2State();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final vacationChartService = ref.watch(vacationChartProider);
 
-class PieChart2State extends State {
-  int touchedIndex = -1;
-
-  @override
-  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
           child: PieChart(
             PieChartData(
-              pieTouchData: PieTouchData(
-                touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                  setState(() {
-                    if (!event.isInterestedForInteractions ||
-                        pieTouchResponse == null ||
-                        pieTouchResponse.touchedSection == null) {
-                      touchedIndex = -1;
-                      return;
-                    }
-                    touchedIndex =
-                        pieTouchResponse.touchedSection!.touchedSectionIndex;
-                  });
-                },
-              ),
               borderData: FlBorderData(
                 show: false,
               ),
               sectionsSpace: 0,
               centerSpaceRadius: 40,
-              sections: showingSections(),
+              sections: [
+                for (final chartEntry in vacationChartService.entries)
+                  PieChartSectionData(
+                    color: chartEntry.key.color,
+                    value: chartEntry.value.toDouble(),
+                    title: '${chartEntry.value}',
+                    radius: 50,
+                    titleStyle: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [Shadow(color: Colors.black12, blurRadius: 1)],
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
@@ -128,38 +143,15 @@ class PieChart2State extends State {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Indicator(
-              color: AppColors.contentColorYellow,
-              text: 'First',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Colors.blue[200]!,
-              text: 'Second',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Colors.blue[50]!,
-              text: 'Third',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 4,
-            ),
-            Indicator(
-              color: Colors.blue[100]!,
-              text: 'Fourth',
-              isSquare: true,
-            ),
-            SizedBox(
-              height: 18,
-            ),
+            for (final cat in VacationCategory.values)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Indicator(
+                  color: cat.color,
+                  text: cat.name,
+                  isSquare: true,
+                ),
+              ),
           ],
         ),
         const SizedBox(
@@ -167,58 +159,6 @@ class PieChart2State extends State {
         ),
       ],
     );
-  }
-
-  List<PieChartSectionData> showingSections() {
-    return List.generate(4, (i) {
-      final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 18.0 : 12.0;
-      final radius = isTouched ? 60.0 : 50.0;
-      const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-
-      final titleStyle = TextStyle(
-        fontSize: fontSize,
-        fontWeight: FontWeight.bold,
-        color: AppColors.mainTextColor1,
-        shadows: shadows,
-      );
-      switch (i) {
-        case 0:
-          return PieChartSectionData(
-            color: Colors.blue[200]!,
-            value: 40,
-            title: '40%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        case 1:
-          return PieChartSectionData(
-            color: AppColors.contentColorYellow,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.blue[100]!,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.blue[50]!,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: titleStyle,
-          );
-        default:
-          throw Error();
-      }
-    });
   }
 }
 
@@ -255,36 +195,11 @@ class Indicator extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontSize: 12,
             color: textColor,
           ),
         )
       ],
     );
   }
-}
-
-class AppColors {
-  static const Color primary = contentColorCyan;
-  static const Color menuBackground = Color(0xFF090912);
-  static const Color itemsBackground = Color(0xFF1B2339);
-  static const Color pageBackground = Color(0xFF282E45);
-  static const Color mainTextColor1 = Colors.white;
-  static const Color mainTextColor2 = Colors.white70;
-  static const Color mainTextColor3 = Colors.white38;
-  static const Color mainGridLineColor = Colors.white10;
-  static const Color borderColor = Colors.white54;
-  static const Color gridLinesColor = Color(0x11FFFFFF);
-
-  static const Color contentColorBlack = Colors.black;
-  static const Color contentColorWhite = Colors.white;
-  static const Color contentColorBlue = Color(0xFF2196F3);
-  static const Color contentColorYellow = Color(0xFFFFC300);
-  static const Color contentColorOrange = Color(0xFFFF683B);
-  static const Color contentColorGreen = Color(0xFF3BFF49);
-  static const Color contentColorPurple = Color(0xFF6E1BFF);
-  static const Color contentColorPink = Color(0xFFFF3AF2);
-  static const Color contentColorRed = Color(0xFFE80054);
-  static const Color contentColorCyan = Color(0xFF50E4FF);
 }
