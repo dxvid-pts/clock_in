@@ -69,4 +69,6 @@ public class ICreateAccount
     [Required]
     [Description("Amount of vacations days per year")]
     public int VacationDays { get; set; }
+
+    public int ManagerId { get; set; } = -1;
 }

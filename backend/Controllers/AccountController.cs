@@ -147,7 +147,19 @@ public class AccountController : ControllerBase
 
             _clockInContext.Accounts.Add(new_account);
             _clockInContext.SaveChanges();
-            
+
+            if (account.ManagerId > 0)
+            {
+                var newRelation = new ManagerEmployee
+                {
+                    EmployeeId = new_account.Id,
+                    ManagerId = account.ManagerId
+                };
+
+                _clockInContext.ManagerEmployees.Add(newRelation);
+                _clockInContext.SaveChanges();
+            }
+
             return Ok(password);
         }
         catch (Exception e)
@@ -195,7 +207,7 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [SuperiorAuthorize(Roles = Roles.Admin)]
-    [HttpPatch("{userId}/role")]
+    [HttpPatch("{userId}/{role}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -221,5 +233,49 @@ public class AccountController : ControllerBase
         }
 
         return Ok();
+    }
+
+    /// <summary>
+    /// Assign Employee/Manager to manager. If a relation already exists, it will be updated
+    /// </summary>
+    /// <param name="employeeId"></param>
+    /// <param name="managerId"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpPatch("employeetomanager/{employeeId}/{managerId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult AddEmployeeToManager(int employeeId, int managerId)
+    {
+        var employee = _clockInContext.Accounts.Find(employeeId);
+        var manager = _clockInContext.Accounts.Find(managerId);
+
+        if (employee == null || manager is not { Role: Roles.Manager })
+        {
+            return BadRequest();
+        }
+
+        var relation = _clockInContext.ManagerEmployees.FirstOrDefault(
+            r =>
+                r.EmployeeId == employeeId
+        );
+
+        if (relation == null)
+        {
+            relation = new ManagerEmployee
+            {
+                EmployeeId = employeeId,
+                ManagerId = managerId
+            };
+            _clockInContext.ManagerEmployees.Add(relation);
+        }
+        else
+        {
+            relation.ManagerId = managerId;
+            _clockInContext.ManagerEmployees.Update(relation);
+        }
+
+        _clockInContext.SaveChanges();
+        return NoContent();
     }
 }
