@@ -5,7 +5,6 @@ using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
 using backend.Utils;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace backend.Controllers;
 
@@ -31,8 +30,8 @@ public class AccountController : ControllerBase
     public AccountController(IConfiguration configuration, ILogger<AccountController> logger, TokenUtils tokenUtils,
         ClockInContext clockInContext)
     {
-        _configuration = configuration;
         _logger = logger;
+        _configuration = configuration;
         _tokenUtils = tokenUtils;
         _clockInContext = clockInContext;
         _logger.Log(LogLevel.Debug, configuration.GetConnectionString("Database"));
@@ -101,20 +100,6 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// test permissions with jwt for employee
-    /// </summary>
-    /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee)]
-    [HttpGet("testemp")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestEmployeePerms()
-    {
-        return Ok();
-    }
-
-    /// <summary>
     /// Create a new Account
     /// </summary>
     /// <returns>Password for the new Account</returns>
@@ -126,6 +111,13 @@ public class AccountController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult CreateAccount(ICreateAccount account)
     {
+        var account_with_same_email = _clockInContext.Accounts.FirstOrDefault(a => a.Email == account.Email);
+        
+        if (account_with_same_email != null)
+        {
+            return BadRequest();
+        }
+        
         try
         {
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -155,7 +147,19 @@ public class AccountController : ControllerBase
 
             _clockInContext.Accounts.Add(new_account);
             _clockInContext.SaveChanges();
-            
+
+            if (account.ManagerId > 0)
+            {
+                var newRelation = new ManagerEmployee
+                {
+                    EmployeeId = new_account.Id,
+                    ManagerId = account.ManagerId
+                };
+
+                _clockInContext.ManagerEmployees.Add(newRelation);
+                _clockInContext.SaveChanges();
+            }
+
             return Ok(password);
         }
         catch (Exception e)
@@ -163,46 +167,32 @@ public class AccountController : ControllerBase
             return BadRequest();
         }
     }
-
-    /// <summary>
-    /// test permissions with jwt for employee + manager
-    /// </summary>
-    /// <returns></returns>
-    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
-    [HttpGet("testcomb")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult TestCombinedPerms()
-    {
-        return Ok();
-    }
     
     /// <summary>
     /// Get account specific information
     /// </summary>
     /// <returns></returns>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
-    [HttpGet("{user_id}")]
+    [HttpGet("{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public IActionResult GetAccountInformation(int user_id)
+    public IActionResult GetAccountInformation(int userId)
     {
-        var account = (Account) HttpContext.Items["User"];
+        var account = (Account) HttpContext.Items["User"]!;
 
-        if (account.Role == Roles.Employee && user_id != account.Id)
+        if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid();
         }
 
-        if (user_id != account.Id && account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
-                relation.Employee.Id == user_id && relation.Manager.Id == account.Id) == null)
+        if (userId != account.Id && account.Role == Roles.Manager && _clockInContext.ManagerEmployees.FirstOrDefault(relation =>
+                relation.Employee.Id == userId && relation.Manager.Id == account.Id) == null)
         {
             return Forbid();
         }
 
-        Account? result = _clockInContext.Accounts.Find(user_id);
+        Account? result = _clockInContext.Accounts.Find(userId);
 
         if (result == null)
         {
@@ -210,5 +200,82 @@ public class AccountController : ControllerBase
         }
 
         return Ok(new IAccount(result));
+    }
+    
+    /// <summary>
+    /// Update role of an account
+    /// </summary>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpPatch("{userId}/{role}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult ChangeRole(int userId, string role)
+    {
+        var account = _clockInContext.Accounts.Find(userId);
+
+        if (account == null)
+        {
+            return NotFound();
+        }
+
+        try
+        {
+            account.Role = role;
+            _clockInContext.Accounts.Update(account);
+            _clockInContext.SaveChanges();
+        }
+        catch
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Assign Employee/Manager to manager. If a relation already exists, it will be updated
+    /// </summary>
+    /// <param name="employeeId"></param>
+    /// <param name="managerId"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpPatch("employeetomanager/{employeeId}/{managerId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult AddEmployeeToManager(int employeeId, int managerId)
+    {
+        var employee = _clockInContext.Accounts.Find(employeeId);
+        var manager = _clockInContext.Accounts.Find(managerId);
+
+        if (employee == null || manager is not { Role: Roles.Manager })
+        {
+            return BadRequest();
+        }
+
+        var relation = _clockInContext.ManagerEmployees.FirstOrDefault(
+            r =>
+                r.EmployeeId == employeeId
+        );
+
+        if (relation == null)
+        {
+            relation = new ManagerEmployee
+            {
+                EmployeeId = employeeId,
+                ManagerId = managerId
+            };
+            _clockInContext.ManagerEmployees.Add(relation);
+        }
+        else
+        {
+            relation.ManagerId = managerId;
+            _clockInContext.ManagerEmployees.Update(relation);
+        }
+
+        _clockInContext.SaveChanges();
+        return NoContent();
     }
 }

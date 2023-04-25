@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using backend.Models;
 
 namespace backend.Interfaces;
@@ -20,4 +21,24 @@ public class IWork
         this.Changed = work.Changed;
 
     }
+}
+
+public class IMonthSelector
+{
+    [Required]
+    [Range(typeof(int), "1", "12", ErrorMessage = "Invalid Month")]
+    public int Month { get; init; }
+    
+    [Required]
+    [Range(typeof(int), "2000", "2100", ErrorMessage = "Invalid Year")]
+    public int Year { get; init; }
+}
+
+public class IWorkDateRange
+{
+    [Required]
+    public DateTime begin { get; init; }
+    
+    [Required]
+    public DateTime end { get; init; }
 }

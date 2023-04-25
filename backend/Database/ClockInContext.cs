@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using backend.Models;
-using Microsoft.AspNetCore.Authentication;
 
 namespace backend.Database;
 
@@ -31,6 +30,7 @@ public partial class ClockInContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseMySql("name=ConnectionStrings:Database", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.11.2-mariadb"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -57,7 +57,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnName("break_time");
             entity.Property(e => e.Changed)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
@@ -102,7 +102,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnName("id");
             entity.Property(e => e.Changed)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
@@ -144,7 +144,7 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.Begin).HasColumnName("begin");
             entity.Property(e => e.Changed)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
@@ -175,7 +175,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnName("account_id");
             entity.Property(e => e.Changed)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Content)
@@ -212,7 +212,7 @@ public partial class ClockInContext : DbContext
             entity.Property(e => e.Begin).HasColumnName("begin");
             entity.Property(e => e.Changed)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
@@ -249,7 +249,7 @@ public partial class ClockInContext : DbContext
                 .HasColumnName("begin");
             entity.Property(e => e.Changed)
                 .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("'0000-00-00 00:00:00'")
+                .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("changed");
             entity.Property(e => e.Created)
