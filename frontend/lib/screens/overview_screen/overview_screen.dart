@@ -27,16 +27,57 @@ class OverviewScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const DatePicker(),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              "Overview",
-              style: titleStyle(context),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView(
+                children: const [
+                  _TitleWidget("Vacation"),
+                  _PendingVacationWidget(),
+
+                  SizedBox(height: 20),
+
+                  _TitleWidget("Overview"),
+                  _OverEntryListSection(),
+                ],
+              ),
             ),
           ),
-          const Expanded(child: _OverEntryListSection()),
         ],
       ),
+    );
+  }
+}
+
+class _TitleWidget extends StatelessWidget {
+  const _TitleWidget(this.title, {Key? key}) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: titleStyle(context),
+    );
+  }
+}
+
+class _PendingVacationWidget extends ConsumerWidget {
+  const _PendingVacationWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        for (final trackingEntry in ref.watch(consolidatedTrackingProvider))
+          EntryListTile(
+            title: dayToDisplayString(trackingEntry.day),
+            subtitle: (trackingEntry.category ?? DateRangeCategory.office).name,
+            color: (trackingEntry.category ?? DateRangeCategory.office).color,
+            duration: trackingEntry.duration,
+          ),
+      ],
     );
   }
 }
@@ -46,20 +87,16 @@ class _OverEntryListSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: ListView(
-        children: [
-          for (final trackingEntry in ref.watch(consolidatedTrackingProvider))
-            EntryListTile(
-              title: dayToDisplayString(trackingEntry.day),
-              subtitle:
-                  (trackingEntry.category ?? DateRangeCategory.office).name,
-              color: (trackingEntry.category ?? DateRangeCategory.office).color,
-              duration: trackingEntry.duration,
-            ),
-        ],
-      ),
+    return Column(
+      children: [
+        for (final trackingEntry in ref.watch(consolidatedTrackingProvider))
+          EntryListTile(
+            title: dayToDisplayString(trackingEntry.day),
+            subtitle: (trackingEntry.category ?? DateRangeCategory.office).name,
+            color: (trackingEntry.category ?? DateRangeCategory.office).color,
+            duration: trackingEntry.duration,
+          ),
+      ],
     );
   }
 }
@@ -157,7 +194,7 @@ class _DatePickerState extends State<DatePicker> {
             },
             child: const Text("Plan now"),
           ),
-          
+
           /*DropdownButton<DateRangeCategory>(
             isDense: true,
             items: [
