@@ -156,7 +156,8 @@ class _DatePickerState extends State<DatePicker> {
                 dateDetails.date.day.toString(),
               ),
             );
-            if (dateDetails.date.day == DateTime.now().day) {
+            if (Day.fromDateTime(dateDetails.date) ==
+                Day.fromDateTime(DateTime.now())) {
               return Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withOpacity(0.1),
