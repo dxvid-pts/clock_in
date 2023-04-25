@@ -28,6 +28,19 @@ extension DateRangeCategoryExtension on VacationCategory {
     }
   }
 
+   String get shortName {
+    switch (this) {
+      case VacationCategory.available:
+        return 'Available';
+      case VacationCategory.taken:
+        return 'Taken';
+      case VacationCategory.pending:
+        return 'Pending';
+      case VacationCategory.approved:
+        return 'Approved';
+    }
+  }
+
   Color get color {
     switch (this) {
       case VacationCategory.available:

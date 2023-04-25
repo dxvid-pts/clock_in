@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/vacation_category.dart';
 
 class EntryListTile extends StatelessWidget {
   const EntryListTile({
@@ -69,6 +70,73 @@ class EntryListTile extends StatelessWidget {
                 Icons.play_arrow,
                 color: Color(0xFF7c7c7c),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class VacationListTile extends StatelessWidget {
+  const VacationListTile({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.category,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final VacationCategory category;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      //rounded corners
+      decoration: const BoxDecoration(
+        color: Color(0xFFf9f9f9),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      child: ListTile(
+        leading: Container(
+          width: 2,
+          alignment: Alignment.topLeft,
+          child: Text(
+            "•",
+            style: TextStyle(
+              fontSize: 30,
+              color: category.color,
+            ),
+          ),
+        ),
+        minLeadingWidth: 0,
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        subtitle: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              category == VacationCategory.pending
+                  ? Icons.access_time
+                  : Icons.check,
+              size: 15,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              category.shortName,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

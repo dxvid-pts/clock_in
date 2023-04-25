@@ -6,6 +6,7 @@ import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
+import 'package:frontend/services/vacation_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -34,9 +35,7 @@ class OverviewScreen extends StatelessWidget {
                 children: const [
                   _TitleWidget("Vacation"),
                   _PendingVacationWidget(),
-
                   SizedBox(height: 20),
-
                   _TitleWidget("Overview"),
                   _OverEntryListSection(),
                 ],
@@ -70,16 +69,31 @@ class _PendingVacationWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        for (final trackingEntry in ref.watch(consolidatedTrackingProvider))
-          EntryListTile(
-            title: dayToDisplayString(trackingEntry.day),
-            subtitle: (trackingEntry.category ?? DateRangeCategory.office).name,
-            color: (trackingEntry.category ?? DateRangeCategory.office).color,
-            duration: trackingEntry.duration,
+        for (final vacationEntry in ref.watch(vacationOverviewProider))
+          VacationListTile(
+            title: _getVacationDisplayString(
+                vacationEntry.start, vacationEntry.end),
+            subtitle: "Request to Manager",
+            category: vacationEntry.category,
           ),
       ],
     );
   }
+}
+
+String _getVacationDisplayString(int start, int end) {
+  String startString = dayToDisplayString(
+      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(start)));
+  String endString = dayToDisplayString(
+      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(end)));
+
+  String weekDay = startString.split(" ")[0];
+  startString = "${weekDay.substring(0, 3)}. ${startString.split(" ")[1]}";
+
+  weekDay = endString.split(" ")[0];
+  endString = "${weekDay.substring(0, 3)}. ${endString.split(" ")[1]}";
+
+  return "$startString - $endString";
 }
 
 class _OverEntryListSection extends ConsumerWidget {

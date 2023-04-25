@@ -33,6 +33,20 @@ final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
   return vacationChart;
 });
 
+final vacationOverviewProider = Provider<List<VacationEntry>>((ref) {
+  final vacationService = ref.watch(vacationProvider);
+  final vacationEntries = vacationService.vacationData;
+
+  if (vacationEntries.isEmpty) return [];
+
+  return [
+    ...vacationEntries
+        .where((element) => element.category == VacationCategory.pending),
+    ...vacationEntries
+        .where((element) => element.category == VacationCategory.approved),
+  ];
+});
+
 final vacationProvider =
     ChangeNotifierProvider<VacationNotifier>((ref) => VacationNotifier());
 
