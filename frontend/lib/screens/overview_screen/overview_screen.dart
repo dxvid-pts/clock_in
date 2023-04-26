@@ -197,7 +197,15 @@ class _DatePickerState extends State<DatePicker> {
             onPressed: () {
               showPlanningDialog(context);
             },
-            child: const Text("Plan now"),
+            child: Row(
+              children: const [
+                 Text("Plan now"),
+                 Icon(
+                  Icons.play_arrow,
+                  size: 14,
+                )
+              ],
+            ),
           ),
 
           /*DropdownButton<DateRangeCategory>(
