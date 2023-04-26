@@ -54,6 +54,7 @@ CREATE TABLE sick_leave
     account_id INT  NOT NULL,
     begin      DATE NOT NULL,
     end        DATE NOT NULL,
+    status     VARCHAR(255) NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     changed    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES account (id)

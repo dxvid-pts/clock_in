@@ -72,4 +72,5 @@ const _$DateRangeCategoryEnumMap = {
   DateRangeCategory.vacation: 'vacation',
   DateRangeCategory.sick: 'sick',
   DateRangeCategory.remote: 'remote',
+  DateRangeCategory.office: 'office',
 };

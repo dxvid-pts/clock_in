@@ -1,31 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tracking_entry.dart';
+part of 'vacation_entry.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TrackingEntryAdapter extends TypeAdapter<_$_TrackingEntry> {
+class VacationEntryAdapter extends TypeAdapter<_$_VacationEntry> {
   @override
-  final int typeId = 3;
+  final int typeId = 7;
 
   @override
-  _$_TrackingEntry read(BinaryReader reader) {
+  _$_VacationEntry read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return _$_TrackingEntry(
+    return _$_VacationEntry(
       id: fields[0] as String,
       start: fields[1] as int,
       end: fields[2] as int,
-      category: fields[3] as DateRangeCategory?,
+      category: fields[3] as VacationCategory,
     );
   }
 
   @override
-  void write(BinaryWriter writer, _$_TrackingEntry obj) {
+  void write(BinaryWriter writer, _$_VacationEntry obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -44,7 +44,7 @@ class TrackingEntryAdapter extends TypeAdapter<_$_TrackingEntry> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TrackingEntryAdapter &&
+      other is VacationEntryAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -53,27 +53,25 @@ class TrackingEntryAdapter extends TypeAdapter<_$_TrackingEntry> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_TrackingEntry _$$_TrackingEntryFromJson(Map<String, dynamic> json) =>
-    _$_TrackingEntry(
+_$_VacationEntry _$$_VacationEntryFromJson(Map<String, dynamic> json) =>
+    _$_VacationEntry(
       id: json['id'] as String,
       start: json['start'] as int,
       end: json['end'] as int,
-      category:
-          $enumDecodeNullable(_$DateRangeCategoryEnumMap, json['category']) ??
-              DateRangeCategory.office,
+      category: $enumDecode(_$VacationCategoryEnumMap, json['category']),
     );
 
-Map<String, dynamic> _$$_TrackingEntryToJson(_$_TrackingEntry instance) =>
+Map<String, dynamic> _$$_VacationEntryToJson(_$_VacationEntry instance) =>
     <String, dynamic>{
       'id': instance.id,
       'start': instance.start,
       'end': instance.end,
-      'category': _$DateRangeCategoryEnumMap[instance.category],
+      'category': _$VacationCategoryEnumMap[instance.category]!,
     };
 
-const _$DateRangeCategoryEnumMap = {
-  DateRangeCategory.vacation: 'vacation',
-  DateRangeCategory.sick: 'sick',
-  DateRangeCategory.remote: 'remote',
-  DateRangeCategory.office: 'office',
+const _$VacationCategoryEnumMap = {
+  VacationCategory.available: 'available',
+  VacationCategory.taken: 'taken',
+  VacationCategory.pending: 'pending',
+  VacationCategory.approved: 'approved',
 };

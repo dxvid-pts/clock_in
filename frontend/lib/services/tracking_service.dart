@@ -2,6 +2,7 @@ import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
@@ -13,36 +14,26 @@ final trackingProvider =
     ChangeNotifierProvider<TrackingNotifier>((ref) => TrackingNotifier());
 
 class TrackingNotifier extends ChangeNotifier {
-  Set<TrackingEntry> trackingEntries = {};
-
-  Set<TrackingEntry> get getConsolidatedTrackingEntries {
-    final consolidatedEntries = <TrackingEntry>{};
-
-    for (final entry in trackingEntries) {
-      //check if there is already an entry for the same day
-      final existingEntry = consolidatedEntries.firstWhereOrNull(
-        (e) => e.start == entry.start,
-      );
-
-      //no entry for the same day found
-      if (existingEntry == null) {
-        consolidatedEntries.add(entry);
-      } else {
-        //entry for the same day found
-        //create new entry with one of both start times; add both durations; end time = start time + duration
-        final combinedDuration = entry.duration + existingEntry.duration;
-        consolidatedEntries.add(
-          TrackingEntry(
-            id: Commons.generateId(),
-            start: entry.start,
-            end: entry.start + combinedDuration.inMilliseconds,
-          ),
-        );
-      }
-    }
-
-    return consolidatedEntries;
-  }
+  Set<TrackingEntry> trackingEntries = {
+    TrackingEntry(
+      id: Commons.generateId(),
+      start: DateTime.parse("2023-04-17 00:00:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2023-04-17 08:00:00").millisecondsSinceEpoch,
+      category: DateRangeCategory.remote,
+    ),
+    TrackingEntry(
+      id: Commons.generateId(),
+      start: DateTime.parse("2023-04-18 00:30:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2023-04-18 08:00:00").millisecondsSinceEpoch,
+      category: DateRangeCategory.remote,
+    ),
+    TrackingEntry(
+      id: Commons.generateId(),
+      start: DateTime.parse("2023-04-19 02:00:00").millisecondsSinceEpoch,
+      end: DateTime.parse("2023-04-19 12:00:00").millisecondsSinceEpoch,
+      category: DateRangeCategory.remote,
+    ),
+  };
 
   late final StorageBox<TrackingEntry> _trackingBox;
 
@@ -78,6 +69,7 @@ class TrackingNotifier extends ChangeNotifier {
       id: Commons.generateId(),
       start: startTime.millisecondsSinceEpoch,
       end: endTime.millisecondsSinceEpoch,
+      category: DateRangeCategory.office,
     );
 
     trackingEntries.add(trackingEntry);
