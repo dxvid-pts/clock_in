@@ -5,9 +5,9 @@ import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
-import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/vacation_service.dart';
+import 'package:frontend/utils.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -34,7 +34,9 @@ class OverviewScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ListView(
                 children: const [
+                  SizedBox(height: 10),
                   _TitleWidget("Vacation"),
+                  SizedBox(height: 3),
                   _PendingVacationWidget(),
                   SizedBox(height: 20),
                   _TitleWidget("Overview"),
@@ -72,7 +74,7 @@ class _PendingVacationWidget extends ConsumerWidget {
       children: [
         for (final vacationEntry in ref.watch(vacationOverviewProider))
           VacationListTile(
-            title: _getVacationDisplayString(
+            title: getVacationDisplayString(
                 vacationEntry.start, vacationEntry.end),
             subtitle: "Request to Manager",
             category: vacationEntry.category,
@@ -80,21 +82,6 @@ class _PendingVacationWidget extends ConsumerWidget {
       ],
     );
   }
-}
-
-String _getVacationDisplayString(int start, int end) {
-  String startString = dayToDisplayString(
-      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(start)));
-  String endString = dayToDisplayString(
-      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(end)));
-
-  String weekDay = startString.split(" ")[0];
-  startString = "${weekDay.substring(0, 3)}. ${startString.split(" ")[1]}";
-
-  weekDay = endString.split(" ")[0];
-  endString = "${weekDay.substring(0, 3)}. ${endString.split(" ")[1]}";
-
-  return "$startString - $endString";
 }
 
 class _OverEntryListSection extends ConsumerWidget {
@@ -157,6 +144,9 @@ class _DatePickerState extends State<DatePicker> {
 
               final currentDay = Day.fromDateTime(dateDetails.date);
 
+              const colorOpacity = 0.12;
+              const double borderRadius = 20;
+
               final base = Center(
                 child: Text(
                   dateDetails.date.day.toString(),
@@ -167,10 +157,35 @@ class _DatePickerState extends State<DatePicker> {
                   ),
                 ),
               );
-              if (vacationDays.containsKey(currentDay)) {
+              if (vacationDays.startDays.containsKey(currentDay)) {
                 return Container(
                   decoration: BoxDecoration(
-                    color: vacationDays[currentDay]!.color.withOpacity(0.2),
+                    color: vacationDays.startDays[currentDay]!.color
+                        .withOpacity(colorOpacity),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(borderRadius),
+                      bottomLeft: Radius.circular(borderRadius),
+                    ),
+                  ),
+                  child: base,
+                );
+              } else if (vacationDays.endDays.containsKey(currentDay)) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: vacationDays.endDays[currentDay]!.color
+                        .withOpacity(colorOpacity),
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(borderRadius),
+                      bottomRight: Radius.circular(borderRadius),
+                    ),
+                  ),
+                  child: base,
+                );
+              } else if (vacationDays.betweenDays.containsKey(currentDay)) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: vacationDays.betweenDays[currentDay]!.color
+                        .withOpacity(colorOpacity),
                   ),
                   child: base,
                 );
@@ -199,8 +214,8 @@ class _DatePickerState extends State<DatePicker> {
             },
             child: Row(
               children: const [
-                 Text("Plan now"),
-                 Icon(
+                Text("Plan now"),
+                Icon(
                   Icons.play_arrow,
                   size: 14,
                 )

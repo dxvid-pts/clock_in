@@ -1,10 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/screens/admin_screen/admin_screen.dart';
 import 'package:frontend/screens/overview_screen/overview_screen.dart';
 import 'package:frontend/screens/stats_screen/stats_screen.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/timer_service.dart';
+import 'package:frontend/utils.dart';
 
 const double _fabDimension = 56.0;
 
@@ -31,7 +34,7 @@ class _MyHomePageState extends State<MainScreen> {
         body = const StatsScreen();
         break;
       case 2:
-        body = const Center(child: Text("Profile"));
+        body = const AdminScreen();
         break;
       default:
         //error: this should never happen!
@@ -89,24 +92,27 @@ class _MyHomePageState extends State<MainScreen> {
           );
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _index,
-        onTap: (index) => setState(() => _index = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.stacked_line_chart_outlined),
-            label: 'Stats',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.admin_panel_settings_outlined),
-            label: 'Admin',
-          ),
-        ],
-      ),
+      bottomNavigationBar: Consumer(builder: (context, ref, _) {
+        return BottomNavigationBar(
+          currentIndex: _index,
+          onTap: (index) => setState(() => _index = index),
+          items: [
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.stacked_line_chart_outlined),
+              label: 'Stats',
+            ),
+            if (ref.watch(authProvider).user?.isAdmin ?? false)
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.admin_panel_settings_outlined),
+                label: 'Admin',
+              ),
+          ],
+        );
+      }),
     );
   }
 }

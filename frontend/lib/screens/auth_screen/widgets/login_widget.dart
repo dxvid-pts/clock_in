@@ -104,7 +104,14 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
               child: SizedBox(
                 height: 46,
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //snackbar
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Google sign in has been disabled by your company."),
+                        ),
+                      );
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -124,7 +131,13 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
               child: SizedBox(
                 height: 46,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                     ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Facebook sign in has been disabled by your company."),
+                        ),
+                      );
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -265,7 +278,13 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
         ),
         if (widget.login)
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+               ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please reach out to your companies IT department to reset your password."),
+                        ),
+                      );
+            },
             child: const Text("Forgot password?"),
           ),
         Padding(

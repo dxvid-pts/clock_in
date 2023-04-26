@@ -33,6 +33,9 @@ class AuthNotifier extends ChangeNotifier {
       return null;
     } else if (email == "admin" && password == "admin") {
       user = const User(id: "admin", email: "admin@admin.com", isAdmin: true);
+      notifyListeners();
+
+      // No error
     } else {
       return ErrorCode.invalidCredentials;
     }

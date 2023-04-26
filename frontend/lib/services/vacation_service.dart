@@ -21,7 +21,8 @@ final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
         .length,
     VacationCategory.pending: vacationEntries
         .where((element) => element.category == VacationCategory.pending)
-        .length,
+        .map((e) => e.durationDays)
+        .reduce((v, e) => v + e),
     VacationCategory.approved: vacationEntries
         .where((element) => element.category == VacationCategory.approved)
         .length,
@@ -47,13 +48,26 @@ final vacationOverviewProider = Provider<List<VacationEntry>>((ref) {
   ];
 });
 
-final vacationCalendarProider = Provider<Map<Day, VacationCategory>>((ref) {
+class _VacationCalendarScheme {
+  final Map<Day, VacationCategory> startDays;
+  final Map<Day, VacationCategory> betweenDays;
+  final Map<Day, VacationCategory> endDays;
+
+  const _VacationCalendarScheme({
+    required this.startDays,
+    required this.betweenDays,
+    required this.endDays,
+  });
+}
+
+final vacationCalendarProider = Provider<_VacationCalendarScheme>((ref) {
   final vacationService = ref.watch(vacationProvider);
-  final vacationEntries = vacationService.vacationData.where((e) => e.category != VacationCategory.available);
+  final vacationEntries = vacationService.vacationData
+      .where((e) => e.category != VacationCategory.available);
 
-  if (vacationEntries.isEmpty) return {};
-
-  final Map<Day, VacationCategory> vacationCalendar = {};
+  final Map<Day, VacationCategory> startDays = {};
+  final Map<Day, VacationCategory> betweenDays = {};
+  final Map<Day, VacationCategory> endDays = {};
 
   for (VacationEntry entry in vacationEntries) {
     final start = DateTime.fromMillisecondsSinceEpoch(entry.start);
@@ -62,13 +76,22 @@ final vacationCalendarProider = Provider<Map<Day, VacationCategory>>((ref) {
     final days = end.difference(start).inDays;
 
     for (int i = 0; i <= days; i++) {
-      final date = start.add(Duration(days: i));
-      vacationCalendar[Day(day: date.day, month: date.month, year: date.year)] =
-          entry.category;
+      final date = Day.fromDateTime(start.add(Duration(days: i)));
+      if (i == 0) {
+        startDays[date] = entry.category;
+      } else if (i == days) {
+        endDays[date] = entry.category;
+      } else {
+        betweenDays[date] = entry.category;
+      }
     }
   }
 
-  return vacationCalendar;
+  return _VacationCalendarScheme(
+    startDays: startDays,
+    betweenDays: betweenDays,
+    endDays: endDays,
+  );
 });
 
 final vacationProvider =
@@ -102,7 +125,8 @@ class VacationNotifier extends ChangeNotifier {
 
       vacationData = entries.values.toSet();
 
-      final availableVacationDays = kMaxVacationDays - vacationData.length;
+      final availableVacationDays = kMaxVacationDays -
+          vacationData.map((e) => e.durationDays).reduce((v, e) => v + e);
 
       //fill rest up with available entries
       for (int i = 0; i < (availableVacationDays); i++) {
@@ -140,11 +164,15 @@ class VacationNotifier extends ChangeNotifier {
     if (!contains) {
       return;
     } else {
-      //get one available entry and remove it
-      final availableEntry = vacationData.firstWhere(
-        (element) => element.category == VacationCategory.available,
-      );
-      vacationData.remove(availableEntry);
+      final duration = vacationEntry.durationDays;
+      for (int i = 0; i < duration; i++) {
+        //get one available entry and remove it
+        final availableEntry = vacationData.firstWhere(
+          (element) => element.category == VacationCategory.available,
+        );
+        vacationData.remove(availableEntry);
+      }
+
       vacationData.add(vacationEntry);
 
       //add new entry to storage

@@ -23,3 +23,7 @@ class VacationEntry with _$VacationEntry {
   factory VacationEntry.fromJson(Map<String, Object?> json) =>
       _$VacationEntryFromJson(json);
 }
+
+extension VacationEntryExtension on VacationEntry {
+  int get durationDays => ((end - start) / Duration.millisecondsPerDay).ceil();
+}
