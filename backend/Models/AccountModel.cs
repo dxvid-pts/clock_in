@@ -72,3 +72,21 @@ public class ChangePassword
     [MinLength(8, ErrorMessage = "Specified password is invalid")]
     public string new_password { get; set; } = string.Empty;
 }
+
+public static class Roles
+{
+    /// <summary>
+    /// Employee Role of user account
+    /// </summary>
+    public const string Employee = "Employee";
+    
+    /// <summary>
+    /// Manager Role of user account
+    /// </summary>
+    public const string Manager = "Manager";
+    
+    /// <summary>
+    /// Admin Role of user account
+    /// </summary>
+    public const string Admin = "Admin";
+}

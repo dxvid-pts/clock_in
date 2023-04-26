@@ -13,7 +13,9 @@ public partial class Work
 
     public DateTime? End { get; set; }
 
-    public DateOnly Changed { get; set; }
+    public DateTime Created { get; set; }
+
+    public DateTime Changed { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 }
