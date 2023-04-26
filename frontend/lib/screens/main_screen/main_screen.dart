@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/screens/admin_screen/admin_screen.dart';
 import 'package:frontend/screens/overview_screen/overview_screen.dart';
 import 'package:frontend/screens/stats_screen/stats_screen.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
@@ -33,7 +34,7 @@ class _MyHomePageState extends State<MainScreen> {
         body = const StatsScreen();
         break;
       case 2:
-        body = const Center(child: Text("Profile"));
+        body = const AdminScreen();
         break;
       default:
         //error: this should never happen!
