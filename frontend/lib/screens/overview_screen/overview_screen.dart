@@ -157,6 +157,10 @@ class _DatePickerState extends State<DatePicker> {
 
               final currentDay = Day.fromDateTime(dateDetails.date);
 
+              const colorOpacity = 0.12;
+              const double borderRadius = 20;
+              
+
               final base = Center(
                 child: Text(
                   dateDetails.date.day.toString(),
@@ -167,10 +171,37 @@ class _DatePickerState extends State<DatePicker> {
                   ),
                 ),
               );
-              if (vacationDays.containsKey(currentDay)) {
+              if (vacationDays.startDays.containsKey(currentDay)) {
                 return Container(
                   decoration: BoxDecoration(
-                    color: vacationDays[currentDay]!.color.withOpacity(0.2),
+                    color: vacationDays.startDays[currentDay]!.color
+                        .withOpacity(colorOpacity),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(borderRadius),
+                      bottomLeft: Radius.circular(borderRadius),
+                    ),
+                  ),
+                  child: base,
+                );
+              } 
+              else if (vacationDays.endDays.containsKey(currentDay)) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: vacationDays.endDays[currentDay]!.color
+                        .withOpacity(colorOpacity),
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(borderRadius),
+                      bottomRight: Radius.circular(borderRadius),
+                    ),
+                  ),
+                  child: base,
+                );
+              }
+              else if (vacationDays.betweenDays.containsKey(currentDay)) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: vacationDays.betweenDays[currentDay]!.color
+                        .withOpacity(colorOpacity),
                   ),
                   child: base,
                 );
@@ -199,8 +230,8 @@ class _DatePickerState extends State<DatePicker> {
             },
             child: Row(
               children: const [
-                 Text("Plan now"),
-                 Icon(
+                Text("Plan now"),
+                Icon(
                   Icons.play_arrow,
                   size: 14,
                 )
