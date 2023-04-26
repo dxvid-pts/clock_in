@@ -193,7 +193,7 @@ class _UpperSection extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Text(
-                'Work time 40 hours • Your daily rate \$145',
+                'Work time 40 hours • Latest check in: 8:00',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontSize: 100,
                       color: reducedFontColor,
