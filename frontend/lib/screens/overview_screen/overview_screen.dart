@@ -34,7 +34,9 @@ class OverviewScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ListView(
                 children: const [
+                  SizedBox(height: 10),
                   _TitleWidget("Vacation"),
+                  SizedBox(height: 3),
                   _PendingVacationWidget(),
                   SizedBox(height: 20),
                   _TitleWidget("Overview"),
@@ -144,7 +146,6 @@ class _DatePickerState extends State<DatePicker> {
 
               const colorOpacity = 0.12;
               const double borderRadius = 20;
-              
 
               final base = Center(
                 child: Text(
@@ -168,8 +169,7 @@ class _DatePickerState extends State<DatePicker> {
                   ),
                   child: base,
                 );
-              } 
-              else if (vacationDays.endDays.containsKey(currentDay)) {
+              } else if (vacationDays.endDays.containsKey(currentDay)) {
                 return Container(
                   decoration: BoxDecoration(
                     color: vacationDays.endDays[currentDay]!.color
@@ -181,8 +181,7 @@ class _DatePickerState extends State<DatePicker> {
                   ),
                   child: base,
                 );
-              }
-              else if (vacationDays.betweenDays.containsKey(currentDay)) {
+              } else if (vacationDays.betweenDays.containsKey(currentDay)) {
                 return Container(
                   decoration: BoxDecoration(
                     color: vacationDays.betweenDays[currentDay]!.color
