@@ -9,6 +9,7 @@ import 'package:frontend/services/timer_service.dart';
 import 'package:frontend/services/tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:frontend/models/date_range_category.dart';
+import 'package:frontend/utils.dart';
 
 class TimerScreen extends StatelessWidget {
   const TimerScreen({super.key});
@@ -343,35 +344,6 @@ class _LowerSection extends ConsumerWidget {
       ),
     );
   }
-}
-
-String dayToDisplayString(Day day) {
-  String returnString = "";
-  switch (day.weekday) {
-    case 1:
-      returnString = "Monday";
-      break;
-    case 2:
-      returnString = "Tuesday";
-      break;
-    case 3:
-      returnString = "Wednesday";
-      break;
-    case 4:
-      returnString = "Thursday";
-      break;
-    case 5:
-      returnString = "Friday";
-      break;
-    case 6:
-      returnString = "Saturday";
-      break;
-    case 7:
-      returnString = "Sunday";
-      break;
-  }
-
-  return "$returnString ${day.day.twoDigits()}.${day.month.twoDigits()}";
 }
 
 void _vibrate() async {

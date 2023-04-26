@@ -175,7 +175,10 @@ class EmployeeRequestListTile extends StatelessWidget {
         ),
         subtitle: Text(
           subtitle,
-          style: Theme.of(context).textTheme.bodySmall,
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: Theme.of(context).primaryColor),
         ),
         trailing: action,
       ),

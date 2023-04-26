@@ -5,9 +5,9 @@ import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
-import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/vacation_service.dart';
+import 'package:frontend/utils.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -72,7 +72,7 @@ class _PendingVacationWidget extends ConsumerWidget {
       children: [
         for (final vacationEntry in ref.watch(vacationOverviewProider))
           VacationListTile(
-            title: _getVacationDisplayString(
+            title: getVacationDisplayString(
                 vacationEntry.start, vacationEntry.end),
             subtitle: "Request to Manager",
             category: vacationEntry.category,
@@ -80,21 +80,6 @@ class _PendingVacationWidget extends ConsumerWidget {
       ],
     );
   }
-}
-
-String _getVacationDisplayString(int start, int end) {
-  String startString = dayToDisplayString(
-      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(start)));
-  String endString = dayToDisplayString(
-      Day.fromDateTime(DateTime.fromMillisecondsSinceEpoch(end)));
-
-  String weekDay = startString.split(" ")[0];
-  startString = "${weekDay.substring(0, 3)}. ${startString.split(" ")[1]}";
-
-  weekDay = endString.split(" ")[0];
-  endString = "${weekDay.substring(0, 3)}. ${endString.split(" ")[1]}";
-
-  return "$startString - $endString";
 }
 
 class _OverEntryListSection extends ConsumerWidget {
