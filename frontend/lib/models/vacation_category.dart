@@ -48,7 +48,7 @@ extension DateRangeCategoryExtension on VacationCategory {
       case VacationCategory.taken:
         return const Color.fromARGB(255, 237, 139, 48);
       case VacationCategory.pending:
-        return const Color(0xFFE3954B);
+        return const Color.fromARGB(255, 231, 160, 94);
       case VacationCategory.approved:
         return const Color.fromARGB(255, 219, 112, 12);
     }
