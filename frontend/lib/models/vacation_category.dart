@@ -46,11 +46,11 @@ extension DateRangeCategoryExtension on VacationCategory {
       case VacationCategory.available:
         return const Color(0xFFD26A07);
       case VacationCategory.taken:
-        return const Color(0xFFE3954B);
+        return Color.fromARGB(255, 237, 139, 48);
       case VacationCategory.pending:
-        return const Color(0xFF5E3E1F);
+        return const Color(0xFFE3954B);
       case VacationCategory.approved:
-        return const Color(0xFFAB5505);
+        return Color.fromARGB(255, 219, 112, 12);
     }
   }
 }
