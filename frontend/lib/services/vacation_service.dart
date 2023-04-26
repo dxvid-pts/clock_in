@@ -21,7 +21,8 @@ final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
         .length,
     VacationCategory.pending: vacationEntries
         .where((element) => element.category == VacationCategory.pending)
-        .length,
+        .map((e) => e.durationDays)
+        .reduce((v, e) => v + e),
     VacationCategory.approved: vacationEntries
         .where((element) => element.category == VacationCategory.approved)
         .length,
@@ -124,7 +125,8 @@ class VacationNotifier extends ChangeNotifier {
 
       vacationData = entries.values.toSet();
 
-      final availableVacationDays = kMaxVacationDays - vacationData.length;
+      final availableVacationDays = kMaxVacationDays -
+          vacationData.map((e) => e.durationDays).reduce((v, e) => v + e);
 
       //fill rest up with available entries
       for (int i = 0; i < (availableVacationDays); i++) {
@@ -162,11 +164,15 @@ class VacationNotifier extends ChangeNotifier {
     if (!contains) {
       return;
     } else {
-      //get one available entry and remove it
-      final availableEntry = vacationData.firstWhere(
-        (element) => element.category == VacationCategory.available,
-      );
-      vacationData.remove(availableEntry);
+      final duration = vacationEntry.durationDays;
+      for (int i = 0; i < duration; i++) {
+        //get one available entry and remove it
+        final availableEntry = vacationData.firstWhere(
+          (element) => element.category == VacationCategory.available,
+        );
+        vacationData.remove(availableEntry);
+      }
+
       vacationData.add(vacationEntry);
 
       //add new entry to storage
