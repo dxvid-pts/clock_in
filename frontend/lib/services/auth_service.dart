@@ -26,11 +26,13 @@ class AuthNotifier extends ChangeNotifier {
     }*/
 
     if (email == "test" && password == "test") {
-      user = const User(id: "test", email: "test@test.com");
+      user = const User(id: "test", email: "test@test.com", isAdmin: false);
       notifyListeners();
 
       // No error
       return null;
+    } else if (email == "admin" && password == "admin") {
+      user = const User(id: "admin", email: "admin@admin.com", isAdmin: true);
     } else {
       return ErrorCode.invalidCredentials;
     }

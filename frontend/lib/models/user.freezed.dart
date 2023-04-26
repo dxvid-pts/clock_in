@@ -26,6 +26,9 @@ mixin _$User {
   @JsonKey(name: "email")
   @HiveField(1)
   String get email => throw _privateConstructorUsedError;
+  @JsonKey(name: "admin")
+  @HiveField(2)
+  bool get isAdmin => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +42,8 @@ abstract class $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") @HiveField(0) String id,
-      @JsonKey(name: "email") @HiveField(1) String email});
+      @JsonKey(name: "email") @HiveField(1) String email,
+      @JsonKey(name: "admin") @HiveField(2) bool isAdmin});
 }
 
 /// @nodoc
@@ -57,6 +61,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? id = null,
     Object? email = null,
+    Object? isAdmin = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -67,6 +72,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -79,7 +88,8 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") @HiveField(0) String id,
-      @JsonKey(name: "email") @HiveField(1) String email});
+      @JsonKey(name: "email") @HiveField(1) String email,
+      @JsonKey(name: "admin") @HiveField(2) bool isAdmin});
 }
 
 /// @nodoc
@@ -93,6 +103,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
   $Res call({
     Object? id = null,
     Object? email = null,
+    Object? isAdmin = null,
   }) {
     return _then(_$_User(
       id: null == id
@@ -103,6 +114,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -113,7 +128,8 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 class _$_User with DiagnosticableTreeMixin implements _User {
   const _$_User(
       {@JsonKey(name: "id") @HiveField(0) required this.id,
-      @JsonKey(name: "email") @HiveField(1) required this.email});
+      @JsonKey(name: "email") @HiveField(1) required this.email,
+      @JsonKey(name: "admin") @HiveField(2) required this.isAdmin});
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -125,10 +141,14 @@ class _$_User with DiagnosticableTreeMixin implements _User {
   @JsonKey(name: "email")
   @HiveField(1)
   final String email;
+  @override
+  @JsonKey(name: "admin")
+  @HiveField(2)
+  final bool isAdmin;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'User(id: $id, email: $email)';
+    return 'User(id: $id, email: $email, isAdmin: $isAdmin)';
   }
 
   @override
@@ -137,7 +157,8 @@ class _$_User with DiagnosticableTreeMixin implements _User {
     properties
       ..add(DiagnosticsProperty('type', 'User'))
       ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('email', email));
+      ..add(DiagnosticsProperty('email', email))
+      ..add(DiagnosticsProperty('isAdmin', isAdmin));
   }
 
   @override
@@ -146,12 +167,13 @@ class _$_User with DiagnosticableTreeMixin implements _User {
         (other.runtimeType == runtimeType &&
             other is _$_User &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email);
+  int get hashCode => Object.hash(runtimeType, id, email, isAdmin);
 
   @JsonKey(ignore: true)
   @override
@@ -170,7 +192,8 @@ class _$_User with DiagnosticableTreeMixin implements _User {
 abstract class _User implements User {
   const factory _User(
           {@JsonKey(name: "id") @HiveField(0) required final String id,
-          @JsonKey(name: "email") @HiveField(1) required final String email}) =
+          @JsonKey(name: "email") @HiveField(1) required final String email,
+          @JsonKey(name: "admin") @HiveField(2) required final bool isAdmin}) =
       _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -183,6 +206,10 @@ abstract class _User implements User {
   @JsonKey(name: "email")
   @HiveField(1)
   String get email;
+  @override
+  @JsonKey(name: "admin")
+  @HiveField(2)
+  bool get isAdmin;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;

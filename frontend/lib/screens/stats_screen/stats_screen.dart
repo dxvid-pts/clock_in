@@ -25,6 +25,22 @@ class StatsScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+               ElevatedButton.icon(
+                onPressed: () {},
+                label: const Text("Export as PDF"),
+                icon: const Icon(Icons.file_download),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {},
+                label: const Text("Export as CSV"),
+                icon: const Icon(Icons.file_download),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(left: 18, bottom: 20),
             child: Text(
