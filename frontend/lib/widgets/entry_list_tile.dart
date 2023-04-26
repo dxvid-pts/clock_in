@@ -144,3 +144,41 @@ class VacationListTile extends StatelessWidget {
     );
   }
 }
+
+class EmployeeRequestListTile extends StatelessWidget {
+  const EmployeeRequestListTile({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.action,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final Widget action;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      //rounded corners
+      decoration: const BoxDecoration(
+        color: Color(0xFFf9f9f9),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      child: ListTile(
+        title: Text(
+          title,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        subtitle: Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+        trailing: action,
+      ),
+    );
+  }
+}
