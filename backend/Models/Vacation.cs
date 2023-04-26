@@ -3,15 +3,17 @@ using System.Collections.Generic;
 
 namespace backend.Models;
 
-public partial class Token
+public partial class Vacation
 {
     public int Id { get; set; }
 
     public int AccountId { get; set; }
 
-    public DateTime Expiration { get; set; }
+    public DateOnly Begin { get; set; }
 
-    public string Content { get; set; } = null!;
+    public DateOnly End { get; set; }
+
+    public string? Status { get; set; }
 
     public DateTime Created { get; set; }
 
