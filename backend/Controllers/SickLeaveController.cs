@@ -1,5 +1,7 @@
+using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
+using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -23,11 +25,26 @@ public class SickLeaveController : ControllerBase
         _logger = logger;
         _clockInContext = clockInContext;
     }
-
-    /*
-    public IActionResult Post(int accountId, [FromBody] SickLeaveInput input)
+    
+    /// <summary>
+    /// Hand in a sick leave request
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager)]
+    [HttpPost]
+    public IActionResult NewSickLeave([FromBody] ISickLeaveInput input)
     {
+        Account account = (Account)HttpContext.Items["User"]!;
+        SickLeave sickLeave = new SickLeave()
+        {
+            AccountId = account.Id,
+            Begin = input.begin,
+            End = input.end
+        };
+        _clockInContext.SickLeaves.Add(sickLeave);
+        _clockInContext.SaveChanges();
+        
         return Ok();
     }
-    */
 }
