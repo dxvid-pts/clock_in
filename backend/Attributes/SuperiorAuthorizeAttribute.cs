@@ -54,6 +54,20 @@ public class SuperiorAuthorizeAttribute : Attribute, IAuthorizationFilter
             return;
         }
 
+        if (account.Blocked == true)
+        {
+            context.Result = new JsonResult(new
+                {
+                    message = new ProblemDetails()
+                    {
+                        Title = "Forbidden",
+                        Status = StatusCodes.Status403Forbidden,
+                        Detail = "You have been deleted. Get a new life."
+                    }
+                })
+                { StatusCode = StatusCodes.Status403Forbidden };
+        }
+
         if (Roles != string.Empty && !Roles.ToUpper().Contains(account.Role.ToUpper()))
         {
             context.Result = new JsonResult(new
