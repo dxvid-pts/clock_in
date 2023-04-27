@@ -36,6 +36,7 @@ class AuthNotifier extends ChangeNotifier {
       notifyListeners();
 
       // No error
+      return null;
     } else {
       return ErrorCode.invalidCredentials;
     }
