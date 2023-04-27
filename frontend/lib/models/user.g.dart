@@ -20,19 +20,25 @@ class UserAdapter extends TypeAdapter<_$_User> {
       id: fields[0] as String,
       email: fields[1] as String,
       isAdmin: fields[2] as bool,
+      token: fields[3] as String,
+      vacationDays: fields[4] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$_User obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.email)
       ..writeByte(2)
-      ..write(obj.isAdmin);
+      ..write(obj.isAdmin)
+      ..writeByte(3)
+      ..write(obj.token)
+      ..writeByte(4)
+      ..write(obj.vacationDays);
   }
 
   @override
@@ -54,10 +60,14 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       id: json['id'] as String,
       email: json['email'] as String,
       isAdmin: json['admin'] as bool,
+      token: json['token'] as String,
+      vacationDays: json['vacationDays'] as int,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'id': instance.id,
       'email': instance.email,
       'admin': instance.isAdmin,
+      'token': instance.token,
+      'vacationDays': instance.vacationDays,
     };
