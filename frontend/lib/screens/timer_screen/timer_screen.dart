@@ -317,7 +317,7 @@ class _LowerSection extends ConsumerWidget {
           children: [
             const SizedBox(height: 20),
             Text(
-              "This week you worked",
+              "Previously you worked",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 15),
