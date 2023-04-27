@@ -87,6 +87,8 @@ class AuthNotifier extends ChangeNotifier {
           token: token,
           vacationDays: vacationDays,
         );
+        
+        notifyListeners();
       } else {
         //no access token -> invalid credentials
         return ErrorCode.invalidCredentials;
