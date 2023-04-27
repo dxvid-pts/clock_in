@@ -16,6 +16,8 @@ public partial class SickLeave
     public DateTime Created { get; set; }
 
     public DateTime Changed { get; set; }
+    
+    public string Status { get; set; }
 
     public virtual Account Account { get; set; } = null!;
 }

@@ -12,6 +12,8 @@ public class ISickLeave
     public DateOnly Begin { get; set; }
 
     public DateOnly End { get; set; }
+    
+    public string Status { get; set; }
 
     public ISickLeave(SickLeave sickLeave)
     {
@@ -19,6 +21,7 @@ public class ISickLeave
         AccountId = sickLeave.AccountId;
         Begin = sickLeave.Begin;
         End = sickLeave.End;
+        Status = sickLeave.Status;
     }
 }
 
