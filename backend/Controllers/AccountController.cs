@@ -176,14 +176,16 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
-    [HttpGet("{userId}")]
+    [HttpGet("{userId?}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult GetAccountInformation(int userId)
     {
         var account = (Account) HttpContext.Items["User"]!;
-
+        if (userId < 1)
+            userId = account.Id;
+        
         if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid();
