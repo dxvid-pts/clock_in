@@ -56,6 +56,9 @@ public class AccountController : ControllerBase
 
         if (user == null)
             return Unauthorized();
+        
+        user.LastLogin = DateTime.Now;
+        _clockInContext.SaveChanges();
 
         return Ok(_tokenUtils.CreateAccessToken(user));
     }
