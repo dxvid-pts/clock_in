@@ -39,8 +39,6 @@ class OverviewScreen extends StatelessWidget {
                   SizedBox(height: 3),
                   _PendingVacationWidget(),
                   SizedBox(height: 20),
-                  _TitleWidget("Overview"),
-                  _OverEntryListSection(),
                 ],
               ),
             ),

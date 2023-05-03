@@ -54,7 +54,9 @@ class _MyHomePageState extends State<MainScreen> {
               color: const Color.fromRGBO(249, 241, 231, 1),
               child: Center(
                 child: Consumer(builder: (context, ref, _) {
-                  final timerService = ref.watch(timerProvider);
+                  final user = ref.watch(authProvider).user;
+                  final timerService =
+                      ref.watch(timerProvider(user?.hoursPerDay ?? 1));
                   return Text(
                       "${timerService.hours.twoDigits()}:${timerService.minutes.twoDigits()}:${timerService.seconds.twoDigits()}");
                 }),
@@ -81,10 +83,11 @@ class _MyHomePageState extends State<MainScreen> {
             width: _fabDimension,
             child: Center(
               child: Consumer(builder: (context, ref, _) {
+                final user = ref.watch(authProvider).user;
+                final timerService =
+                    ref.watch(timerProvider(user?.hoursPerDay ?? 1));
                 return Icon(
-                  ref.watch(timerProvider).isRunning
-                      ? Icons.pause
-                      : Icons.play_arrow,
+                  timerService.isRunning ? Icons.pause : Icons.play_arrow,
                   color: Colors.white,
                 );
               }),

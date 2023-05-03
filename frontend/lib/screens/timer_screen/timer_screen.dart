@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/timer_service.dart';
 import 'package:frontend/services/tracking_service.dart';
@@ -57,11 +58,14 @@ class _UpperSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timerService = ref.watch(timerProvider);
+    final user = ref.watch(authProvider).user;
+    final timerService = ref.watch(timerProvider(user?.hoursPerDay ?? 1));
 
     final timerTextTheme = Theme.of(context).textTheme.headlineLarge?.copyWith(
           fontSize: 100,
-          color: const Color(0xFFfefdfd),
+          color: !timerService.hasReachedZero
+              ? const Color(0xFFfefdfd)
+              : const Color.fromARGB(255, 255, 132, 132),
         );
 
     const reducedFontColor = Color(0xFFf5ddaf);
@@ -317,7 +321,7 @@ class _LowerSection extends ConsumerWidget {
           children: [
             const SizedBox(height: 20),
             Text(
-              "This week you worked",
+              "Previously you worked",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 15),
