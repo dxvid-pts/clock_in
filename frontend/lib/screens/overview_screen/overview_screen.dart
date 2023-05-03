@@ -29,9 +29,9 @@ class OverviewScreen extends StatelessWidget {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           DatePicker(),
-          Expanded(
+          const Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: _PendingVacationWidget(),
@@ -149,15 +149,10 @@ class OverviewListTile extends StatelessWidget {
   }
 }
 
-class DatePicker extends StatefulWidget {
-  const DatePicker({super.key});
+class DatePicker extends StatelessWidget {
+  DatePicker({super.key});
 
-  @override
-  State<DatePicker> createState() => _DatePickerState();
-}
-
-class _DatePickerState extends State<DatePicker> {
-  Day? _startDay;
+  final DateRangePickerController _controller = DateRangePickerController();
 
   @override
   Widget build(BuildContext context) {
@@ -168,69 +163,94 @@ class _DatePickerState extends State<DatePicker> {
             headerStyle: DateRangePickerHeaderStyle(
               textStyle: titleStyle(context),
             ),
+            controller: _controller,
             cellBuilder: (context, dateDetails) {
-              final vacationDays = ref.watch(vacationCalendarProider);
+              if (_controller.view == DateRangePickerView.month) {
+                final vacationDays = ref.watch(vacationCalendarProider);
 
-              final currentDay = Day.fromDateTime(dateDetails.date);
+                final currentDay = Day.fromDateTime(dateDetails.date);
 
-              const colorOpacity = 0.12;
-              const double borderRadius = 20;
+                const colorOpacity = 0.12;
+                const double borderRadius = 20;
 
-              final base = Center(
-                child: Text(
-                  dateDetails.date.day.toString(),
-                  style: TextStyle(
-                    color: currentDay == Day.fromDateTime(DateTime.now())
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).textTheme.bodyMedium?.color,
-                  ),
-                ),
-              );
-              if (vacationDays.startDays.containsKey(currentDay)) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: vacationDays.startDays[currentDay]!.color
-                        .withOpacity(colorOpacity),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(borderRadius),
-                      bottomLeft: Radius.circular(borderRadius),
+                final base = Center(
+                  child: Text(
+                    dateDetails.date.day.toString(),
+                    style: TextStyle(
+                      color: currentDay == Day.fromDateTime(DateTime.now())
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                   ),
-                  child: base,
                 );
-              } else if (vacationDays.endDays.containsKey(currentDay)) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: vacationDays.endDays[currentDay]!.color
-                        .withOpacity(colorOpacity),
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(borderRadius),
-                      bottomRight: Radius.circular(borderRadius),
+                if (vacationDays.startDays.containsKey(currentDay)) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: vacationDays.startDays[currentDay]!.color
+                          .withOpacity(colorOpacity),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(borderRadius),
+                        bottomLeft: Radius.circular(borderRadius),
+                      ),
                     ),
-                  ),
-                  child: base,
-                );
-              } else if (vacationDays.betweenDays.containsKey(currentDay)) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: vacationDays.betweenDays[currentDay]!.color
-                        .withOpacity(colorOpacity),
-                  ),
-                  child: base,
-                );
-              } else if (currentDay == Day.fromDateTime(DateTime.now())) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
                     child: base,
-                  ),
+                  );
+                } else if (vacationDays.endDays.containsKey(currentDay)) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: vacationDays.endDays[currentDay]!.color
+                          .withOpacity(colorOpacity),
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(borderRadius),
+                        bottomRight: Radius.circular(borderRadius),
+                      ),
+                    ),
+                    child: base,
+                  );
+                } else if (vacationDays.betweenDays.containsKey(currentDay)) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: vacationDays.betweenDays[currentDay]!.color
+                          .withOpacity(colorOpacity),
+                    ),
+                    child: base,
+                  );
+                } else if (currentDay == Day.fromDateTime(DateTime.now())) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: base,
+                    ),
+                  );
+                }
+
+                return base;
+              } else if (_controller.view == DateRangePickerView.year) {
+                return Container(
+                  width: dateDetails.bounds.width,
+                  height: dateDetails.bounds.height,
+                  alignment: Alignment.center,
+                  child: Text(_monthString(dateDetails.date.month)),
+                );
+              } else if (_controller.view == DateRangePickerView.decade) {
+                return Container(
+                  width: dateDetails.bounds.width,
+                  height: dateDetails.bounds.height,
+                  alignment: Alignment.center,
+                  child: Text(dateDetails.date.year.toString()),
+                );
+              } else {
+                final int yearValue = (dateDetails.date.year ~/ 10) * 10;
+                return Container(
+                  width: dateDetails.bounds.width,
+                  height: dateDetails.bounds.height,
+                  alignment: Alignment.center,
+                  child: Text('$yearValue - ${yearValue + 9}'),
                 );
               }
-
-              return base;
             },
           );
         }),
@@ -266,5 +286,36 @@ class _DatePickerState extends State<DatePicker> {
         )
       ],
     );
+  }
+}
+
+String _monthString(int month) {
+  switch (month) {
+    case 1:
+      return "January";
+    case 2:
+      return "February";
+    case 3:
+      return "March";
+    case 4:
+      return "April";
+    case 5:
+      return "May";
+    case 6:
+      return "June";
+    case 7:
+      return "July";
+    case 8:
+      return "August";
+    case 9:
+      return "September";
+    case 10:
+      return "Oktober";
+    case 11:
+      return "November";
+    case 12:
+      return "December";
+    default:
+      return "Unknown";
   }
 }
