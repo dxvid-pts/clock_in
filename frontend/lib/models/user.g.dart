@@ -22,13 +22,14 @@ class UserAdapter extends TypeAdapter<_$_User> {
       isAdmin: fields[2] as bool,
       token: fields[3] as String,
       vacationDays: fields[4] as int,
+      hoursPerDay: fields[5] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$_User obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class UserAdapter extends TypeAdapter<_$_User> {
       ..writeByte(3)
       ..write(obj.token)
       ..writeByte(4)
-      ..write(obj.vacationDays);
+      ..write(obj.vacationDays)
+      ..writeByte(5)
+      ..write(obj.hoursPerDay);
   }
 
   @override
@@ -62,6 +65,7 @@ _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       isAdmin: json['admin'] as bool,
       token: json['token'] as String,
       vacationDays: json['vacationDays'] as int,
+      hoursPerDay: json['hoursPerDay'] as int,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
@@ -70,4 +74,5 @@ Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'admin': instance.isAdmin,
       'token': instance.token,
       'vacationDays': instance.vacationDays,
+      'hoursPerDay': instance.hoursPerDay,
     };
