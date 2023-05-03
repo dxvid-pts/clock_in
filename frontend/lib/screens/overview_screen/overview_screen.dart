@@ -77,9 +77,9 @@ class _PendingVacationWidget extends ConsumerWidget {
                 children: [
                   SizedBox(
                     height: 130,
-                    child: Image.network(
+                    child: Image.asset(
                         //https://i.ibb.co/qD2q2Cz/168312588290589803.webp, https://i.ibb.co/gdQZyS0/employee-unable-to-access-data-3391065-2829991-1.png
-                        "https://i.ibb.co/qD2q2Cz/168312588290589803.webp"),
+                        "assets/not-found.webp"),
                   ),
                   const SizedBox(height: 10),
                   Text("No pending vacation requests",
