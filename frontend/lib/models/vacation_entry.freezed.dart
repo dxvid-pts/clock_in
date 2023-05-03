@@ -32,6 +32,9 @@ mixin _$VacationEntry {
   @JsonKey(name: "category")
   @HiveField(3)
   VacationCategory get category => throw _privateConstructorUsedError;
+  @JsonKey(name: "comment")
+  @HiveField(4)
+  String? get comment => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,7 +52,8 @@ abstract class $VacationEntryCopyWith<$Res> {
       {@JsonKey(name: "id") @HiveField(0) String id,
       @JsonKey(name: "start") @HiveField(1) int start,
       @JsonKey(name: "end") @HiveField(2) int end,
-      @JsonKey(name: "category") @HiveField(3) VacationCategory category});
+      @JsonKey(name: "category") @HiveField(3) VacationCategory category,
+      @JsonKey(name: "comment") @HiveField(4) String? comment});
 }
 
 /// @nodoc
@@ -69,6 +73,7 @@ class _$VacationEntryCopyWithImpl<$Res, $Val extends VacationEntry>
     Object? start = null,
     Object? end = null,
     Object? category = null,
+    Object? comment = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -87,6 +92,10 @@ class _$VacationEntryCopyWithImpl<$Res, $Val extends VacationEntry>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as VacationCategory,
+      comment: freezed == comment
+          ? _value.comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -103,7 +112,8 @@ abstract class _$$_VacationEntryCopyWith<$Res>
       {@JsonKey(name: "id") @HiveField(0) String id,
       @JsonKey(name: "start") @HiveField(1) int start,
       @JsonKey(name: "end") @HiveField(2) int end,
-      @JsonKey(name: "category") @HiveField(3) VacationCategory category});
+      @JsonKey(name: "category") @HiveField(3) VacationCategory category,
+      @JsonKey(name: "comment") @HiveField(4) String? comment});
 }
 
 /// @nodoc
@@ -121,6 +131,7 @@ class __$$_VacationEntryCopyWithImpl<$Res>
     Object? start = null,
     Object? end = null,
     Object? category = null,
+    Object? comment = freezed,
   }) {
     return _then(_$_VacationEntry(
       id: null == id
@@ -139,6 +150,10 @@ class __$$_VacationEntryCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as VacationCategory,
+      comment: freezed == comment
+          ? _value.comment
+          : comment // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -151,7 +166,8 @@ class _$_VacationEntry with DiagnosticableTreeMixin implements _VacationEntry {
       {@JsonKey(name: "id") @HiveField(0) required this.id,
       @JsonKey(name: "start") @HiveField(1) required this.start,
       @JsonKey(name: "end") @HiveField(2) required this.end,
-      @JsonKey(name: "category") @HiveField(3) required this.category});
+      @JsonKey(name: "category") @HiveField(3) required this.category,
+      @JsonKey(name: "comment") @HiveField(4) required this.comment});
 
   factory _$_VacationEntry.fromJson(Map<String, dynamic> json) =>
       _$$_VacationEntryFromJson(json);
@@ -172,10 +188,14 @@ class _$_VacationEntry with DiagnosticableTreeMixin implements _VacationEntry {
   @JsonKey(name: "category")
   @HiveField(3)
   final VacationCategory category;
+  @override
+  @JsonKey(name: "comment")
+  @HiveField(4)
+  final String? comment;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VacationEntry(id: $id, start: $start, end: $end, category: $category)';
+    return 'VacationEntry(id: $id, start: $start, end: $end, category: $category, comment: $comment)';
   }
 
   @override
@@ -186,7 +206,8 @@ class _$_VacationEntry with DiagnosticableTreeMixin implements _VacationEntry {
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('start', start))
       ..add(DiagnosticsProperty('end', end))
-      ..add(DiagnosticsProperty('category', category));
+      ..add(DiagnosticsProperty('category', category))
+      ..add(DiagnosticsProperty('comment', comment));
   }
 
   @override
@@ -198,12 +219,14 @@ class _$_VacationEntry with DiagnosticableTreeMixin implements _VacationEntry {
             (identical(other.start, start) || other.start == start) &&
             (identical(other.end, end) || other.end == end) &&
             (identical(other.category, category) ||
-                other.category == category));
+                other.category == category) &&
+            (identical(other.comment, comment) || other.comment == comment));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, start, end, category);
+  int get hashCode =>
+      Object.hash(runtimeType, id, start, end, category, comment);
 
   @JsonKey(ignore: true)
   @override
@@ -232,7 +255,10 @@ abstract class _VacationEntry implements VacationEntry {
           required final int end,
       @JsonKey(name: "category")
       @HiveField(3)
-          required final VacationCategory category}) = _$_VacationEntry;
+          required final VacationCategory category,
+      @JsonKey(name: "comment")
+      @HiveField(4)
+          required final String? comment}) = _$_VacationEntry;
 
   factory _VacationEntry.fromJson(Map<String, dynamic> json) =
       _$_VacationEntry.fromJson;
@@ -253,6 +279,10 @@ abstract class _VacationEntry implements VacationEntry {
   @JsonKey(name: "category")
   @HiveField(3)
   VacationCategory get category;
+  @override
+  @JsonKey(name: "comment")
+  @HiveField(4)
+  String? get comment;
   @override
   @JsonKey(ignore: true)
   _$$_VacationEntryCopyWith<_$_VacationEntry> get copyWith =>

@@ -15,27 +15,32 @@ final trackingProvider =
     ChangeNotifierProvider<TrackingNotifier>((ref) => TrackingNotifier());
 
 class TrackingNotifier extends ChangeNotifier {
-  Set<TrackingEntry> trackingEntries = {
+ Set<TrackingEntry> trackingEntries = {
     TrackingEntry(
       id: Commons.generateId(),
-      start: DateTime.parse("2023-04-24 00:00:00").millisecondsSinceEpoch,
-      end: DateTime.parse("2023-04-24 08:00:00").millisecondsSinceEpoch,
+      start: DateTime.parse("${_dateWeekStartToParsableString(0)} 00:00:00")
+          .millisecondsSinceEpoch,
+      end: DateTime.parse("${_dateWeekStartToParsableString(0)} 08:00:00")
+          .millisecondsSinceEpoch,
       category: DateRangeCategory.remote,
     ),
     TrackingEntry(
       id: Commons.generateId(),
-      start: DateTime.parse("2023-04-25 00:30:00").millisecondsSinceEpoch,
-      end: DateTime.parse("2023-04-25 08:00:00").millisecondsSinceEpoch,
+      start: DateTime.parse("${_dateWeekStartToParsableString(1)} 00:30:00")
+          .millisecondsSinceEpoch,
+      end: DateTime.parse("${_dateWeekStartToParsableString(1)} 08:00:00")
+          .millisecondsSinceEpoch,
       category: DateRangeCategory.remote,
     ),
     TrackingEntry(
       id: Commons.generateId(),
-      start: DateTime.parse("2023-04-26 02:00:00").millisecondsSinceEpoch,
-      end: DateTime.parse("2023-04-26 12:00:00").millisecondsSinceEpoch,
+      start: DateTime.parse("${_dateWeekStartToParsableString(2)} 02:00:00")
+          .millisecondsSinceEpoch,
+      end: DateTime.parse("${_dateWeekStartToParsableString(2)} 12:00:00")
+          .millisecondsSinceEpoch,
       category: DateRangeCategory.remote,
     ),
   };
-
   late final StorageBox<TrackingEntry> _trackingBox;
 
   TrackingNotifier() {
@@ -79,4 +84,18 @@ class TrackingNotifier extends ChangeNotifier {
     _trackingBox.put(trackingEntry.id, trackingEntry);
     notifyListeners();
   }
+}
+
+String _dateWeekStartToParsableString(int addedDays){
+  //get date of fist day of week
+  final weekStartDate = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+
+  //add days to week start date
+  final now = weekStartDate.add(Duration(days: addedDays));
+
+  final year = now.year;
+  final month = now.month.toString().padLeft(2, '0');
+  final day = now.day.toString().padLeft(2, '0');
+
+  return "$year-$month-$day";
 }

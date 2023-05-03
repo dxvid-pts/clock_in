@@ -3,9 +3,12 @@ import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 
 final currentWeekStatsProvider = Provider<Map<Day, TrackingEntry>>((ref) {
+  final user = ref.watch(authProvider).user;
+
   final Map<Day, TrackingEntry> weekStats = {};
 
   final consolidated = ref.watch(consolidatedTrackingProvider);
@@ -29,10 +32,17 @@ final currentWeekStatsProvider = Provider<Map<Day, TrackingEntry>>((ref) {
       weekStats[day] = entry;
     } else {
       //if there is no entry for the day, create a dummy entry with zero duration
+
+      final startTime = day.toDateTime().millisecondsSinceEpoch;
+
+      //add 8 hours to get end time
+      final endTime = startTime + (Duration(hours: user?.hoursPerDay??8).inMilliseconds);
+
       weekStats[day] = TrackingEntry(
+        isDummy: true,
         id: Commons.generateId(),
-        start: day.toDateTime().millisecondsSinceEpoch,
-        end: day.toDateTime().millisecondsSinceEpoch,
+        start: startTime,
+        end: endTime,
         category: DateRangeCategory.office,
       );
     }

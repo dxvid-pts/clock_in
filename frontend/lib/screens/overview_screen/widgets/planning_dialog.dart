@@ -24,6 +24,7 @@ class _PlanningDialogState extends State<PlanningDialog> {
   DateTime? _startDate;
   DateTime? _endDate;
   DateRangeCategory? _category;
+  String? comment;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +88,24 @@ class _PlanningDialogState extends State<PlanningDialog> {
               labelText: "End",
             ),
           ),
+          const SizedBox(height: 10),
+
+          //comment
+          TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Comment (optional)",
+            ),
+            onChanged: (value) {
+              setState(() {
+                if (value.isEmpty) {
+                  comment = null;
+                } else {
+                  comment = value;
+                }
+              });
+            },
+          ),
 
           //dropdown in the style of a textfield
           const SizedBox(height: 10),
@@ -94,11 +113,10 @@ class _PlanningDialogState extends State<PlanningDialog> {
           DropdownButtonFormField<DateRangeCategory>(
             value: _category,
             items: [
-              for (final item in DateRangeCategory.values)
-                DropdownMenuItem(
-                  value: item,
-                  child: Text(item.name),
-                ),
+              DropdownMenuItem(
+                value: DateRangeCategory.vacation,
+                child: Text(DateRangeCategory.vacation.name),
+              ),
             ],
             onChanged: (newValue) {
               setState(() {
@@ -130,6 +148,7 @@ class _PlanningDialogState extends State<PlanningDialog> {
                                 start: _startDate!.millisecondsSinceEpoch,
                                 end: _endDate!.millisecondsSinceEpoch,
                                 category: VacationCategory.pending,
+                                comment: comment,
                               ),
                             );
                         Navigator.of(context).pop();

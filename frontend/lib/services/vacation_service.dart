@@ -20,15 +20,29 @@ final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
         .where((element) => element.category == VacationCategory.available)
         .length,
     VacationCategory.pending: vacationEntries
-        .where((element) => element.category == VacationCategory.pending)
-        .map((e) => e.durationDays)
-        .reduce((v, e) => v + e),
+            .where((element) => element.category == VacationCategory.pending)
+            .isEmpty
+        ? 0
+        : vacationEntries
+            .where((element) => element.category == VacationCategory.pending)
+            .map((e) => e.durationDays)
+            .reduce((v, e) => v + e),
     VacationCategory.approved: vacationEntries
-        .where((element) => element.category == VacationCategory.approved)
-        .length,
+            .where((element) => element.category == VacationCategory.approved)
+            .isEmpty
+        ? 0
+        : vacationEntries
+            .where((element) => element.category == VacationCategory.approved)
+            .map((e) => e.durationDays)
+            .reduce((v, e) => v + e),
     VacationCategory.taken: vacationEntries
-        .where((element) => element.category == VacationCategory.taken)
-        .length,
+            .where((element) => element.category == VacationCategory.taken)
+            .isEmpty
+        ? 0
+        : vacationEntries
+            .where((element) => element.category == VacationCategory.taken)
+            .map((e) => e.durationDays)
+            .reduce((v, e) => v + e),
   };
 
   return vacationChart;
@@ -126,7 +140,11 @@ class VacationNotifier extends ChangeNotifier {
       vacationData = entries.values.toSet();
 
       final availableVacationDays = kMaxVacationDays -
-          vacationData.map((e) => e.durationDays).reduce((v, e) => v + e);
+          (vacationData.isEmpty
+              ? 0
+              : vacationData
+                  .map((e) => e.durationDays)
+                  .reduce((v, e) => v + e));
 
       //fill rest up with available entries
       for (int i = 0; i < (availableVacationDays); i++) {
@@ -136,6 +154,7 @@ class VacationNotifier extends ChangeNotifier {
             id: Commons.generateId(),
             start: date.millisecondsSinceEpoch,
             end: date.millisecondsSinceEpoch,
+            comment: null,
             category: VacationCategory.available,
           ),
         );
@@ -180,5 +199,32 @@ class VacationNotifier extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  Future<void> deleteVacation(VacationEntry vacationEntry) async {
+    //await initFuture;
+    if (_initFuture != null) await _initFuture;
+
+    vacationData.remove(vacationEntry);
+
+    //add new entry to storage
+    _vacationBox.remove(vacationEntry.id);
+
+    //add available entries
+    final duration = vacationEntry.durationDays;
+    for (int i = 0; i < duration; i++) {
+      final date = DateTime.now().add(Duration(days: i));
+      vacationData.add(
+        VacationEntry(
+          id: Commons.generateId(),
+          start: date.millisecondsSinceEpoch,
+          end: date.millisecondsSinceEpoch,
+          comment: null,
+          category: VacationCategory.available,
+        ),
+      );
+    }
+
+    notifyListeners();
   }
 }

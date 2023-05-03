@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:frontend/models/employee.dart';
 import 'package:frontend/models/vacation_entry.dart';
 import 'package:hive/hive.dart';
 
@@ -14,8 +15,9 @@ class EmployeeRequest with _$EmployeeRequest {
   @HiveType(typeId: 10, adapterName: 'EmployeeRequestAdapter')
   const factory EmployeeRequest({
     @JsonKey(name: "id") @HiveField(0) required String id,
-    @JsonKey(name: "employee_name") @HiveField(1) required String employeeName,
+    @JsonKey(name: "employeeId") @HiveField(1) required String employeeId,
     @JsonKey(name: "vacation_entry") @HiveField(2) required VacationEntry vacationEntry,
+    @JsonKey(name: "accepted") @HiveField(3) required bool? accepted, //true: accepted, false: rejected, null: pending
   }) = _EmployeeRequest;
 
   factory EmployeeRequest.fromJson(Map<String, Object?> json) =>

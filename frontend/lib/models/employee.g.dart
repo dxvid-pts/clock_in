@@ -1,41 +1,41 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'employee_request.dart';
+part of 'employee.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class EmployeeRequestAdapter extends TypeAdapter<_$_EmployeeRequest> {
+class EmployeeAdapter extends TypeAdapter<_$_Employee> {
   @override
-  final int typeId = 10;
+  final int typeId = 16;
 
   @override
-  _$_EmployeeRequest read(BinaryReader reader) {
+  _$_Employee read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return _$_EmployeeRequest(
+    return _$_Employee(
       id: fields[0] as String,
-      employeeId: fields[1] as String,
-      vacationEntry: fields[2] as VacationEntry,
-      accepted: fields[3] as bool?,
+      employeeName: fields[1] as String,
+      vacationDays: fields[2] as int,
+      workHours: fields[3] as int,
     );
   }
 
   @override
-  void write(BinaryWriter writer, _$_EmployeeRequest obj) {
+  void write(BinaryWriter writer, _$_Employee obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.employeeId)
+      ..write(obj.employeeName)
       ..writeByte(2)
-      ..write(obj.vacationEntry)
+      ..write(obj.vacationDays)
       ..writeByte(3)
-      ..write(obj.accepted);
+      ..write(obj.workHours);
   }
 
   @override
@@ -44,7 +44,7 @@ class EmployeeRequestAdapter extends TypeAdapter<_$_EmployeeRequest> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is EmployeeRequestAdapter &&
+      other is EmployeeAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -53,19 +53,17 @@ class EmployeeRequestAdapter extends TypeAdapter<_$_EmployeeRequest> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_EmployeeRequest _$$_EmployeeRequestFromJson(Map<String, dynamic> json) =>
-    _$_EmployeeRequest(
+_$_Employee _$$_EmployeeFromJson(Map<String, dynamic> json) => _$_Employee(
       id: json['id'] as String,
-      employeeId: json['employeeId'] as String,
-      vacationEntry: VacationEntry.fromJson(
-          json['vacation_entry'] as Map<String, dynamic>),
-      accepted: json['accepted'] as bool?,
+      employeeName: json['employee_name'] as String,
+      vacationDays: json['vacation_days'] as int,
+      workHours: json['work_hours'] as int,
     );
 
-Map<String, dynamic> _$$_EmployeeRequestToJson(_$_EmployeeRequest instance) =>
+Map<String, dynamic> _$$_EmployeeToJson(_$_Employee instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'employeeId': instance.employeeId,
-      'vacation_entry': instance.vacationEntry,
-      'accepted': instance.accepted,
+      'employee_name': instance.employeeName,
+      'vacation_days': instance.vacationDays,
+      'work_hours': instance.workHours,
     };
