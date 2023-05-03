@@ -31,22 +31,26 @@ class AuthNotifier extends ChangeNotifier {
 
     if (email == "test" && password == "test") {
       user = const User(
-          id: "test",
-          email: "test@test.com",
-          isAdmin: false,
-          token: "",
-          vacationDays: 30);
+        id: "test",
+        email: "test@test.com",
+        isAdmin: false,
+        token: "",
+        vacationDays: 30,
+        hoursPerDay: 8,
+      );
       notifyListeners();
 
       // No error
       return null;
     } else if (email == "admin" && password == "admin") {
       user = const User(
-          id: "admin",
-          email: "admin@admin.com",
-          isAdmin: true,
-          token: "",
-          vacationDays: 30);
+        id: "admin",
+        email: "admin@admin.com",
+        isAdmin: true,
+        token: "",
+        vacationDays: 30,
+        hoursPerDay: 8,
+      );
       notifyListeners();
 
       // No error
@@ -86,8 +90,9 @@ class AuthNotifier extends ChangeNotifier {
           isAdmin: isAdmin,
           token: token,
           vacationDays: vacationDays,
+          hoursPerDay: 8,
         );
-        
+
         notifyListeners();
       } else {
         //no access token -> invalid credentials
