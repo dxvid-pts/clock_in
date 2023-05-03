@@ -41,6 +41,7 @@ dependencies:
   flutter_svg: ^2.0.4
   collection: ^1.17.0
   http: ^0.13.5
+  flutter_slidable: ^3.0.0
 
   storage_engine:
     path: /Users/david.petersmway.io/IdeaProjects/storage_engine/storage_engine

@@ -1,6 +1,7 @@
 import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
@@ -71,11 +72,26 @@ class _PendingVacationWidget extends ConsumerWidget {
     return Column(
       children: [
         for (final vacationEntry in ref.watch(vacationOverviewProider))
-          VacationListTile(
-            title: getVacationDisplayString(
-                vacationEntry.start, vacationEntry.end),
-            subtitle: "Request to Manager",
-            category: vacationEntry.category,
+          Slidable(
+            key: ValueKey(vacationEntry.id),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (_) {},
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                  icon: Icons.history,
+                  label: 'Revert request',
+                ),
+              ],
+            ),
+            child: VacationListTile(
+              title: getVacationDisplayString(
+                  vacationEntry.start, vacationEntry.end),
+              subtitle: "Request to Manager",
+              category: vacationEntry.category,
+            ),
           ),
       ],
     );
