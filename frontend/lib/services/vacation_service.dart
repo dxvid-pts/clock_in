@@ -154,6 +154,7 @@ class VacationNotifier extends ChangeNotifier {
             id: Commons.generateId(),
             start: date.millisecondsSinceEpoch,
             end: date.millisecondsSinceEpoch,
+            comment: null,
             category: VacationCategory.available,
           ),
         );
@@ -218,6 +219,7 @@ class VacationNotifier extends ChangeNotifier {
           id: Commons.generateId(),
           start: date.millisecondsSinceEpoch,
           end: date.millisecondsSinceEpoch,
+          comment: null,
           category: VacationCategory.available,
         ),
       );

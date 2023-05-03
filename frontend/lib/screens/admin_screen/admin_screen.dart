@@ -10,38 +10,54 @@ class AdminScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final requests = ref.watch(employeeRequestProvider).requests;
-    return Scaffold(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
         appBar: AppBar(
           title: const Text("Admin"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: ListView(
-            children: [
-              for (final request in requests)
-                EmployeeRequestListTile(
-                  title: "Vaction Request from ${request.employeeName}",
-                  subtitle: getVacationDisplayString(
-                    request.vacationEntry.start,
-                    request.vacationEntry.end,
-                  ),
-                  action: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.check),
-                      //  color: Theme.of(context).primaryColor,
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.close),
-                      ),
-                    ],
-                  ),
-                ),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: "Employee Overview"),
+              Tab(text: "Pending Requests"),
             ],
           ),
-        ));
+        ),
+        body: TabBarView(
+          children: [
+             Icon(Icons.abc),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ListView(
+                children: [
+                  for (final request in requests)
+                    EmployeeRequestListTile(
+                      title: "Vaction Request from ${request.employeeName}",
+                      subtitle: getVacationDisplayString(
+                        request.vacationEntry.start,
+                        request.vacationEntry.end,
+                      ),
+                      action: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.check),
+                            //  color: Theme.of(context).primaryColor,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.close),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+           
+          ],
+        ),
+      ),
+    );
   }
 }
