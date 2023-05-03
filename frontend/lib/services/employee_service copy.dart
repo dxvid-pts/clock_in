@@ -27,11 +27,11 @@ class EmployeeNotifier extends ChangeNotifier {
     ),
   };
 
-  late final StorageBox<Employee> _employeeBox;
+  //late final StorageBox<Employee> _employeeBox;
 
   EmployeeNotifier() {
     //register storage adapter
-    StorageEngine.registerBoxAdapter<Employee>(
+    /* StorageEngine.registerBoxAdapter<Employee>(
       collectionKey: kEmployeeCollectionKey,
       version: 1,
       adapter: HiveBoxAdapter<Employee>(
@@ -50,6 +50,12 @@ class EmployeeNotifier extends ChangeNotifier {
         employees.addAll(entries.values);
         notifyListeners();
       },
-    );
+    );*/
+  }
+
+  void updateEmployee(Employee employee) {
+    employees.removeWhere((element) => element.id == employee.id);
+    employees.add(employee);
+    notifyListeners();
   }
 }

@@ -15,7 +15,7 @@ import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
 
 final employeeRequestProvider = Provider<Set<EmployeeReqStruct>>((ref) {
   final employees = ref.watch(employeeProvider).employees;
-  final requests = ref.watch(_employeeRequestRawProvider).requests;
+  final requests = ref.watch(employeeRequestRawProvider).requests;
 
   Set<EmployeeReqStruct> returnSet = {};
 
@@ -44,16 +44,17 @@ class EmployeeReqStruct {
   const EmployeeReqStruct({required this.request, required this.employee});
 }
 
-final _employeeRequestRawProvider =
+final employeeRequestRawProvider =
     ChangeNotifierProvider<EmployeeRequestNotifier>(
   (ref) => EmployeeRequestNotifier(),
 );
 
 class EmployeeRequestNotifier extends ChangeNotifier {
-  Set<EmployeeRequest> requests = {
+  List<EmployeeRequest> requests = [
     EmployeeRequest(
       employeeId: "0",
       id: Commons.generateId(),
+      accepted: null,
       vacationEntry: VacationEntry(
         id: Commons.generateId(),
         start: DateTime.parse("2023-04-24 00:00:00").millisecondsSinceEpoch,
@@ -65,6 +66,7 @@ class EmployeeRequestNotifier extends ChangeNotifier {
     EmployeeRequest(
       employeeId: "1",
       id: Commons.generateId(),
+      accepted: null,
       vacationEntry: VacationEntry(
         id: Commons.generateId(),
         start: DateTime.parse("2023-04-25 00:30:00").millisecondsSinceEpoch,
@@ -73,13 +75,13 @@ class EmployeeRequestNotifier extends ChangeNotifier {
         category: VacationCategory.pending,
       ),
     ),
-  };
+  ];
 
-  late final StorageBox<EmployeeRequest> _employeeRequestBox;
+  //late final StorageBox<EmployeeRequest> _employeeRequestBox;
 
   EmployeeRequestNotifier() {
     //register storage adapter
-    StorageEngine.registerBoxAdapter<EmployeeRequest>(
+  /*  StorageEngine.registerBoxAdapter<EmployeeRequest>(
       collectionKey: kEmployeeRequestCollectionKey,
       version: 1,
       adapter: HiveBoxAdapter<EmployeeRequest>(
@@ -99,6 +101,17 @@ class EmployeeRequestNotifier extends ChangeNotifier {
         requests.addAll(entries.values);
         notifyListeners();
       },
-    );
+    );*/
+  }
+
+  void setAccepted(EmployeeRequest request, bool accepted) {
+    final index = requests.indexWhere((element) => element.id == request.id);
+
+    if (index != -1) {
+      requests[index] = requests[index].copyWith(accepted: accepted);
+     /* _employeeRequestBox.put(
+          requests.elementAt(index).id, requests.elementAt(index));*/
+      notifyListeners();
+    }
   }
 }

@@ -20,19 +20,22 @@ class EmployeeRequestAdapter extends TypeAdapter<_$_EmployeeRequest> {
       id: fields[0] as String,
       employeeId: fields[1] as String,
       vacationEntry: fields[2] as VacationEntry,
+      accepted: fields[3] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$_EmployeeRequest obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.employeeId)
       ..writeByte(2)
-      ..write(obj.vacationEntry);
+      ..write(obj.vacationEntry)
+      ..writeByte(3)
+      ..write(obj.accepted);
   }
 
   @override
@@ -56,6 +59,7 @@ _$_EmployeeRequest _$$_EmployeeRequestFromJson(Map<String, dynamic> json) =>
       employeeId: json['employeeId'] as String,
       vacationEntry: VacationEntry.fromJson(
           json['vacation_entry'] as Map<String, dynamic>),
+      accepted: json['accepted'] as bool?,
     );
 
 Map<String, dynamic> _$$_EmployeeRequestToJson(_$_EmployeeRequest instance) =>
@@ -63,4 +67,5 @@ Map<String, dynamic> _$$_EmployeeRequestToJson(_$_EmployeeRequest instance) =>
       'id': instance.id,
       'employeeId': instance.employeeId,
       'vacation_entry': instance.vacationEntry,
+      'accepted': instance.accepted,
     };

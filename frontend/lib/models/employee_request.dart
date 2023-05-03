@@ -17,6 +17,7 @@ class EmployeeRequest with _$EmployeeRequest {
     @JsonKey(name: "id") @HiveField(0) required String id,
     @JsonKey(name: "employeeId") @HiveField(1) required String employeeId,
     @JsonKey(name: "vacation_entry") @HiveField(2) required VacationEntry vacationEntry,
+    @JsonKey(name: "accepted") @HiveField(3) required bool? accepted, //true: accepted, false: rejected, null: pending
   }) = _EmployeeRequest;
 
   factory EmployeeRequest.fromJson(Map<String, Object?> json) =>

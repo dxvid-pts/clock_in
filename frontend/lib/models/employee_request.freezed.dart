@@ -29,6 +29,9 @@ mixin _$EmployeeRequest {
   @JsonKey(name: "vacation_entry")
   @HiveField(2)
   VacationEntry get vacationEntry => throw _privateConstructorUsedError;
+  @JsonKey(name: "accepted")
+  @HiveField(3)
+  bool? get accepted => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +54,10 @@ abstract class $EmployeeRequestCopyWith<$Res> {
           String employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
-          VacationEntry vacationEntry});
+          VacationEntry vacationEntry,
+      @JsonKey(name: "accepted")
+      @HiveField(3)
+          bool? accepted});
 
   $VacationEntryCopyWith<$Res> get vacationEntry;
 }
@@ -72,6 +78,7 @@ class _$EmployeeRequestCopyWithImpl<$Res, $Val extends EmployeeRequest>
     Object? id = null,
     Object? employeeId = null,
     Object? vacationEntry = null,
+    Object? accepted = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -86,6 +93,10 @@ class _$EmployeeRequestCopyWithImpl<$Res, $Val extends EmployeeRequest>
           ? _value.vacationEntry
           : vacationEntry // ignore: cast_nullable_to_non_nullable
               as VacationEntry,
+      accepted: freezed == accepted
+          ? _value.accepted
+          : accepted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 
@@ -115,7 +126,10 @@ abstract class _$$_EmployeeRequestCopyWith<$Res>
           String employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
-          VacationEntry vacationEntry});
+          VacationEntry vacationEntry,
+      @JsonKey(name: "accepted")
+      @HiveField(3)
+          bool? accepted});
 
   @override
   $VacationEntryCopyWith<$Res> get vacationEntry;
@@ -135,6 +149,7 @@ class __$$_EmployeeRequestCopyWithImpl<$Res>
     Object? id = null,
     Object? employeeId = null,
     Object? vacationEntry = null,
+    Object? accepted = freezed,
   }) {
     return _then(_$_EmployeeRequest(
       id: null == id
@@ -149,6 +164,10 @@ class __$$_EmployeeRequestCopyWithImpl<$Res>
           ? _value.vacationEntry
           : vacationEntry // ignore: cast_nullable_to_non_nullable
               as VacationEntry,
+      accepted: freezed == accepted
+          ? _value.accepted
+          : accepted // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -168,7 +187,10 @@ class _$_EmployeeRequest
           required this.employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
-          required this.vacationEntry});
+          required this.vacationEntry,
+      @JsonKey(name: "accepted")
+      @HiveField(3)
+          required this.accepted});
 
   factory _$_EmployeeRequest.fromJson(Map<String, dynamic> json) =>
       _$$_EmployeeRequestFromJson(json);
@@ -185,10 +207,14 @@ class _$_EmployeeRequest
   @JsonKey(name: "vacation_entry")
   @HiveField(2)
   final VacationEntry vacationEntry;
+  @override
+  @JsonKey(name: "accepted")
+  @HiveField(3)
+  final bool? accepted;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'EmployeeRequest(id: $id, employeeId: $employeeId, vacationEntry: $vacationEntry)';
+    return 'EmployeeRequest(id: $id, employeeId: $employeeId, vacationEntry: $vacationEntry, accepted: $accepted)';
   }
 
   @override
@@ -198,7 +224,8 @@ class _$_EmployeeRequest
       ..add(DiagnosticsProperty('type', 'EmployeeRequest'))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('employeeId', employeeId))
-      ..add(DiagnosticsProperty('vacationEntry', vacationEntry));
+      ..add(DiagnosticsProperty('vacationEntry', vacationEntry))
+      ..add(DiagnosticsProperty('accepted', accepted));
   }
 
   @override
@@ -210,12 +237,15 @@ class _$_EmployeeRequest
             (identical(other.employeeId, employeeId) ||
                 other.employeeId == employeeId) &&
             (identical(other.vacationEntry, vacationEntry) ||
-                other.vacationEntry == vacationEntry));
+                other.vacationEntry == vacationEntry) &&
+            (identical(other.accepted, accepted) ||
+                other.accepted == accepted));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, employeeId, vacationEntry);
+  int get hashCode =>
+      Object.hash(runtimeType, id, employeeId, vacationEntry, accepted);
 
   @JsonKey(ignore: true)
   @override
@@ -241,7 +271,10 @@ abstract class _EmployeeRequest implements EmployeeRequest {
           required final String employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
-          required final VacationEntry vacationEntry}) = _$_EmployeeRequest;
+          required final VacationEntry vacationEntry,
+      @JsonKey(name: "accepted")
+      @HiveField(3)
+          required final bool? accepted}) = _$_EmployeeRequest;
 
   factory _EmployeeRequest.fromJson(Map<String, dynamic> json) =
       _$_EmployeeRequest.fromJson;
@@ -258,6 +291,10 @@ abstract class _EmployeeRequest implements EmployeeRequest {
   @JsonKey(name: "vacation_entry")
   @HiveField(2)
   VacationEntry get vacationEntry;
+  @override
+  @JsonKey(name: "accepted")
+  @HiveField(3)
+  bool? get accepted;
   @override
   @JsonKey(ignore: true)
   _$$_EmployeeRequestCopyWith<_$_EmployeeRequest> get copyWith =>
