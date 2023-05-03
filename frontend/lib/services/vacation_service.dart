@@ -181,4 +181,16 @@ class VacationNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> deleteVacation(VacationEntry vacationEntry) async {
+    //await initFuture;
+    if (_initFuture != null) await _initFuture;
+
+    vacationData.remove(vacationEntry);
+
+    //add new entry to storage
+    _vacationBox.remove(vacationEntry.id);
+
+    notifyListeners();
+  }
 }

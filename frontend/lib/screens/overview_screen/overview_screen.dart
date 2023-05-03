@@ -78,7 +78,8 @@ class _PendingVacationWidget extends ConsumerWidget {
               motion: const ScrollMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (_) {},
+                  onPressed: (_) =>
+                      ref.read(vacationProvider).deleteVacation(vacationEntry),
                   backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
                   icon: Icons.history,
