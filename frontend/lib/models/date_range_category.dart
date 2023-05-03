@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+part 'date_range_category.g.dart';
 
 @HiveType(typeId: 14, adapterName: 'DateRangeCategoryAdapter')
 enum DateRangeCategory {
