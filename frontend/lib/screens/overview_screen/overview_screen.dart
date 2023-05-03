@@ -28,20 +28,12 @@ class OverviewScreen extends StatelessWidget {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const DatePicker(),
+        children: const [
+          DatePicker(),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ListView(
-                children: const [
-                  SizedBox(height: 10),
-                  _TitleWidget("Vacation"),
-                  SizedBox(height: 3),
-                  _PendingVacationWidget(),
-                  SizedBox(height: 20),
-                ],
-              ),
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: _PendingVacationWidget(),
             ),
           ),
         ],
@@ -69,9 +61,44 @@ class _PendingVacationWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
+    final vacatinoEntries = ref.watch(vacationOverviewProider);
+
+    if (vacatinoEntries.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          const _TitleWidget("Vacation"),
+          const SizedBox(height: 3),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 130,
+                    child: Image.network(
+                        //https://i.ibb.co/qD2q2Cz/168312588290589803.webp, https://i.ibb.co/gdQZyS0/employee-unable-to-access-data-3391065-2829991-1.png
+                        "https://i.ibb.co/qD2q2Cz/168312588290589803.webp"),
+                  ),
+                  const SizedBox(height: 10),
+                  Text("No pending vacation requests",
+                      style: titleStyle(context)),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return ListView(
       children: [
-        for (final vacationEntry in ref.watch(vacationOverviewProider))
+        const SizedBox(height: 10),
+        const _TitleWidget("Vacation"),
+        const SizedBox(height: 3),
+        for (final vacationEntry in vacatinoEntries)
           Slidable(
             key: ValueKey(vacationEntry.id),
             endActionPane: ActionPane(
@@ -94,6 +121,7 @@ class _PendingVacationWidget extends ConsumerWidget {
               category: vacationEntry.category,
             ),
           ),
+        const SizedBox(height: 20),
       ],
     );
   }
