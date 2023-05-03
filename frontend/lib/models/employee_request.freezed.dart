@@ -23,9 +23,9 @@ mixin _$EmployeeRequest {
   @JsonKey(name: "id")
   @HiveField(0)
   String get id => throw _privateConstructorUsedError;
-  @JsonKey(name: "employee_name")
+  @JsonKey(name: "employeeId")
   @HiveField(1)
-  String get employeeName => throw _privateConstructorUsedError;
+  String get employeeId => throw _privateConstructorUsedError;
   @JsonKey(name: "vacation_entry")
   @HiveField(2)
   VacationEntry get vacationEntry => throw _privateConstructorUsedError;
@@ -46,9 +46,9 @@ abstract class $EmployeeRequestCopyWith<$Res> {
       {@JsonKey(name: "id")
       @HiveField(0)
           String id,
-      @JsonKey(name: "employee_name")
+      @JsonKey(name: "employeeId")
       @HiveField(1)
-          String employeeName,
+          String employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
           VacationEntry vacationEntry});
@@ -70,7 +70,7 @@ class _$EmployeeRequestCopyWithImpl<$Res, $Val extends EmployeeRequest>
   @override
   $Res call({
     Object? id = null,
-    Object? employeeName = null,
+    Object? employeeId = null,
     Object? vacationEntry = null,
   }) {
     return _then(_value.copyWith(
@@ -78,9 +78,9 @@ class _$EmployeeRequestCopyWithImpl<$Res, $Val extends EmployeeRequest>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      employeeName: null == employeeName
-          ? _value.employeeName
-          : employeeName // ignore: cast_nullable_to_non_nullable
+      employeeId: null == employeeId
+          ? _value.employeeId
+          : employeeId // ignore: cast_nullable_to_non_nullable
               as String,
       vacationEntry: null == vacationEntry
           ? _value.vacationEntry
@@ -110,9 +110,9 @@ abstract class _$$_EmployeeRequestCopyWith<$Res>
       {@JsonKey(name: "id")
       @HiveField(0)
           String id,
-      @JsonKey(name: "employee_name")
+      @JsonKey(name: "employeeId")
       @HiveField(1)
-          String employeeName,
+          String employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
           VacationEntry vacationEntry});
@@ -133,7 +133,7 @@ class __$$_EmployeeRequestCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? employeeName = null,
+    Object? employeeId = null,
     Object? vacationEntry = null,
   }) {
     return _then(_$_EmployeeRequest(
@@ -141,9 +141,9 @@ class __$$_EmployeeRequestCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      employeeName: null == employeeName
-          ? _value.employeeName
-          : employeeName // ignore: cast_nullable_to_non_nullable
+      employeeId: null == employeeId
+          ? _value.employeeId
+          : employeeId // ignore: cast_nullable_to_non_nullable
               as String,
       vacationEntry: null == vacationEntry
           ? _value.vacationEntry
@@ -163,9 +163,9 @@ class _$_EmployeeRequest
       {@JsonKey(name: "id")
       @HiveField(0)
           required this.id,
-      @JsonKey(name: "employee_name")
+      @JsonKey(name: "employeeId")
       @HiveField(1)
-          required this.employeeName,
+          required this.employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
           required this.vacationEntry});
@@ -178,9 +178,9 @@ class _$_EmployeeRequest
   @HiveField(0)
   final String id;
   @override
-  @JsonKey(name: "employee_name")
+  @JsonKey(name: "employeeId")
   @HiveField(1)
-  final String employeeName;
+  final String employeeId;
   @override
   @JsonKey(name: "vacation_entry")
   @HiveField(2)
@@ -188,7 +188,7 @@ class _$_EmployeeRequest
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'EmployeeRequest(id: $id, employeeName: $employeeName, vacationEntry: $vacationEntry)';
+    return 'EmployeeRequest(id: $id, employeeId: $employeeId, vacationEntry: $vacationEntry)';
   }
 
   @override
@@ -197,7 +197,7 @@ class _$_EmployeeRequest
     properties
       ..add(DiagnosticsProperty('type', 'EmployeeRequest'))
       ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('employeeName', employeeName))
+      ..add(DiagnosticsProperty('employeeId', employeeId))
       ..add(DiagnosticsProperty('vacationEntry', vacationEntry));
   }
 
@@ -207,15 +207,15 @@ class _$_EmployeeRequest
         (other.runtimeType == runtimeType &&
             other is _$_EmployeeRequest &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.employeeName, employeeName) ||
-                other.employeeName == employeeName) &&
+            (identical(other.employeeId, employeeId) ||
+                other.employeeId == employeeId) &&
             (identical(other.vacationEntry, vacationEntry) ||
                 other.vacationEntry == vacationEntry));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, employeeName, vacationEntry);
+  int get hashCode => Object.hash(runtimeType, id, employeeId, vacationEntry);
 
   @JsonKey(ignore: true)
   @override
@@ -236,9 +236,9 @@ abstract class _EmployeeRequest implements EmployeeRequest {
       {@JsonKey(name: "id")
       @HiveField(0)
           required final String id,
-      @JsonKey(name: "employee_name")
+      @JsonKey(name: "employeeId")
       @HiveField(1)
-          required final String employeeName,
+          required final String employeeId,
       @JsonKey(name: "vacation_entry")
       @HiveField(2)
           required final VacationEntry vacationEntry}) = _$_EmployeeRequest;
@@ -251,9 +251,9 @@ abstract class _EmployeeRequest implements EmployeeRequest {
   @HiveField(0)
   String get id;
   @override
-  @JsonKey(name: "employee_name")
+  @JsonKey(name: "employeeId")
   @HiveField(1)
-  String get employeeName;
+  String get employeeId;
   @override
   @JsonKey(name: "vacation_entry")
   @HiveField(2)

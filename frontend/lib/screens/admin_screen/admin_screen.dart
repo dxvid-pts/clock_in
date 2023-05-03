@@ -9,7 +9,7 @@ class AdminScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final requests = ref.watch(employeeRequestProvider).requests;
+    final requests = ref.watch(employeeRequestProvider);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -24,17 +24,17 @@ class AdminScreen extends ConsumerWidget {
         ),
         body: TabBarView(
           children: [
-             Icon(Icons.abc),
+            Icon(Icons.abc),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: ListView(
                 children: [
-                  for (final request in requests)
+                  for (final item in requests)
                     EmployeeRequestListTile(
-                      title: "Vaction Request from ${request.employeeName}",
+                      title: "Vaction Request from ${item.employee.employeeName}",
                       subtitle: getVacationDisplayString(
-                        request.vacationEntry.start,
-                        request.vacationEntry.end,
+                        item.request.vacationEntry.start,
+                        item.request.vacationEntry.end,
                       ),
                       action: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -54,7 +54,6 @@ class AdminScreen extends ConsumerWidget {
                 ],
               ),
             ),
-           
           ],
         ),
       ),
