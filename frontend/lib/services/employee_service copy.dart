@@ -1,11 +1,7 @@
 import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/constants.dart';
 import 'package:frontend/models/employee.dart';
-import 'package:storage_engine/storage_box.dart';
-import 'package:storage_engine/storage_engine.dart';
-import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
 //import firstwhereor null extension
 
 final employeeProvider =
@@ -54,8 +50,9 @@ class EmployeeNotifier extends ChangeNotifier {
   }
 
   void updateEmployee(Employee employee) {
-    employees.removeWhere((element) => element.id == employee.id);
+    employees.removeWhere((e) => e.id == employee.id);
     employees.add(employee);
+
     notifyListeners();
   }
 }

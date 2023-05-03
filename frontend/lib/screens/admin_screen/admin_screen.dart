@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/screens/admin_screen/widgets/employee_dialog.dart';
 import 'package:frontend/services/employee_request_service.dart';
 import 'package:frontend/services/employee_service%20copy.dart';
 import 'package:frontend/utils.dart';
@@ -57,15 +58,17 @@ class _EmployeeSection extends ConsumerWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
-                          Text("Work days: 40"),
-                          Text("Vacation days: 30"),
+                        children: [
+                          Text("Work days: ${e.workHours}"),
+                          Text("Vacation days: ${e.vacationDays}"),
                         ],
                       ),
                     ),
                     const SizedBox(width: 10),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showEmployeeDialog(context, e);
+                      },
                       icon: const Icon(Icons.edit_outlined),
                     ),
                   ],
