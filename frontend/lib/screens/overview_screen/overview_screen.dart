@@ -10,6 +10,7 @@ import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/vacation_service.dart';
 import 'package:frontend/utils.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
+import 'package:frontend/widgets/title_widget.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 TextStyle titleStyle(BuildContext context) => TextStyle(
@@ -42,20 +43,6 @@ class OverviewScreen extends StatelessWidget {
   }
 }
 
-class _TitleWidget extends StatelessWidget {
-  const _TitleWidget(this.title, {Key? key}) : super(key: key);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: titleStyle(context),
-    );
-  }
-}
-
 class _PendingVacationWidget extends ConsumerWidget {
   const _PendingVacationWidget({super.key});
 
@@ -68,7 +55,7 @@ class _PendingVacationWidget extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const _TitleWidget("Vacation"),
+          const TitleWidget("Vacation"),
           const SizedBox(height: 3),
           Expanded(
             child: Center(
@@ -95,7 +82,7 @@ class _PendingVacationWidget extends ConsumerWidget {
 
     return ListView(
       children: [
-        const _TitleWidget("Vacation"),
+        const TitleWidget("Vacation"),
         const SizedBox(height: 3),
         for (final vacationEntry in vacatinoEntries)
           Slidable(
