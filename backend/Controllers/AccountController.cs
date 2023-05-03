@@ -5,6 +5,7 @@ using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
 using backend.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -205,6 +206,32 @@ public class AccountController : ControllerBase
         }
 
         return Ok(new IAccount(result));
+    }
+    
+    /// <summary>
+    /// Delete specified account
+    /// </summary>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpDelete("{userId?}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult DeleteAccount(int userId)
+    {
+        var account = _clockInContext.Accounts.Find(userId);
+        
+        if (account == null)
+        {
+            return BadRequest();
+        }
+
+        _clockInContext.Remove(account);
+
+        _clockInContext.SaveChanges();
+
+        return Ok();
     }
     
     /// <summary>
