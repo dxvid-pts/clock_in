@@ -36,12 +36,18 @@ public class WorkController : ControllerBase
     [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee)]
     [HttpPost("start",Name = "Start Work")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public IActionResult StartWork()
     {
         var account = (Account) HttpContext.Items["User"]!;
+        if (account.BeginTime < TimeOnly.FromDateTime(DateTime.Now) ||
+            account.EndTime < TimeOnly.FromDateTime(DateTime.Now))
+        {
+            return BadRequest("You're too early / too late to start work");
+        }
 
         var runningWork = _clockInContext.Works.FirstOrDefault(w => w.AccountId == account.Id && w.End == null);
 
@@ -228,6 +234,56 @@ public class WorkController : ControllerBase
         _clockInContext.Works.Remove(work);
         _clockInContext.SaveChanges();
         
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Update the Times in which an employee can start work
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <param name="range"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [HttpPatch("setworktimesfor/{accountId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult SetWorkTimesFor(int accountId, [FromBody] IWorkTimeRange range)
+    {
+        Account operatorAccount = (Account)HttpContext.Items["User"]!;
+        ManagerEmployee relation = _clockInContext.ManagerEmployees.FirstOrDefault(r => r.EmployeeId == accountId && r.ManagerId == operatorAccount.Id);
+
+        if (relation == null) return Forbid();
+
+        Account account = _clockInContext.Accounts.Find(accountId);
+        account.BeginTime = range.begin;
+        account.EndTime = range.end;
+        _clockInContext.SaveChanges();
+        return NoContent();
+    }
+
+    /// <summary>
+    /// Update the Time an employee has to work per week
+    /// </summary>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [HttpPatch("settimefor/{accountId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult SetWorkTimeFor(int accountId, [FromBody] IWorkNBreakTime workTime)
+    {
+        Account operatorAccount = (Account)HttpContext.Items["User"]!;
+        ManagerEmployee relation =
+            _clockInContext.ManagerEmployees.FirstOrDefault(r =>
+                r.EmployeeId == accountId && r.ManagerId == operatorAccount.Id);
+
+        if (relation == null) return Forbid();
+        
+        Account account = _clockInContext.Accounts.Find(accountId);
+        account.WorkTime = workTime.worktime;
+        account.BreakTime = workTime.breaktime;
+        _clockInContext.SaveChanges();
         return NoContent();
     }
 }

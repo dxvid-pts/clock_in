@@ -5,6 +5,7 @@ using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
 using backend.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
@@ -56,6 +57,9 @@ public class AccountController : ControllerBase
 
         if (user == null)
             return Unauthorized();
+        
+        user.LastLogin = DateTime.Now;
+        _clockInContext.SaveChanges();
 
         return Ok(_tokenUtils.CreateAccessToken(user));
     }
@@ -173,14 +177,16 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
-    [HttpGet("{userId}")]
+    [HttpGet("{userId?}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult GetAccountInformation(int userId)
     {
         var account = (Account) HttpContext.Items["User"]!;
-
+        if (userId < 1)
+            userId = account.Id;
+        
         if (account.Role == Roles.Employee && userId != account.Id)
         {
             return Forbid();
@@ -200,6 +206,32 @@ public class AccountController : ControllerBase
         }
 
         return Ok(new IAccount(result));
+    }
+    
+    /// <summary>
+    /// Delete specified account
+    /// </summary>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpDelete("{userId?}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult DeleteAccount(int userId)
+    {
+        var account = _clockInContext.Accounts.Find(userId);
+        
+        if (account == null)
+        {
+            return BadRequest();
+        }
+
+        _clockInContext.Remove(account);
+
+        _clockInContext.SaveChanges();
+
+        return Ok();
     }
     
     /// <summary>
@@ -275,6 +307,52 @@ public class AccountController : ControllerBase
             _clockInContext.ManagerEmployees.Update(relation);
         }
 
+        _clockInContext.SaveChanges();
+        return NoContent();
+    }
+
+    /// <summary>
+    /// rm -rf user
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin + Roles.Manager)]
+    [HttpDelete("block/{accountId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult BlockAccount(int accountId)
+    {
+        Account deletor = (Account)HttpContext.Items["User"]!;
+        ManagerEmployee relation = _clockInContext.ManagerEmployees.FirstOrDefault(r => r.EmployeeId == accountId);
+
+        if (deletor.Role != Roles.Admin && (relation == null || relation.ManagerId != deletor.Id))
+        {
+            return Forbid();
+        }
+
+        Account victim = _clockInContext.Accounts.Find(accountId);
+        if (victim == null) return BadRequest();
+        victim.Blocked = true;
+        _clockInContext.SaveChanges();
+        return NoContent();
+    }
+
+    /// <summary>
+    /// You made a mistake? Ask an admin for help and buy the poor guy some chocolate!
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpPatch("unblock/{accountId}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult UnblockAccount(int accountId)
+    {
+        Account luckyGuy = _clockInContext.Accounts.Find(accountId);
+        if (luckyGuy == null) return BadRequest();
+        luckyGuy.Blocked = false;
         _clockInContext.SaveChanges();
         return NoContent();
     }
