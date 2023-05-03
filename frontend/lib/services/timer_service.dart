@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final timerProvider =
-    ChangeNotifierProvider<TimerNotifier>((ref) => TimerNotifier());
+    ChangeNotifierProvider.family<TimerNotifier, int>((ref, hoursPerDay) {
+  return TimerNotifier(hoursPerDay);
+});
 
 class TimerNotifier extends ChangeNotifier {
   int hours = 0;
@@ -17,6 +19,10 @@ class TimerNotifier extends ChangeNotifier {
   bool get isRunning => _t?.isActive ?? false;
 
   DateTime? startTime;
+
+  TimerNotifier(int hoursPerDay) {
+    hours = hoursPerDay;
+  }
 
   void startTimer() {
     //check if currently running

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/timer_service.dart';
 import 'package:frontend/services/tracking_service.dart';
@@ -57,7 +58,8 @@ class _UpperSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timerService = ref.watch(timerProvider);
+    final user = ref.watch(authProvider).user;
+    final timerService = ref.watch(timerProvider(user?.hoursPerDay ?? 1));
 
     final timerTextTheme = Theme.of(context).textTheme.headlineLarge?.copyWith(
           fontSize: 100,
