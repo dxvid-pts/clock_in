@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/date_range.dart';
+import 'package:frontend/models/date_range_category.dart';
+import 'package:hive/hive.dart';
 import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
 import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
@@ -16,6 +18,8 @@ class DateRangeNotifier extends ChangeNotifier {
   late final StorageBox<DateRange> _dateRangeBox;
 
   DateRangeNotifier() {
+    Hive.registerAdapter<DateRangeCategory>(DateRangeCategoryAdapter());
+
     //register storage adapter
     StorageEngine.registerBoxAdapter<DateRange>(
       collectionKey: kDateRangeCollectionKey,

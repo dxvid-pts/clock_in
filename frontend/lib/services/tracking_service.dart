@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/constants.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:hive/hive.dart';
 import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
 import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
@@ -39,6 +40,8 @@ class TrackingNotifier extends ChangeNotifier {
 
   TrackingNotifier() {
     //register storage adapter
+    Hive.registerAdapter<DateRangeCategory>(DateRangeCategoryAdapter());
+
     StorageEngine.registerBoxAdapter<TrackingEntry>(
       collectionKey: kTrackingCollectionKey,
       version: 1,
