@@ -21,7 +21,7 @@ class TrackingEntryAdapter extends TypeAdapter<_$_TrackingEntry> {
       start: fields[1] as int,
       end: fields[2] as int,
       category: fields[3] as DateRangeCategory?,
-      isDummy: fields[4] as bool,
+      isDummy: fields[4] as bool?,
     );
   }
 

@@ -103,15 +103,15 @@ class SimpleBarChart extends ConsumerWidget {
                     gradient: LinearGradient(
                       colors: [
                         //dummy
-                        if (statsEntry.value.isDummy)
+                        if (statsEntry.value.isDummy ?? false)
                           Colors.grey.withOpacity(0.05),
-                        if (statsEntry.value.isDummy)
+                        if (statsEntry.value.isDummy ?? false)
                           Colors.grey.withOpacity(0.3),
 
                         //no dummy
-                        if (!statsEntry.value.isDummy)
+                        if (!(statsEntry.value.isDummy ?? false))
                           Theme.of(context).primaryColor.withOpacity(0.8),
-                        if (!statsEntry.value.isDummy)
+                        if (!(statsEntry.value.isDummy ?? false))
                           Theme.of(context).primaryColor,
                       ],
                       begin: Alignment.bottomCenter,

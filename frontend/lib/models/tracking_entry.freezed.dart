@@ -36,7 +36,7 @@ mixin _$TrackingEntry {
   DateRangeCategory? get category => throw _privateConstructorUsedError;
   @JsonKey(name: "dummy")
   @HiveField(4)
-  bool get isDummy => throw _privateConstructorUsedError;
+  bool? get isDummy => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,7 +55,7 @@ abstract class $TrackingEntryCopyWith<$Res> {
       @JsonKey(name: "start") @HiveField(1) int start,
       @JsonKey(name: "end") @HiveField(2) int end,
       @JsonKey(name: "category") @HiveField(3) DateRangeCategory? category,
-      @JsonKey(name: "dummy") @HiveField(4) bool isDummy});
+      @JsonKey(name: "dummy") @HiveField(4) bool? isDummy});
 }
 
 /// @nodoc
@@ -75,7 +75,7 @@ class _$TrackingEntryCopyWithImpl<$Res, $Val extends TrackingEntry>
     Object? start = null,
     Object? end = null,
     Object? category = freezed,
-    Object? isDummy = null,
+    Object? isDummy = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -94,10 +94,10 @@ class _$TrackingEntryCopyWithImpl<$Res, $Val extends TrackingEntry>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as DateRangeCategory?,
-      isDummy: null == isDummy
+      isDummy: freezed == isDummy
           ? _value.isDummy
           : isDummy // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
     ) as $Val);
   }
 }
@@ -115,7 +115,7 @@ abstract class _$$_TrackingEntryCopyWith<$Res>
       @JsonKey(name: "start") @HiveField(1) int start,
       @JsonKey(name: "end") @HiveField(2) int end,
       @JsonKey(name: "category") @HiveField(3) DateRangeCategory? category,
-      @JsonKey(name: "dummy") @HiveField(4) bool isDummy});
+      @JsonKey(name: "dummy") @HiveField(4) bool? isDummy});
 }
 
 /// @nodoc
@@ -133,7 +133,7 @@ class __$$_TrackingEntryCopyWithImpl<$Res>
     Object? start = null,
     Object? end = null,
     Object? category = freezed,
-    Object? isDummy = null,
+    Object? isDummy = freezed,
   }) {
     return _then(_$_TrackingEntry(
       id: null == id
@@ -152,10 +152,10 @@ class __$$_TrackingEntryCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as DateRangeCategory?,
-      isDummy: null == isDummy
+      isDummy: freezed == isDummy
           ? _value.isDummy
           : isDummy // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
     ));
   }
 }
@@ -205,7 +205,7 @@ class _$_TrackingEntry implements _TrackingEntry {
   @override
   @JsonKey(name: "dummy")
   @HiveField(4)
-  final bool isDummy;
+  final bool? isDummy;
 
   @override
   String toString() {
@@ -260,7 +260,7 @@ abstract class _TrackingEntry implements TrackingEntry {
           final DateRangeCategory? category,
       @JsonKey(name: "dummy")
       @HiveField(4)
-          final bool isDummy}) = _$_TrackingEntry;
+          final bool? isDummy}) = _$_TrackingEntry;
 
   factory _TrackingEntry.fromJson(Map<String, dynamic> json) =
       _$_TrackingEntry.fromJson;
@@ -284,7 +284,7 @@ abstract class _TrackingEntry implements TrackingEntry {
   @override
   @JsonKey(name: "dummy")
   @HiveField(4)
-  bool get isDummy;
+  bool? get isDummy;
   @override
   @JsonKey(ignore: true)
   _$$_TrackingEntryCopyWith<_$_TrackingEntry> get copyWith =>

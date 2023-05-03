@@ -19,7 +19,7 @@ class TrackingEntry with _$TrackingEntry {
     //milliseconds since epoch
     @JsonKey(name: "end") @HiveField(2) required int end,
     @JsonKey(name: "category") @HiveField(3) @Default(DateRangeCategory.office) DateRangeCategory? category,
-     @JsonKey(name: "dummy") @HiveField(4) @Default(false) bool isDummy,
+     @JsonKey(name: "dummy") @HiveField(4) @Default(false) bool? isDummy,
   }) = _TrackingEntry;
 
   factory TrackingEntry.fromJson(Map<String, Object?> json) =>
