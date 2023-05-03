@@ -40,39 +40,39 @@ public class VacationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Post([FromBody] VacationInput input)
     {
-        try
-        {
-            DateOnly begin = input.begin.ToDateOnly();
-            DateOnly end = input.end.ToDateOnly();
-            if (end.CompareTo(begin) < 0)
-            {
-                throw new FormatException("end date was before begin date");
-            }
+        DateOnly begin = input.begin.ToDateOnly();
+        DateOnly end = input.end.ToDateOnly();
+        if (end.CompareTo(begin) < 0) return BadRequest();
 
-            int accountId = ((Account?)HttpContext.Items["User"])!.Id;
-            Vacation vacation = new Vacation()
-            {
-                AccountId = accountId,
-                Status = "Pending",
-                Begin = begin,
-                End = end,
-                Changed = DateTime.Now
-            };
-            _clockInContext.Vacations.Add(vacation);
-            _clockInContext.SaveChanges();
-            
-            return Ok(new VacationModel(vacation));
-        }
-        catch (FormatException e)
+        int remainingVacationDays = ((Account)HttpContext.Items["User"]).VacationDays;
+        var vacations = _clockInContext.Vacations.Where(v => (v.Begin.Year == DateTime.Now.Year || v.End.Year == DateTime.Now.Year) && v.Status != "Canceled");
+        foreach (Vacation exVacation in vacations)
         {
-            _logger.LogError(e.ToString());
-            return BadRequest();
+            var beginEx = exVacation.Begin.Year == DateTime.Now.Year ? exVacation.Begin.ToDateTime(new TimeOnly(0,0)) : new DateTime(DateTime.Now.Year, 1, 1);
+            var endEx = exVacation.End.Year == DateTime.Now.Year ? exVacation.End.ToDateTime(new TimeOnly(0, 0)) : new DateTime(DateTime.Now.Year, 12, 31);
+
+            remainingVacationDays -= beginEx.BusinessDaysUntil(endEx);
         }
-        catch (Exception e)
+
+        int vacationDays = begin.ToDateTime(new TimeOnly(0, 0)).BusinessDaysUntil(end.ToDateTime(new TimeOnly(0, 0)));
+        if (vacationDays > remainingVacationDays)
         {
-            _logger.LogError(e.ToString());
-            return Problem();
+            return BadRequest("too much vacation days requested. cancel other vacations first");
         }
+
+        int accountId = ((Account?)HttpContext.Items["User"])!.Id;
+        Vacation vacation = new Vacation()
+        {
+            AccountId = accountId,
+            Status = "Pending",
+            Begin = begin,
+            End = end,
+            Changed = DateTime.Now
+        };
+        _clockInContext.Vacations.Add(vacation);
+        _clockInContext.SaveChanges();
+        
+        return Ok(new VacationModel(vacation));
     }
 
     /// <summary>
@@ -107,6 +107,22 @@ public class VacationController : ControllerBase
         {
             return BadRequest();
         }
+        
+        int remainingVacationDays = ((Account)HttpContext.Items["User"]).VacationDays;
+        var vacations = _clockInContext.Vacations.Where(v => (v.Begin.Year == DateTime.Now.Year || v.End.Year == DateTime.Now.Year) && v.Id != id && v.Status != "Canceled");
+        foreach (Vacation exVacation in vacations)
+        {
+            var beginEx = exVacation.Begin.Year == DateTime.Now.Year ? exVacation.Begin.ToDateTime(new TimeOnly(0,0)) : new DateTime(DateTime.Now.Year, 1, 1);
+            var endEx = exVacation.End.Year == DateTime.Now.Year ? exVacation.End.ToDateTime(new TimeOnly(0, 0)) : new DateTime(DateTime.Now.Year, 12, 31);
+
+            remainingVacationDays -= beginEx.BusinessDaysUntil(endEx);
+        }
+
+        int vacationDays = begin.ToDateTime(new TimeOnly(0, 0)).BusinessDaysUntil(end.ToDateTime(new TimeOnly(0, 0)));
+        if (vacationDays > remainingVacationDays)
+        {
+            return BadRequest("too much vacation days requested. cancel other vacations first");
+        }
 
         vacation.Begin = begin;
         vacation.End = end;
@@ -130,7 +146,7 @@ public class VacationController : ControllerBase
     public IActionResult Delete(int id)
     {
         Vacation? vacation = _clockInContext.Vacations.FirstOrDefault(v => v.Id == id);
-        if (vacation == null)
+        if (vacation == null || vacation.End > DateTime.Now.ToDateOnly())
         {
             return BadRequest();
         }
@@ -203,17 +219,21 @@ public class VacationController : ControllerBase
     /// <param name="year">Year of vacations</param>
     /// <returns>A List of all vacations in the given year</returns>
     [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee + Roles.Admin)]
-    [HttpGet("{userId}")]
+    [HttpGet("{year?}/{userId?}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IVacation[]))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public IActionResult Get(int userId, int year)
     {
         var account = (Account) HttpContext.Items["User"]!;
+        if (userId < 1)
+            userId = account.Id;
+        if (year < 1)
+            year = DateTime.Now.Year;
 
         if (account.Role == Roles.Employee && userId != account.Id)
         {
-            return Forbid(" ");
+            return Forbid();
         }
 
         if (userId != account.Id && account.Role == Roles.Manager && this._clockInContext.ManagerEmployees.FirstOrDefault(relation =>
@@ -222,8 +242,32 @@ public class VacationController : ControllerBase
             return Forbid();
         }
 
-        var vacations = this._clockInContext.Vacations.Where(v => v.AccountId == account.Id && v.Begin.Year == year).ToList().Select(v => new IVacation(v));
+        var vacations = this._clockInContext.Vacations.Where(v => v.AccountId == userId && v.Begin.Year == year).Select(v => new IVacation(v)).ToList();
         
         return Ok(vacations);
+    }
+
+    /// <summary>
+    /// Update the amount of vacation days for an account
+    /// </summary>
+    /// <param name="accountId"></param>
+    /// <param name="days"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Manager)]
+    [HttpPatch("setvacationdaysfor/{accountId}/{days}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult SetVacationDays(int accountId, int days)
+    {
+        Account operatorAccount = (Account)HttpContext.Items["User"]!;
+        ManagerEmployee relation = _clockInContext.ManagerEmployees.FirstOrDefault(r => r.EmployeeId == accountId && r.ManagerId == operatorAccount.Id);
+
+        if (relation == null) return Forbid();
+
+        Account account = _clockInContext.Accounts.Find(accountId);
+        account.VacationDays = days;
+        _clockInContext.SaveChanges();
+        return NoContent();
     }
 }

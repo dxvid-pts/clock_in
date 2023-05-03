@@ -26,4 +26,12 @@
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="out\web.config" />
+      <_ContentIncludedByDefault Remove="out\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="out\appsettings.json" />
+      <_ContentIncludedByDefault Remove="out\backend.deps.json" />
+      <_ContentIncludedByDefault Remove="out\backend.runtimeconfig.json" />
+    </ItemGroup>
+
 </Project>

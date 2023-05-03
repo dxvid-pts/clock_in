@@ -42,3 +42,21 @@ public class IWorkDateRange
     [Required]
     public DateTime end { get; init; }
 }
+
+public class IWorkTimeRange
+{
+    [Required]
+    public TimeOnly begin { get; init; }
+    
+    [Required]
+    public TimeOnly end { get; init; }
+}
+
+public class IWorkNBreakTime
+{
+    [Required]
+    public TimeOnly worktime { get; init; }
+    
+    [Required]
+    public TimeOnly breaktime { get; init; }
+}
