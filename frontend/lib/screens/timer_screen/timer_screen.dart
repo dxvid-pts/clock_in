@@ -63,7 +63,9 @@ class _UpperSection extends ConsumerWidget {
 
     final timerTextTheme = Theme.of(context).textTheme.headlineLarge?.copyWith(
           fontSize: 100,
-          color: const Color(0xFFfefdfd),
+          color: !timerService.hasReachedZero
+              ? const Color(0xFFfefdfd)
+              : const Color.fromARGB(255, 255, 132, 132),
         );
 
     const reducedFontColor = Color(0xFFf5ddaf);
