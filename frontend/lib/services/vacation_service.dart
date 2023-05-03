@@ -126,7 +126,11 @@ class VacationNotifier extends ChangeNotifier {
       vacationData = entries.values.toSet();
 
       final availableVacationDays = kMaxVacationDays -
-          vacationData.map((e) => e.durationDays).reduce((v, e) => v + e);
+          (vacationData.isEmpty
+              ? 0
+              : vacationData
+                  .map((e) => e.durationDays)
+                  .reduce((v, e) => v + e));
 
       //fill rest up with available entries
       for (int i = 0; i < (availableVacationDays); i++) {

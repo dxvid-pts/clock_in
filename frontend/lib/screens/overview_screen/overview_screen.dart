@@ -66,8 +66,8 @@ class _PendingVacationWidget extends ConsumerWidget {
     if (vacatinoEntries.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const SizedBox(height: 10),
           const _TitleWidget("Vacation"),
           const SizedBox(height: 3),
           Expanded(
@@ -95,7 +95,6 @@ class _PendingVacationWidget extends ConsumerWidget {
 
     return ListView(
       children: [
-        const SizedBox(height: 10),
         const _TitleWidget("Vacation"),
         const SizedBox(height: 3),
         for (final vacationEntry in vacatinoEntries)
