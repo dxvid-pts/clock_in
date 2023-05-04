@@ -239,7 +239,7 @@ public class WorkController : ControllerBase
         return NoContent();
     }
 
-    [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee)]
+    [SuperiorAuthorize(Roles = Roles.Admin + Roles.Manager + Roles.Employee)]
     [HttpGet("summary/{month?}")]
     [Produces("text/csv")]
     public FileResult Summary(int month)
