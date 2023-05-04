@@ -42,6 +42,7 @@ dependencies:
   collection: ^1.17.0
   http: ^0.13.5
   flutter_slidable: ^3.0.0
+  pdf: ^3.10.1
 
   storage_engine:
     path: /Users/david.petersmway.io/IdeaProjects/storage_engine/storage_engine
@@ -51,6 +52,11 @@ dependencies:
 
   commons_flutter:
     path: /Users/david.petersmway.io/IdeaProjects/commons/commons_flutter
+  pdfx: 
+    git: 
+      url: https://github.com/kyle-seongwoo-jun/packages.flutter.git
+      path: packages/pdfx
+      ref: 32b55b8943b7fb166cf70fa21dc83ae60b79c212
 
 dev_dependencies:
   flutter_test:
