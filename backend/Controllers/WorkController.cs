@@ -248,7 +248,12 @@ public class WorkController : ControllerBase
 
         if (month < 1) month = DateTime.Now.Month;
 
-        List<Work> workSessions = _clockInContext.Works.Where(w => w.AccountId == account.Id && w.Begin.Month == month && w.End != null).ToList();
+        List<Work> workSessions = _clockInContext.Works.Where(w =>
+            w.AccountId == account.Id
+            && w.Begin.Year == DateTime.Now.Year
+            && w.Begin.Month == month
+            && w.End != null).ToList();
+        workSessions.Sort((x, y) => DateTime.Compare(x.Begin, y.Begin));
 
         Dictionary<DateOnly, TimeSpan> summaryDictionary = new Dictionary<DateOnly, TimeSpan>();
         foreach (Work workSession in workSessions)
