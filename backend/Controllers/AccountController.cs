@@ -356,4 +356,16 @@ public class AccountController : ControllerBase
         _clockInContext.SaveChanges();
         return NoContent();
     }
+
+    /// <summary>
+    /// get an array of all users
+    /// </summary>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Admin)]
+    [HttpGet("showallusers")]
+    public IActionResult ShowAllUsers()
+    {
+        List<IAccount> accounts = _clockInContext.Accounts.Where(a => a.Id > 0).Select(a => new IAccount(a)).ToList();
+        return Ok(accounts);
+    }
 }

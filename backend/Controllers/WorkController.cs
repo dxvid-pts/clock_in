@@ -239,6 +239,11 @@ public class WorkController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// get a csv file where all work times are listed
+    /// </summary>
+    /// <param name="month">month of the current year default: current month</param>
+    /// <returns></returns>
     [SuperiorAuthorize(Roles = Roles.Admin + Roles.Manager + Roles.Employee)]
     [HttpGet("summary/{month?}")]
     [Produces("text/csv")]
