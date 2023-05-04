@@ -1,17 +1,50 @@
+import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdfx/pdfx.dart' as pdfv;
 
 void exportAndShowPdf(WidgetRef ref, BuildContext context) async {
   final pdf = pw.Document();
+  const double fontSize = 12;
+
+  final reportedItems = [];
+
+  final consolidatedTracking = ref.watch(consolidatedTrackingProvider);
+
+  //add entries to reportedItems
+  for (final entry in consolidatedTracking) {
+    reportedItems.add([_toDateString(entry.day), _toTimeString(entry.duration)]);
+  }
 
   pdf.addPage(pw.Page(
       pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
         return pw.Center(
-          child: pw.Text("Hello World"),
+          child: pw.Table(children: [
+            for (var i = 0; i < reportedItems.length; i++)
+              pw.TableRow(children: [
+                pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      pw.Text(reportedItems[i][0],
+                          style: const pw.TextStyle(fontSize: fontSize)),
+                      pw.Divider(thickness: 1)
+                    ]),
+                pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      pw.Text(reportedItems[i][1],
+                          style: const pw.TextStyle(fontSize: fontSize)),
+                      pw.Divider(thickness: 1)
+                    ]),
+              ])
+          ]),
         ); // Center
       })); // Page
 
@@ -87,4 +120,12 @@ class PdfPreviewScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+String _toDateString(Day day){
+  return "${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}";
+}
+
+String _toTimeString(Duration duration){
+  return "${duration.inHours}:${duration.inMinutes % 60}:${duration.inSeconds % 60}";
 }
