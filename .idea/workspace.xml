@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af452a00-8425-44ce-9d78-b8623c5a9041" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/lib/services/auth_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/lib/services/auth_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/container/mysql_upgrade_info" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +45,11 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "show.migrate.to.gradle.popup": "false",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -58,6 +62,7 @@
       <updated>1682541634838</updated>
       <workItem from="1682541636149" duration="93000" />
       <workItem from="1682541741137" duration="1123000" />
+      <workItem from="1683187806490" duration="228000" />
     </task>
     <servers />
   </component>
