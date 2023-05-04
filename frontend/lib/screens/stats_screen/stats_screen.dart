@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
+import 'package:frontend/screens/stats_screen/stats_utils.dart';
 import 'package:frontend/services/current_week_stats_service.dart';
 import 'package:frontend/services/vacation_service.dart';
 
@@ -25,6 +26,26 @@ class StatsScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Consumer(builder: (context, ref, _) {
+                return ElevatedButton.icon(
+                  onPressed: () {
+                    exportAndShowPdf(ref, context);
+                  },
+                  label: const Text("Export as PDF"),
+                  icon: const Icon(Icons.file_download),
+                );
+              }),
+              ElevatedButton.icon(
+                onPressed: () {},
+                label: const Text("Export as CSV"),
+                icon: const Icon(Icons.file_download),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.only(left: 18, bottom: 20),
             child: Text(
@@ -36,6 +57,10 @@ class StatsScreen extends StatelessWidget {
             flex: 2,
             child: PieChartSample2(),
           ),
+          const Expanded(
+            flex: 1,
+            child: SizedBox(),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 18, bottom: 20),
             child: Text(
@@ -44,9 +69,10 @@ class StatsScreen extends StatelessWidget {
             ),
           ),
           const Expanded(
-            flex: 2,
+            flex: 4,
             child: SimpleBarChart(),
           ),
+          const SizedBox(height: 6),
         ],
       ),
     );
@@ -81,8 +107,17 @@ class SimpleBarChart extends ConsumerWidget {
                     toY: statsEntry.value.duration.inHours.toDouble(),
                     gradient: LinearGradient(
                       colors: [
-                        Theme.of(context).primaryColor.withOpacity(0.8),
-                        Theme.of(context).primaryColor,
+                        //dummy
+                        if (statsEntry.value.isDummy ?? false)
+                          Colors.grey.withOpacity(0.05),
+                        if (statsEntry.value.isDummy ?? false)
+                          Colors.grey.withOpacity(0.3),
+
+                        //no dummy
+                        if (!(statsEntry.value.isDummy ?? false))
+                          Theme.of(context).primaryColor.withOpacity(0.8),
+                        if (!(statsEntry.value.isDummy ?? false))
+                          Theme.of(context).primaryColor,
                       ],
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,

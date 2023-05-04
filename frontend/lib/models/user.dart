@@ -14,6 +14,10 @@ class User with _$User {
   const factory User({
     @JsonKey(name: "id") @HiveField(0) required String id,
     @JsonKey(name: "email") @HiveField(1) required String email,
+    @JsonKey(name: "admin") @HiveField(2) required bool isAdmin,
+    @JsonKey(name: "token") @HiveField(3) required String token,
+    @JsonKey(name: "vacationDays") @HiveField(4) required int vacationDays,
+    @JsonKey(name: "hoursPerDay") @HiveField(5) required int hoursPerDay,
   }) = _User;
 
   factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);

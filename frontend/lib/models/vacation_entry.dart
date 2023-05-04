@@ -18,8 +18,13 @@ class VacationEntry with _$VacationEntry {
     @JsonKey(name: "start") @HiveField(1) required int start,
     @JsonKey(name: "end") @HiveField(2) required int end,
     @JsonKey(name: "category") @HiveField(3) required VacationCategory category,
+     @JsonKey(name: "comment") @HiveField(4) required String? comment,
   }) = _VacationEntry;
 
   factory VacationEntry.fromJson(Map<String, Object?> json) =>
       _$VacationEntryFromJson(json);
+}
+
+extension VacationEntryExtension on VacationEntry {
+  int get durationDays => ((end - start) / Duration.millisecondsPerDay).ceil();
 }

@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/timer_service.dart';
 import 'package:frontend/services/tracking_service.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:frontend/models/date_range_category.dart';
+import 'package:frontend/utils.dart';
 
 class TimerScreen extends StatelessWidget {
   const TimerScreen({super.key});
@@ -56,11 +58,14 @@ class _UpperSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timerService = ref.watch(timerProvider);
+    final user = ref.watch(authProvider).user;
+    final timerService = ref.watch(timerProvider(user?.hoursPerDay ?? 1));
 
     final timerTextTheme = Theme.of(context).textTheme.headlineLarge?.copyWith(
           fontSize: 100,
-          color: const Color(0xFFfefdfd),
+          color: !timerService.hasReachedZero
+              ? const Color(0xFFfefdfd)
+              : const Color.fromARGB(255, 255, 132, 132),
         );
 
     const reducedFontColor = Color(0xFFf5ddaf);
@@ -193,7 +198,7 @@ class _UpperSection extends ConsumerWidget {
             child: FittedBox(
               fit: BoxFit.contain,
               child: Text(
-                'Work time 40 hours • Your daily rate \$145',
+                'Work time 40 hours • Latest check in: 8:00',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontSize: 100,
                       color: reducedFontColor,
@@ -316,7 +321,7 @@ class _LowerSection extends ConsumerWidget {
           children: [
             const SizedBox(height: 20),
             Text(
-              "This week you worked",
+              "Previously you worked",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 15),
@@ -343,35 +348,6 @@ class _LowerSection extends ConsumerWidget {
       ),
     );
   }
-}
-
-String dayToDisplayString(Day day) {
-  String returnString = "";
-  switch (day.weekday) {
-    case 1:
-      returnString = "Monday";
-      break;
-    case 2:
-      returnString = "Tuesday";
-      break;
-    case 3:
-      returnString = "Wednesday";
-      break;
-    case 4:
-      returnString = "Thursday";
-      break;
-    case 5:
-      returnString = "Friday";
-      break;
-    case 6:
-      returnString = "Saturday";
-      break;
-    case 7:
-      returnString = "Sunday";
-      break;
-  }
-
-  return "$returnString ${day.day.twoDigits()}.${day.month.twoDigits()}";
 }
 
 void _vibrate() async {

@@ -36,10 +36,13 @@ dependencies:
   flutter_riverpod: ^2.3.2
   hive: ^2.2.3
   animations: ^2.0.7
-  syncfusion_flutter_datepicker: ^20.4.54
+  syncfusion_flutter_datepicker: ^21.2.3
   fl_chart: ^0.61.0
   flutter_svg: ^2.0.4
   collection: ^1.17.0
+  http: ^0.13.5
+  flutter_slidable: ^3.0.0
+  pdf: ^3.10.1
 
   storage_engine:
     path: /Users/david.petersmway.io/IdeaProjects/storage_engine/storage_engine
@@ -49,6 +52,11 @@ dependencies:
 
   commons_flutter:
     path: /Users/david.petersmway.io/IdeaProjects/commons/commons_flutter
+  pdfx: 
+    git: 
+      url: https://github.com/kyle-seongwoo-jun/packages.flutter.git
+      path: packages/pdfx
+      ref: 32b55b8943b7fb166cf70fa21dc83ae60b79c212
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +88,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/logo-white.svg
+    - assets/not-found.webp
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

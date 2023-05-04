@@ -21,13 +21,14 @@ class VacationEntryAdapter extends TypeAdapter<_$_VacationEntry> {
       start: fields[1] as int,
       end: fields[2] as int,
       category: fields[3] as VacationCategory,
+      comment: fields[4] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, _$_VacationEntry obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class VacationEntryAdapter extends TypeAdapter<_$_VacationEntry> {
       ..writeByte(2)
       ..write(obj.end)
       ..writeByte(3)
-      ..write(obj.category);
+      ..write(obj.category)
+      ..writeByte(4)
+      ..write(obj.comment);
   }
 
   @override
@@ -59,6 +62,7 @@ _$_VacationEntry _$$_VacationEntryFromJson(Map<String, dynamic> json) =>
       start: json['start'] as int,
       end: json['end'] as int,
       category: $enumDecode(_$VacationCategoryEnumMap, json['category']),
+      comment: json['comment'] as String?,
     );
 
 Map<String, dynamic> _$$_VacationEntryToJson(_$_VacationEntry instance) =>
@@ -67,6 +71,7 @@ Map<String, dynamic> _$$_VacationEntryToJson(_$_VacationEntry instance) =>
       'start': instance.start,
       'end': instance.end,
       'category': _$VacationCategoryEnumMap[instance.category]!,
+      'comment': instance.comment,
     };
 
 const _$VacationCategoryEnumMap = {

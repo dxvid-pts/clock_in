@@ -26,6 +26,18 @@ mixin _$User {
   @JsonKey(name: "email")
   @HiveField(1)
   String get email => throw _privateConstructorUsedError;
+  @JsonKey(name: "admin")
+  @HiveField(2)
+  bool get isAdmin => throw _privateConstructorUsedError;
+  @JsonKey(name: "token")
+  @HiveField(3)
+  String get token => throw _privateConstructorUsedError;
+  @JsonKey(name: "vacationDays")
+  @HiveField(4)
+  int get vacationDays => throw _privateConstructorUsedError;
+  @JsonKey(name: "hoursPerDay")
+  @HiveField(5)
+  int get hoursPerDay => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +51,11 @@ abstract class $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") @HiveField(0) String id,
-      @JsonKey(name: "email") @HiveField(1) String email});
+      @JsonKey(name: "email") @HiveField(1) String email,
+      @JsonKey(name: "admin") @HiveField(2) bool isAdmin,
+      @JsonKey(name: "token") @HiveField(3) String token,
+      @JsonKey(name: "vacationDays") @HiveField(4) int vacationDays,
+      @JsonKey(name: "hoursPerDay") @HiveField(5) int hoursPerDay});
 }
 
 /// @nodoc
@@ -57,6 +73,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   $Res call({
     Object? id = null,
     Object? email = null,
+    Object? isAdmin = null,
+    Object? token = null,
+    Object? vacationDays = null,
+    Object? hoursPerDay = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -67,6 +87,22 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      token: null == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String,
+      vacationDays: null == vacationDays
+          ? _value.vacationDays
+          : vacationDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      hoursPerDay: null == hoursPerDay
+          ? _value.hoursPerDay
+          : hoursPerDay // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -79,7 +115,11 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: "id") @HiveField(0) String id,
-      @JsonKey(name: "email") @HiveField(1) String email});
+      @JsonKey(name: "email") @HiveField(1) String email,
+      @JsonKey(name: "admin") @HiveField(2) bool isAdmin,
+      @JsonKey(name: "token") @HiveField(3) String token,
+      @JsonKey(name: "vacationDays") @HiveField(4) int vacationDays,
+      @JsonKey(name: "hoursPerDay") @HiveField(5) int hoursPerDay});
 }
 
 /// @nodoc
@@ -93,6 +133,10 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
   $Res call({
     Object? id = null,
     Object? email = null,
+    Object? isAdmin = null,
+    Object? token = null,
+    Object? vacationDays = null,
+    Object? hoursPerDay = null,
   }) {
     return _then(_$_User(
       id: null == id
@@ -103,6 +147,22 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      isAdmin: null == isAdmin
+          ? _value.isAdmin
+          : isAdmin // ignore: cast_nullable_to_non_nullable
+              as bool,
+      token: null == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String,
+      vacationDays: null == vacationDays
+          ? _value.vacationDays
+          : vacationDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      hoursPerDay: null == hoursPerDay
+          ? _value.hoursPerDay
+          : hoursPerDay // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -113,7 +173,11 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 class _$_User with DiagnosticableTreeMixin implements _User {
   const _$_User(
       {@JsonKey(name: "id") @HiveField(0) required this.id,
-      @JsonKey(name: "email") @HiveField(1) required this.email});
+      @JsonKey(name: "email") @HiveField(1) required this.email,
+      @JsonKey(name: "admin") @HiveField(2) required this.isAdmin,
+      @JsonKey(name: "token") @HiveField(3) required this.token,
+      @JsonKey(name: "vacationDays") @HiveField(4) required this.vacationDays,
+      @JsonKey(name: "hoursPerDay") @HiveField(5) required this.hoursPerDay});
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
@@ -125,10 +189,26 @@ class _$_User with DiagnosticableTreeMixin implements _User {
   @JsonKey(name: "email")
   @HiveField(1)
   final String email;
+  @override
+  @JsonKey(name: "admin")
+  @HiveField(2)
+  final bool isAdmin;
+  @override
+  @JsonKey(name: "token")
+  @HiveField(3)
+  final String token;
+  @override
+  @JsonKey(name: "vacationDays")
+  @HiveField(4)
+  final int vacationDays;
+  @override
+  @JsonKey(name: "hoursPerDay")
+  @HiveField(5)
+  final int hoursPerDay;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'User(id: $id, email: $email)';
+    return 'User(id: $id, email: $email, isAdmin: $isAdmin, token: $token, vacationDays: $vacationDays, hoursPerDay: $hoursPerDay)';
   }
 
   @override
@@ -137,7 +217,11 @@ class _$_User with DiagnosticableTreeMixin implements _User {
     properties
       ..add(DiagnosticsProperty('type', 'User'))
       ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('email', email));
+      ..add(DiagnosticsProperty('email', email))
+      ..add(DiagnosticsProperty('isAdmin', isAdmin))
+      ..add(DiagnosticsProperty('token', token))
+      ..add(DiagnosticsProperty('vacationDays', vacationDays))
+      ..add(DiagnosticsProperty('hoursPerDay', hoursPerDay));
   }
 
   @override
@@ -146,12 +230,19 @@ class _$_User with DiagnosticableTreeMixin implements _User {
         (other.runtimeType == runtimeType &&
             other is _$_User &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin) &&
+            (identical(other.token, token) || other.token == token) &&
+            (identical(other.vacationDays, vacationDays) ||
+                other.vacationDays == vacationDays) &&
+            (identical(other.hoursPerDay, hoursPerDay) ||
+                other.hoursPerDay == hoursPerDay));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email);
+  int get hashCode => Object.hash(
+      runtimeType, id, email, isAdmin, token, vacationDays, hoursPerDay);
 
   @JsonKey(ignore: true)
   @override
@@ -169,9 +260,24 @@ class _$_User with DiagnosticableTreeMixin implements _User {
 
 abstract class _User implements User {
   const factory _User(
-          {@JsonKey(name: "id") @HiveField(0) required final String id,
-          @JsonKey(name: "email") @HiveField(1) required final String email}) =
-      _$_User;
+      {@JsonKey(name: "id")
+      @HiveField(0)
+          required final String id,
+      @JsonKey(name: "email")
+      @HiveField(1)
+          required final String email,
+      @JsonKey(name: "admin")
+      @HiveField(2)
+          required final bool isAdmin,
+      @JsonKey(name: "token")
+      @HiveField(3)
+          required final String token,
+      @JsonKey(name: "vacationDays")
+      @HiveField(4)
+          required final int vacationDays,
+      @JsonKey(name: "hoursPerDay")
+      @HiveField(5)
+          required final int hoursPerDay}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
 
@@ -183,6 +289,22 @@ abstract class _User implements User {
   @JsonKey(name: "email")
   @HiveField(1)
   String get email;
+  @override
+  @JsonKey(name: "admin")
+  @HiveField(2)
+  bool get isAdmin;
+  @override
+  @JsonKey(name: "token")
+  @HiveField(3)
+  String get token;
+  @override
+  @JsonKey(name: "vacationDays")
+  @HiveField(4)
+  int get vacationDays;
+  @override
+  @JsonKey(name: "hoursPerDay")
+  @HiveField(5)
+  int get hoursPerDay;
   @override
   @JsonKey(ignore: true)
   _$$_UserCopyWith<_$_User> get copyWith => throw _privateConstructorUsedError;
