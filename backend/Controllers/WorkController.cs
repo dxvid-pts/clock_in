@@ -1,7 +1,9 @@
+using System.Text;
 using backend.Attributes;
 using backend.Database;
 using backend.Interfaces;
 using backend.Models;
+using backend.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers;
@@ -43,7 +45,7 @@ public class WorkController : ControllerBase
     public IActionResult StartWork()
     {
         var account = (Account) HttpContext.Items["User"]!;
-        if (account.BeginTime < TimeOnly.FromDateTime(DateTime.Now) ||
+        if (account.BeginTime > TimeOnly.FromDateTime(DateTime.Now) ||
             account.EndTime < TimeOnly.FromDateTime(DateTime.Now))
         {
             return BadRequest("You're too early / too late to start work");
@@ -235,6 +237,44 @@ public class WorkController : ControllerBase
         _clockInContext.SaveChanges();
         
         return NoContent();
+    }
+
+    [SuperiorAuthorize(Roles = Roles.Manager + Roles.Employee)]
+    [HttpGet("summary/{month?}")]
+    [Produces("text/csv")]
+    public FileResult Summary(int month)
+    {
+        Account account = (Account)HttpContext.Items["User"]!;
+
+        if (month < 1) month = DateTime.Now.Month;
+
+        List<Work> workSessions = _clockInContext.Works.Where(w => w.AccountId == account.Id && w.Begin.Month == month && w.End != null).ToList();
+
+        Dictionary<DateOnly, TimeSpan> summaryDictionary = new Dictionary<DateOnly, TimeSpan>();
+        foreach (Work workSession in workSessions)
+        {
+            if (summaryDictionary.ContainsKey(workSession.Begin.ToDateOnly()))
+            {
+                summaryDictionary[workSession.Begin.ToDateOnly()] += workSession.End.Value - workSession.Begin;
+            }
+            else
+            {
+                summaryDictionary.Add(workSession.Begin.ToDateOnly(), workSession.End.Value - workSession.Begin);
+            }
+        }
+
+        string summary = "Date,Time\n";
+        foreach (KeyValuePair<DateOnly,TimeSpan> span in summaryDictionary)
+        {
+            summary += $"{span.Key},{span.Value}\n";
+        }
+
+        if (workSessions.Count == 0)
+        {
+            summary += "No Times logged,\n";
+        }
+
+        return new FileContentResult(Encoding.ASCII.GetBytes(summary), "text/csv");
     }
 
     /// <summary>
