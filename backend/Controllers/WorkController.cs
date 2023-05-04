@@ -198,6 +198,50 @@ public class WorkController : ControllerBase
         
         return Ok();
     }
+
+    /// <summary>
+    /// Manually insert work time
+    /// </summary>
+    /// <param name="work"></param>
+    /// <returns></returns>
+    [SuperiorAuthorize(Roles = Roles.Employee + Roles.Manager + Roles.Admin)]
+    [HttpPost]
+    
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public IActionResult InsertWork([FromBody] IWorkDateRange work)
+    {
+        if (work.begin >= work.end)
+        {
+            return BadRequest();
+        }
+        Account account = (Account)HttpContext.Items["User"]!;
+        if(TimeOnly.FromDateTime(work.begin) < account.BeginTime || TimeOnly.FromDateTime(work.end) > account.EndTime)
+        {
+            return Conflict("Your valid work time range is from " + account.BeginTime + " - " + account.EndTime);
+        }
+        Work existingWork = _clockInContext.Works.FirstOrDefault(w => 
+            w.AccountId == account.Id
+            && ((w.Begin <= work.begin && w.End >= work.end)
+                || (w.Begin > work.begin && w.End > work.end)
+                || (w.Begin < work.begin && w.End < work.end)
+                || (w.Begin > work.begin && w.End < work.end)));
+        if (existingWork != null) return Conflict("Work session already exists");
+
+        Work newWork = new Work()
+        {
+            AccountId = account.Id,
+            Begin = work.begin,
+            End = work.end
+        };
+
+        _clockInContext.Works.Add(newWork);
+        _clockInContext.SaveChanges();
+        return NoContent();
+    }
     
     /// <summary>
     /// Delete a work session by a given id
