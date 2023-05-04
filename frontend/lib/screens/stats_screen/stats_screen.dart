@@ -5,6 +5,7 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
+import 'package:frontend/screens/stats_screen/stats_utils.dart';
 import 'package:frontend/services/current_week_stats_service.dart';
 import 'package:frontend/services/vacation_service.dart';
 
@@ -28,11 +29,15 @@ class StatsScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ElevatedButton.icon(
-                onPressed: () {},
-                label: const Text("Export as PDF"),
-                icon: const Icon(Icons.file_download),
-              ),
+              Consumer(builder: (context, ref, _) {
+                return ElevatedButton.icon(
+                  onPressed: () {
+                    exportAndShowPdf(ref, context);
+                  },
+                  label: const Text("Export as PDF"),
+                  icon: const Icon(Icons.file_download),
+                );
+              }),
               ElevatedButton.icon(
                 onPressed: () {},
                 label: const Text("Export as CSV"),
