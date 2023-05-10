@@ -18,6 +18,7 @@ class User with _$User {
     @JsonKey(name: "token") @HiveField(3) required String token,
     @JsonKey(name: "vacationDays") @HiveField(4) required int vacationDays,
     @JsonKey(name: "hoursPerDay") @HiveField(5) required int hoursPerDay,
+    @JsonKey(name: "isDemo") @HiveField(6) required bool isDemo,
   }) = _User;
 
   factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);

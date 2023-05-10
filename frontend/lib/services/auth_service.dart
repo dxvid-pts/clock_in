@@ -37,6 +37,7 @@ class AuthNotifier extends ChangeNotifier {
         token: "",
         vacationDays: 30,
         hoursPerDay: 8,
+        isDemo: true,
       );
       notifyListeners();
 
@@ -50,6 +51,7 @@ class AuthNotifier extends ChangeNotifier {
         token: "",
         vacationDays: 30,
         hoursPerDay: 8,
+        isDemo: true,
       );
       notifyListeners();
 
@@ -91,6 +93,7 @@ class AuthNotifier extends ChangeNotifier {
           token: token,
           vacationDays: vacationDays,
           hoursPerDay: 8,
+          isDemo: false,
         );
 
         notifyListeners();

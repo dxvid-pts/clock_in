@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/employee.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/employee_service%20copy.dart';
 
 void showEmployeeDialog(BuildContext context, Employee employee) {
@@ -98,7 +99,10 @@ class _EmployeeDialogState extends State<EmployeeDialog> {
                       vacationDays: int.parse(vacationDays!),
                     );
 
-                    ref.read(employeeProvider).updateEmployee(employee);
+                    final user = ref.read(authProvider).user;
+                    if (user == null) return;
+
+                    ref.read(employeeProvider(user)).updateEmployee(employee);
                     Navigator.of(context).pop();
                   },
             child: const Text("Save"),

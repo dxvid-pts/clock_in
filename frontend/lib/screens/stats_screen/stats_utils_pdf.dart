@@ -13,7 +13,7 @@ void exportAndShowPdf(WidgetRef ref, BuildContext context) async {
 
   final reportedItems = [];
 
-  final consolidatedTracking = ref.watch(consolidatedTrackingProvider);
+  final consolidatedTracking = ref.read(consolidatedTrackingProvider);
 
   //add entries to reportedItems
   for (final entry in consolidatedTracking) {
