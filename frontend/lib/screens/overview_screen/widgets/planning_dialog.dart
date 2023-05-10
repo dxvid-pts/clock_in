@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/models/vacation_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/vacation_service.dart';
 
 void showPlanningDialog(BuildContext context) {
@@ -142,7 +143,10 @@ class _PlanningDialogState extends State<PlanningDialog> {
                 _startDate == null || _endDate == null || _category == null
                     ? null
                     : () {
-                        ref.read(vacationProvider).requestNewVacation(
+                        final user = ref.read(authProvider).user;
+                        if (user == null) return;
+                        
+                        ref.read(vacationProvider(user)).requestNewVacation(
                               VacationEntry(
                                 id: Commons.generateId(),
                                 start: _startDate!.millisecondsSinceEpoch,

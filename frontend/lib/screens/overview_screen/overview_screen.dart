@@ -6,6 +6,7 @@ import 'package:frontend/models/date_range_category.dart';
 import 'package:frontend/models/tracking_entry.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/screens/overview_screen/widgets/planning_dialog.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/consolidated_tracking_service.dart';
 import 'package:frontend/services/vacation_service.dart';
 import 'package:frontend/utils.dart';
@@ -48,6 +49,7 @@ class _PendingVacationWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.read(authProvider).user;
     final vacatinoEntries = ref.watch(vacationOverviewProider);
 
     if (vacatinoEntries.isEmpty) {
@@ -91,8 +93,13 @@ class _PendingVacationWidget extends ConsumerWidget {
               motion: const ScrollMotion(),
               children: [
                 SlidableAction(
-                  onPressed: (_) =>
-                      ref.read(vacationProvider).deleteVacation(vacationEntry),
+                  onPressed: (_) {
+                    if (user == null) return;
+
+                    ref
+                        .read(vacationProvider(user))
+                        .deleteVacation(vacationEntry);
+                  },
                   backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
                   icon: Icons.history,
