@@ -2,12 +2,19 @@ import 'package:collection/collection.dart';
 import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/tracking_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/tracking_service.dart';
 
 final consolidatedTrackingProvider = Provider<Set<TrackingEntry>>((ref) {
+  final user = ref.watch(authProvider).user;
+
+  if(user == null) {
+    return {};
+  }
+
   final consolidatedEntries = <TrackingEntry>{};
 
-  final trackingEntries = ref.watch(trackingProvider).trackingEntries;
+  final trackingEntries = ref.watch(trackingProvider(user)).trackingEntries;
 
   for (final entry in trackingEntries) {
     //check if there is already an entry for the same day

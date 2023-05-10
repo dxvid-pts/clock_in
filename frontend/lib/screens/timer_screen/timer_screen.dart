@@ -229,6 +229,8 @@ class _UpperSection extends ConsumerWidget {
               if (timerService.wasRunningOnce && timerService.isRunning)
                 _CustomIconButton(
                   onPressed: () {
+                    if (user == null) return;
+
                     final startTime = timerService.startTime;
                     final endTime = DateTime.now();
 
@@ -236,7 +238,7 @@ class _UpperSection extends ConsumerWidget {
                     timerService.pauseTimer();
 
                     //add tracking entry to database
-                    ref.read(trackingProvider).addTrackingEntry(
+                    ref.read(trackingProvider(user)).addTrackingEntry(
                           startTime: startTime!,
                           endTime: endTime,
                         );
@@ -266,6 +268,8 @@ class _UpperSection extends ConsumerWidget {
               if (timerService.wasRunningOnce)
                 _CustomIconButton(
                   onPressed: () {
+                    if (user == null) return;
+
                     final startTime = timerService.startTime;
                     final endTime = DateTime.now();
 
@@ -274,7 +278,7 @@ class _UpperSection extends ConsumerWidget {
 
                     //add tracking entry to database (only if start time is not null)
                     if (startTime != null) {
-                      ref.read(trackingProvider).addTrackingEntry(
+                      ref.read(trackingProvider(user)).addTrackingEntry(
                             startTime: startTime,
                             endTime: endTime,
                           );
