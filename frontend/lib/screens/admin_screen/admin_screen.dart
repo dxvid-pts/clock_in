@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/models/employee.dart';
 import 'package:frontend/screens/admin_screen/widgets/employee_dialog.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/employee_request_service.dart';
 import 'package:frontend/services/employee_service%20copy.dart';
 import 'package:frontend/utils.dart';
@@ -40,7 +42,11 @@ class _EmployeeSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final employees = ref.watch(employeeProvider).employees;
+    final user = ref.read(authProvider).user;
+
+    final employees = user == null
+        ? <Employee>{}
+        : ref.watch(employeeProvider(user)).employees;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -139,8 +145,11 @@ class _EmployeeRequestListTile extends StatelessWidget {
           if (item.request.accepted == null)
             IconButton(
               onPressed: () {
+                final user = ref.read(authProvider).user;
+                if (user == null) return;
+
                 ref
-                    .read(employeeRequestRawProvider)
+                    .read(employeeRequestRawProvider(user))
                     .setAccepted(item.request, true);
               },
               icon: const Icon(Icons.check),
@@ -148,8 +157,11 @@ class _EmployeeRequestListTile extends StatelessWidget {
           if (item.request.accepted == null)
             IconButton(
               onPressed: () {
+                final user = ref.read(authProvider).user;
+                if (user == null) return;
+
                 ref
-                    .read(employeeRequestRawProvider)
+                    .read(employeeRequestRawProvider(user))
                     .setAccepted(item.request, false);
               },
               icon: const Icon(Icons.close),
