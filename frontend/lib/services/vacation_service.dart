@@ -2,15 +2,22 @@ import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/constants.dart';
+import 'package:frontend/models/user.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/models/vacation_entry.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:hive/hive.dart';
 import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
 import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
+import 'package:http/http.dart' as http;
 
 final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
-  final vacationService = ref.watch(vacationProvider);
+  final user = ref.watch(authProvider).user;
+  assert(user != null);
+  if (user == null) return {};
+
+  final vacationService = ref.watch(vacationProvider(user));
   final vacationEntries = vacationService.vacationData;
 
   if (vacationEntries.isEmpty) return {};
@@ -49,7 +56,10 @@ final vacationChartProider = Provider<Map<VacationCategory, int>>((ref) {
 });
 
 final vacationOverviewProider = Provider<List<VacationEntry>>((ref) {
-  final vacationService = ref.watch(vacationProvider);
+  final user = ref.watch(authProvider).user;
+  assert(user != null);
+
+  final vacationService = ref.watch(vacationProvider(user!));
   final vacationEntries = vacationService.vacationData;
 
   if (vacationEntries.isEmpty) return [];
@@ -75,7 +85,10 @@ class _VacationCalendarScheme {
 }
 
 final vacationCalendarProider = Provider<_VacationCalendarScheme>((ref) {
-  final vacationService = ref.watch(vacationProvider);
+  final user = ref.watch(authProvider).user;
+  assert(user != null);
+
+  final vacationService = ref.watch(vacationProvider(user!));
   final vacationEntries = vacationService.vacationData
       .where((e) => e.category != VacationCategory.available);
 
@@ -108,17 +121,18 @@ final vacationCalendarProider = Provider<_VacationCalendarScheme>((ref) {
   );
 });
 
-final vacationProvider =
-    ChangeNotifierProvider<VacationNotifier>((ref) => VacationNotifier());
+final vacationProvider = ChangeNotifierProvider.family<VacationNotifier, User>(
+    (ref, user) => VacationNotifier(user));
 
 class VacationNotifier extends ChangeNotifier {
+  final User _user;
   Set<VacationEntry> vacationData = {};
 
   late final StorageBox<VacationEntry> _vacationBox;
 
   Future<void>? _initFuture;
 
-  VacationNotifier() {
+  VacationNotifier(User user) : _user = user {
     //register storage adapter
     StorageEngine.registerBoxAdapter<VacationEntry>(
       collectionKey: kVacationCollectionKey,
@@ -198,6 +212,18 @@ class VacationNotifier extends ChangeNotifier {
       _vacationBox.put(vacationEntry.id, vacationEntry);
 
       notifyListeners();
+
+      //notify api
+      await http.post(
+        Uri.parse('http://localhost:3001/api/vacation'),
+        headers: {"Authorization": "Bearer ${_user.token}"},
+        body: {
+          "begin": DateTime.fromMillisecondsSinceEpoch(vacationEntry.start)
+              .toIso8601String(),
+          "end": DateTime.fromMillisecondsSinceEpoch(vacationEntry.end)
+              .toIso8601String(),
+        },
+      );
     }
   }
 
