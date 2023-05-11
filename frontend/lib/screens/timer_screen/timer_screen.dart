@@ -1,4 +1,3 @@
-import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,8 +33,8 @@ class TimerScreen extends StatelessWidget {
                 stops: const [0.0, 0.3],
               ),
             ),
-            child: Column(
-              children: const [
+            child: const Column(
+              children: [
                 Expanded(
                   flex: 6,
                   child: _UpperSection(),

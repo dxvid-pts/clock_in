@@ -4,7 +4,7 @@ import 'package:frontend/models/employee.dart';
 import 'package:frontend/screens/admin_screen/widgets/employee_dialog.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/employee_request_service.dart';
-import 'package:frontend/services/employee_service%20copy.dart';
+import 'package:frontend/services/employee_service.dart';
 import 'package:frontend/utils.dart';
 import 'package:frontend/widgets/entry_list_tile.dart';
 import 'package:frontend/widgets/title_widget.dart';

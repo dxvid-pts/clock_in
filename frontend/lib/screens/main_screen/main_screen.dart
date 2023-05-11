@@ -7,7 +7,6 @@ import 'package:frontend/screens/stats_screen/stats_screen.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/timer_service.dart';
-import 'package:frontend/utils.dart';
 
 const double _fabDimension = 56.0;
 

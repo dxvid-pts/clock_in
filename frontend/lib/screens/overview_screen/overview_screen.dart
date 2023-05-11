@@ -268,8 +268,8 @@ class DatePicker extends StatelessWidget {
             onPressed: () {
               showPlanningDialog(context);
             },
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text("Plan now"),
                 Icon(
                   Icons.play_arrow,

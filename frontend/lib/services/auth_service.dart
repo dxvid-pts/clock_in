@@ -14,8 +14,6 @@ class AuthNotifier extends ChangeNotifier {
   User? user;
   bool get isLoggedIn => user != null;
 
-  AuthNotifier() {}
-
   Future<ErrorCode?> loginWithEmailPassword({
     required String email,
     required String password,
@@ -126,23 +124,4 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> logout() async {
     //await FirebaseAuth.instance.signOut();
   }
-}
-
-ErrorCode _errorCodeFromException(Object e) {
-  /* if (e is FirebaseAuthException) {
-    switch (e.code) {
-      case 'user-disabled':
-        return ErrorCode.invalidCredentials;
-      case 'user-not-found':
-        return ErrorCode.invalidCredentials;
-      case 'wrong-password':
-        return ErrorCode.invalidCredentials;
-      case 'email-already-in-use':
-        return ErrorCode.emailInUse;
-      case 'invalid-email':
-        return ErrorCode.emailInvalid;
-      case 'weak-password':
-        return ErrorCode.badPasswordLength;
-    }*/
-  return ErrorCode.unknown;
 }

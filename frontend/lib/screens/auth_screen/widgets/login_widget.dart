@@ -74,8 +74,6 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    const double loginLogoSize = 16;
-
     bool buttonDisabled = loading || email == null || password == null;
 
     //if we are in login mode, we don't need a name -> extra check for registration
@@ -108,11 +106,12 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
                       //snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Google sign in has been disabled by your company."),
+                          content: Text(
+                              "Google sign in has been disabled by your company."),
                         ),
                       );
                     },
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         /*SvgPicture.asset(
@@ -120,8 +119,8 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
                           width: loginLogoSize,
                           height: loginLogoSize,
                         ),*/
-                        const SizedBox(width: 10),
-                        const Text("Google"),
+                        SizedBox(width: 10),
+                        Text("Google"),
                       ],
                     )),
               ),
@@ -132,13 +131,14 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
                 height: 46,
                 child: ElevatedButton(
                   onPressed: () {
-                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Facebook sign in has been disabled by your company."),
-                        ),
-                      );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            "Facebook sign in has been disabled by your company."),
+                      ),
+                    );
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       /*SvgPicture.asset(
@@ -146,8 +146,8 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
                         width: loginLogoSize,
                         height: loginLogoSize,
                       ),*/
-                      const SizedBox(width: 10),
-                      const Text("Facebook"),
+                      SizedBox(width: 10),
+                      Text("Facebook"),
                     ],
                   ),
                 ),
@@ -156,10 +156,10 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
           ],
         ),
 
-        Padding(
-          padding: const EdgeInsets.only(top: 30, bottom: 15),
+        const Padding(
+          padding: EdgeInsets.only(top: 30, bottom: 15),
           child: Row(
-            children: const [
+            children: [
               Expanded(child: Divider()),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
@@ -279,11 +279,12 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
         if (widget.login)
           TextButton(
             onPressed: () {
-               ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please reach out to your companies IT department to reset your password."),
-                        ),
-                      );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      "Please reach out to your companies IT department to reset your password."),
+                ),
+              );
             },
             child: const Text("Forgot password?"),
           ),

@@ -2,17 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:frontend/constants.dart';
 import 'package:frontend/models/employee.dart';
 import 'package:frontend/models/employee_request.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/models/vacation_category.dart';
 import 'package:frontend/models/vacation_entry.dart';
 import 'package:frontend/services/auth_service.dart';
-import 'package:frontend/services/employee_service%20copy.dart';
-import 'package:storage_engine/storage_box.dart';
-import 'package:storage_engine/storage_engine.dart';
-import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
+import 'package:frontend/services/employee_service.dart';
 //import firstwhereor null extension
 
 final employeeRequestProvider = Provider<Set<EmployeeReqStruct>>((ref) {

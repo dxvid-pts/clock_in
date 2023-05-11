@@ -10,7 +10,6 @@ import 'package:storage_engine/storage_box.dart';
 import 'package:storage_engine/storage_engine.dart';
 import 'package:storage_engine_hive_adapter/storage_engine_hive_adapter.dart';
 //import firstwhereor null extension
-import 'package:collection/collection.dart';
 import 'package:http/http.dart' as http;
 
 final trackingProvider = ChangeNotifierProvider.family<TrackingNotifier, User>(
