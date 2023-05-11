@@ -77,19 +77,25 @@ class _MyHomePageState extends State<MainScreen> {
         ),
         closedColor: Theme.of(context).primaryColor,
         closedBuilder: (BuildContext context, VoidCallback openContainer) {
-          return SizedBox(
-            height: _fabDimension,
-            width: _fabDimension,
-            child: Center(
-              child: Consumer(builder: (context, ref, _) {
-                final user = ref.watch(authProvider).user;
-                final timerService =
-                    ref.watch(timerProvider(user?.hoursPerDay ?? 1));
-                return Icon(
-                  timerService.isRunning ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white,
-                );
-              }),
+          return Tooltip(
+            message: "Start/Stop Timer",
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: SizedBox(
+                height: _fabDimension,
+                width: _fabDimension,
+                child: Center(
+                  child: Consumer(builder: (context, ref, _) {
+                    final user = ref.watch(authProvider).user;
+                    final timerService =
+                        ref.watch(timerProvider(user?.hoursPerDay ?? 1));
+                    return Icon(
+                      timerService.isRunning ? Icons.pause : Icons.play_arrow,
+                      color: Colors.white,
+                    );
+                  }),
+                ),
+              ),
             ),
           );
         },

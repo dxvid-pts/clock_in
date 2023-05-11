@@ -340,7 +340,14 @@ class _InternalLoginWidgetState extends ConsumerState<SingleLoginWidget> {
                   : "Already have an account?"),
               TextButton(
                 onPressed: () {
-                  widget.toggleLogin!();
+                  //widget.toggleLogin!();
+                  //snackbar to show that the feature is disabled
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          "This feature has been disabled by your company."),
+                    ),
+                  );
                 },
                 child: Text(widget.login ? "Sign up" : "Log in"),
               ),

@@ -72,6 +72,7 @@ class _EmployeeSection extends ConsumerWidget {
                     ),
                     const SizedBox(width: 10),
                     IconButton(
+                      tooltip: "Edit employee details",
                       onPressed: () {
                         showEmployeeDialog(context, e);
                       },
