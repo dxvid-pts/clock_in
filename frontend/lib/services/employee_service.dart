@@ -1,9 +1,7 @@
-import 'package:commons_flutter/commons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/employee.dart';
 import 'package:frontend/models/user.dart';
-//import firstwhereor null extension
 
 final employeeProvider = ChangeNotifierProvider.family<EmployeeNotifier, User>(
     (ref, user) => EmployeeNotifier(user));

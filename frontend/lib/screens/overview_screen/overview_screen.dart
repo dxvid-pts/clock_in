@@ -264,18 +264,21 @@ class DatePicker extends StatelessWidget {
         Positioned(
           top: 6,
           right: 10,
-          child: TextButton(
-            onPressed: () {
-              showPlanningDialog(context);
-            },
-            child: Row(
-              children: const [
-                Text("Plan now"),
-                Icon(
-                  Icons.play_arrow,
-                  size: 14,
-                )
-              ],
+          child: Tooltip(
+            message: "Admin request menu (vacation/sick/...)",
+            child: TextButton(
+              onPressed: () {
+                showPlanningDialog(context);
+              },
+              child: const Row(
+                children: [
+                  Text("Plan now"),
+                  Icon(
+                    Icons.play_arrow,
+                    size: 14,
+                  )
+                ],
+              ),
             ),
           ),
 

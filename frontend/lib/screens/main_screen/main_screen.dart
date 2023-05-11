@@ -7,7 +7,6 @@ import 'package:frontend/screens/stats_screen/stats_screen.dart';
 import 'package:frontend/screens/timer_screen/timer_screen.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/timer_service.dart';
-import 'package:frontend/utils.dart';
 
 const double _fabDimension = 56.0;
 
@@ -78,19 +77,25 @@ class _MyHomePageState extends State<MainScreen> {
         ),
         closedColor: Theme.of(context).primaryColor,
         closedBuilder: (BuildContext context, VoidCallback openContainer) {
-          return SizedBox(
-            height: _fabDimension,
-            width: _fabDimension,
-            child: Center(
-              child: Consumer(builder: (context, ref, _) {
-                final user = ref.watch(authProvider).user;
-                final timerService =
-                    ref.watch(timerProvider(user?.hoursPerDay ?? 1));
-                return Icon(
-                  timerService.isRunning ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white,
-                );
-              }),
+          return Tooltip(
+            message: "Start/Stop Timer",
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: SizedBox(
+                height: _fabDimension,
+                width: _fabDimension,
+                child: Center(
+                  child: Consumer(builder: (context, ref, _) {
+                    final user = ref.watch(authProvider).user;
+                    final timerService =
+                        ref.watch(timerProvider(user?.hoursPerDay ?? 1));
+                    return Icon(
+                      timerService.isRunning ? Icons.pause : Icons.play_arrow,
+                      color: Colors.white,
+                    );
+                  }),
+                ),
+              ),
             ),
           );
         },
