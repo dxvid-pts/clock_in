@@ -29,10 +29,10 @@ class AuthNotifier extends ChangeNotifier {
       return _errorCodeFromException(e);
     }*/
 
-    if (email == "test" && password == "test") {
+    if (email == "user" && password == "user") {
       user = const User(
-        id: "test",
-        email: "test@test.com",
+        id: "user",
+        email: "user@user.com",
         isAdmin: false,
         token: "",
         vacationDays: 30,
@@ -97,6 +97,7 @@ class AuthNotifier extends ChangeNotifier {
         );
 
         notifyListeners();
+        return null;
       } else {
         //no access token -> invalid credentials
         return ErrorCode.invalidCredentials;
