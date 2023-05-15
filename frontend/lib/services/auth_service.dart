@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:frontend/models/error_code.dart';
 import 'package:frontend/models/user.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 
 final authProvider =
@@ -14,19 +15,31 @@ class AuthNotifier extends ChangeNotifier {
   User? user;
   bool get isLoggedIn => user != null;
 
+  Future<Box<User>>? _box;
+
+  AuthNotifier() {
+    
+    _box = _initBoxAndUser();
+  }
+
+  Future<Box<User>> _initBoxAndUser() async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(UserAdapter());
+    final box = await Hive.openBox<User>('user');
+
+    if(box.containsKey("user")){
+      user = box.get("user");
+
+      notifyListeners();
+    }
+
+    return box;
+  }
+
   Future<ErrorCode?> loginWithEmailPassword({
     required String email,
     required String password,
   }) async {
-    /*try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      return _errorCodeFromException(e);
-    }*/
-
     if (email == "user" && password == "user") {
       user = const User(
         id: "user",
@@ -38,6 +51,8 @@ class AuthNotifier extends ChangeNotifier {
         isDemo: true,
       );
       notifyListeners();
+
+      (await _box)?.put("user", user!);
 
       // No error
       return null;
@@ -52,6 +67,8 @@ class AuthNotifier extends ChangeNotifier {
         isDemo: true,
       );
       notifyListeners();
+
+       (await _box)?.put("user", user!);
 
       // No error
       return null;
@@ -95,6 +112,9 @@ class AuthNotifier extends ChangeNotifier {
         );
 
         notifyListeners();
+
+        (await _box)?.put("user", user!);
+
         return null;
       } else {
         //no access token -> invalid credentials
@@ -108,20 +128,13 @@ class AuthNotifier extends ChangeNotifier {
     required String email,
     required String password,
   }) async {
-    /*try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      return _errorCodeFromException(e);
-    }*/
-
     // No error
     return null;
   }
 
   Future<void> logout() async {
-    //await FirebaseAuth.instance.signOut();
+     (await _box)?.delete("user");
+    user = null;
+    notifyListeners();
   }
 }
